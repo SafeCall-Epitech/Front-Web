@@ -51,48 +51,42 @@ export default function ProfilePage() {
                   style={{ width: '170px' }}
                   fluid />
 
-                  {Load ? <MDBCardText className="text-muted">
+                  {Load ? <MDBCardText>
                     None
                     </MDBCardText>
                     :
-                    <MDBCardText className="text-muted">
+                    <MDBCardText>
                     {Name}
                     </MDBCardText>
                   }
 
-                <p className="text-muted mb-4">@ID : *******</p>
+                <p className>@ID : *******</p>
                 <div className="d-flex justify-content-c  enter mb-2">
                   <MDBBtn color="dark" rounded block size="mg">
                   <MDBIcon  far icon="cog" /> Modify</MDBBtn>
                 </div>
               </MDBCardBody>
             </MDBCard>
+
             <MDBCard className="mb-4 mb-lg-0">
             <MDBCardBody>
-              <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Your SafeCall Sites</span></MDBCardText>
+            <MDBCardText>Description</MDBCardText>
             </MDBCardBody>
-              <MDBCardBody className="p-0">
-                <MDBListGroup flush className="rounded-3">
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fab icon="github fa-lg" style={{ color: '#333333' }} />
-                    <MDBCardText>Github</MDBCardText>
-                  </MDBListGroupItem>
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fab icon="twitter fa-lg" style={{ color: '#55acee' }} />
-                    <MDBCardText>Twitter</MDBCardText>
-                  </MDBListGroupItem>
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fab icon="instagram fa-lg" style={{ color: '#ac2bac' }} />
-                    <MDBCardText>Instagram</MDBCardText>
-                  </MDBListGroupItem>
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fab icon="facebook fa-lg" style={{ color: '#3b5998' }} />
-                    <MDBCardText>Facebook</MDBCardText>
-                  </MDBListGroupItem>
-                </MDBListGroup>
+            <MDBCardBody className="p-0">       
+
+                {Load ? <MDBCardText className="text-muted">
+                None
+                </MDBCardText>
+                :
+                <MDBCardText className="text-muted">
+                {Description}
+                </MDBCardText>
+                }
+                
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
+          
           <MDBCol lg="8">
             <MDBCard className="mb-4">
               <MDBCardBody>
