@@ -1,7 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
 
 export default function EditButton() {
+
+  const [Name, setName] = useState('');
+  const [Email, setEmail] = useState('');
+  const [Nb, setNb] = useState('');
+  const [Description, setDescription] = useState('');
+
+
+  var Load = false;
+
+    const fetchData = async () => {
+      const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/Alabama`);
+      setName(res.data['profile']['FullName']);
+      setEmail(res.data['profile']['Email']);
+      setNb(res.data['profile']['PhoneNb']);
+      setDescription(res.data['profile']['Description']);
+
+      Load = false;
+    };
+    fetchData();
+
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: '#BEBAB7' }}>
       <MDBContainer className="py-5 h-100">
@@ -16,7 +37,12 @@ export default function EditButton() {
                 </div>
                 
                 <div className="ms-3" style={{ marginTop: '130px' }}>
-                  <MDBTypography tag="h5">Andy Horwitz</MDBTypography>
+
+                {Load ?  <MDBTypography tag="h5">Andy Horwitz</MDBTypography>
+                    :
+                    <MDBTypography tag="h5">{Name}</MDBTypography>
+                  }
+
                   <MDBCardText>@ID</MDBCardText>
                   
                   
@@ -40,9 +66,16 @@ export default function EditButton() {
                   <div className="mb-5">
                   <p className="lead fw-normal mb-1">About</p>
                   <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
-                    <MDBCardText className="font-italic mb-1">Web Developer</MDBCardText>
-                    <MDBCardText className="font-italic mb-1">Lives in Paris</MDBCardText>
-                    <MDBCardText className="font-italic mb-0">Photographer</MDBCardText>
+
+                  {Load ? <MDBCardText className="text-muted">
+                    None
+                    </MDBCardText>
+                    :
+                    <MDBCardText className="text-muted">
+                    {Description}
+                    </MDBCardText>
+                  }
+
                   </div>
               </div>
               

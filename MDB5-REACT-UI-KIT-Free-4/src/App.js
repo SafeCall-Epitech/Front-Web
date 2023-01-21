@@ -11,8 +11,6 @@ import My_Error from './pages/error';
 class App extends Component {
 render() {
 	return (
-		
-    
 	<Router>
 		
 		

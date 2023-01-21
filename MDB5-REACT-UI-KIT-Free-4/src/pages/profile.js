@@ -16,18 +16,26 @@ import axios from 'axios';
 
 
 export default function ProfilePage() {
- 
-  const UserCard = (props) => {
-    const [userData, setUserData] = useState({});
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${props.userId}`);
-            setUserData(res.data);
-        }
-        fetchUserData();
-    }, [props.userId]);
-  }
+    const [Name, setName] = useState('');
+    const [Email, setEmail] = useState('');
+    const [Nb, setNb] = useState('');
+    const [Description, setDescription] = useState('');
+
+    var Load = false;
+
+      const fetchData = async () => {
+        const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/Alabama`);
+        setName(res.data['profile']['FullName']);
+        setEmail(res.data['profile']['Email']);
+        setNb(res.data['profile']['PhoneNb']);
+        setDescription(res.data['profile']['Description']);
+
+
+        Load = false;
+      };
+      fetchData();
+
   return (
     <section style={{ backgroundColor: '#d3d3d3' }}>
       <MDBContainer className="py-5">
@@ -42,7 +50,16 @@ export default function ProfilePage() {
                   className="rounded-circle"
                   style={{ width: '170px' }}
                   fluid />
-                <p className="text-muted mb-1">Name : Nom Prénom</p>
+
+                  {Load ? <MDBCardText className="text-muted">
+                    None
+                    </MDBCardText>
+                    :
+                    <MDBCardText className="text-muted">
+                    {Name}
+                    </MDBCardText>
+                  }
+
                 <p className="text-muted mb-4">@ID : *******</p>
                 <div className="d-flex justify-content-c  enter mb-2">
                   <MDBBtn color="dark" rounded block size="mg">
@@ -50,7 +67,6 @@ export default function ProfilePage() {
                 </div>
               </MDBCardBody>
             </MDBCard>
-
             <MDBCard className="mb-4 mb-lg-0">
             <MDBCardBody>
               <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Your SafeCall Sites</span></MDBCardText>
@@ -85,7 +101,16 @@ export default function ProfilePage() {
                     <MDBCardText>Full Name</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">Example Test</MDBCardText>
+
+                    {Load ? <MDBCardText className="text-muted">
+                    None
+                    </MDBCardText>
+                    :
+                    <MDBCardText className="text-muted">
+                    {Name}
+                    </MDBCardText>
+                    }
+
                   </MDBCol>
                 </MDBRow>
                 <hr />
@@ -103,7 +128,16 @@ export default function ProfilePage() {
                     <MDBCardText>Email</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">example@example.com</MDBCardText>
+                    
+                  {Load ? <MDBCardText className="text-muted">
+                    None
+                    </MDBCardText>
+                    :
+                    <MDBCardText className="text-muted">
+                    {Email}
+                    </MDBCardText>
+                    }
+
                   </MDBCol>
                 </MDBRow>
                 <hr />
@@ -112,7 +146,16 @@ export default function ProfilePage() {
                     <MDBCardText>Phone Number</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">(+33) 680981067</MDBCardText>
+
+                  {Load ? <MDBCardText className="text-muted">
+                    None
+                    </MDBCardText>
+                    :
+                    <MDBCardText className="text-muted">
+                    {Nb}
+                    </MDBCardText>
+                    }
+
                   </MDBCol>
                 </MDBRow>
                 <hr />

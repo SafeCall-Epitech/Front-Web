@@ -1,7 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
+import { ZIndexManager } from 'cx/ui';
+import axios from 'axios';
+
 
 export default function ECommerce() {
+
+  const [Name, setName] = useState('');
+  const [Email, setEmail] = useState('');
+  const [Nb, setNb] = useState('');
+  const [Description, setDescription] = useState('');
+
+
+  var Load = false;
+
+    const fetchData = async () => {
+      const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/Alabama`);
+      setName(res.data['profile']['FullName']);
+      setEmail(res.data['profile']['Email']);
+      setNb(res.data['profile']['PhoneNb']);
+      setDescription(res.data['profile']['Description']);
+
+      Load = false;
+    };
+    fetchData();
+
   return (
     <div className="vh-100" style={{ backgroundColor: '#BEBAB7' }}>
       <MDBContainer>
@@ -10,8 +33,12 @@ export default function ECommerce() {
             <MDBCard style={{ borderRadius: '15px', backgroundColor: '#DOCBC8' }}>
               <MDBCardBody className="p-4 text-black">
                 <div>
-                  <MDBTypography tag='h6'>Name</MDBTypography>
-                  <div className="d-flex align-items-center justify-content-between mb-3">
+
+                {Load ?  <MDBTypography tag="h5">Andy Horwitz</MDBTypography>
+                    :
+                    <MDBTypography tag="h5">{Name}</MDBTypography>
+                  } 
+                <div className="d-flex align-items-center justify-content-between mb-3">
                     <p className="small mb-0"><MDBIcon far icon="clock me-2" />6 hrs ago</p>
                   </div>
                 </div>
