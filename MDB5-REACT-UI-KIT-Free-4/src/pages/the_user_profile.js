@@ -24,7 +24,7 @@ export default function EditButton() {
     fetchData();
 
   return (
-    <div className="gradient-custom-2" style={{ backgroundColor: '#BEBAB7' }}>
+    <div className="gradient-custom-2" style={{ backgroundColor: '#E6E6E6' }}>
       <MDBContainer className="py-5 h-100">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol lg="9" xl="7">
@@ -50,7 +50,7 @@ export default function EditButton() {
                 </div>
               </div>
               
-              <div className="p-4 text-black" style={{ backgroundColor: '#f8f9fa' }}>
+              <div className="p-4 text-black" style={{ backgroundColor: '#E6E6E6' }}>
                 <div className="d-flex justify-content-end text-center py-1">
                 </div>
                   <div className="mb-5">

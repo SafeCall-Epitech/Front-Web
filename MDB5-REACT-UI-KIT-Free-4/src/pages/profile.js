@@ -31,13 +31,12 @@ export default function ProfilePage() {
         setNb(res.data['profile']['PhoneNb']);
         setDescription(res.data['profile']['Description']);
 
-
         Load = false;
       };
       fetchData();
 
   return (
-    <section style={{ backgroundColor: '#d3d3d3' }}>
+    <section style={{top:'0', bottom:'0', right:'0', left:'0',  backgroundColor: '#E6E6E6'}}>
       <MDBContainer className="py-5">
         
         <MDBRow>
@@ -70,9 +69,7 @@ export default function ProfilePage() {
 
             <MDBCard className="mb-4 mb-lg-0">
             <MDBCardBody>
-            <MDBCardText>Description</MDBCardText>
-            </MDBCardBody>
-            <MDBCardBody className="p-0">       
+            <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Description</span></MDBCardText>      
 
                 {Load ? <MDBCardText className="text-muted">
                 None
@@ -110,7 +107,7 @@ export default function ProfilePage() {
                 <hr />
                 <MDBRow>
                   <MDBCol sm="3"> 
-                    <MDBCardText>ID</MDBCardText>
+                    <MDBCardText>ID SafeCall</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
                     <MDBCardText className="text-muted">MyIdTest</MDBCardText>

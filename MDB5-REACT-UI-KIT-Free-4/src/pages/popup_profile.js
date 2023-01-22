@@ -26,7 +26,7 @@ export default function ECommerce() {
     fetchData();
 
   return (
-    <div className="vh-100" style={{ backgroundColor: '#BEBAB7' }}>
+    <div className="vh-100" style={{ backgroundColor: '#E6E6E6' }}>
       <MDBContainer>
         <MDBRow className="justify-content-center">
           <MDBCol md="9" lg="7" xl="5" className="mt-5">
