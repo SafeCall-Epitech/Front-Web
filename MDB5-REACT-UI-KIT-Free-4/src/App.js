@@ -7,14 +7,15 @@ import My_wfriend_profile from './pages/wfriend_profile';
 import WF_popup_profile from './pages/wfpopup_profile';
 import My_Calendar from './pages/Calendar/Calendar';
 import My_Error from './pages/error';
+import My_login from './pages/login';
+
 
 class App extends Component {
 render() {
 	return (
 	<Router>
-		
-		
 		<Routes>
+				<Route exact path='/login' element={< My_login />}></Route>
 				<Route exact path='/My_user_profile' element={< The_user_profile />}></Route>
 				<Route exact path='/' element={< Home />}></Route>
 				<Route exact path='/popup_profile' element={< My_popup_profile />}></Route>
@@ -22,7 +23,6 @@ render() {
 				<Route exact path='/wfpopup_profile' element={< WF_popup_profile />}></Route>
 				<Route exact path='/Calendar' element={< My_Calendar />}></Route>
 				<Route exact path='/error' element={< My_Error />}></Route>
-
 
 		</Routes>
 	</Router>

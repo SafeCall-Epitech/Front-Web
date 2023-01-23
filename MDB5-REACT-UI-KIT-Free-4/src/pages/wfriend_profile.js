@@ -27,7 +27,7 @@ export default function EditButton() {
     <div className="gradient-custom-2" style={{ backgroundColor: '#E6E6E6' }}>
       <MDBContainer className="py-5 h-100">
         <MDBRow className="justify-content-center align-items-center h-100">
-          <MDBCol lg="9" xl="7">
+          <MDBCol lg="9" xl="8">
             <MDBCard>
               
               <div className="rounded-top text-white d-flex flex-row" style={{ backgroundColor: '#000', height: '200px' }}>
@@ -36,7 +36,7 @@ export default function EditButton() {
                     alt="Generic placeholder image" className="mt-4 mb-2 img-thumbnail" fluid style={{ width: '150px', zIndex: '1' }} />
                 </div>
                 
-                <div className="ms-3" style={{ marginTop: '130px' }}>
+                <div className="ms-3" style={{ marginTop: '135px' }}>
 
                 {Load ?  <MDBTypography tag="h5">Andy Horwitz</MDBTypography>
                     :

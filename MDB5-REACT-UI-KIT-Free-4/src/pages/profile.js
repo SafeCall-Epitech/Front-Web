@@ -14,7 +14,6 @@ import {
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
 
-
 export default function ProfilePage() {
 
     const [Name, setName] = useState('');
@@ -69,7 +68,7 @@ export default function ProfilePage() {
 
             <MDBCard className="mb-4 mb-lg-0">
             <MDBCardBody>
-            <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Description</span></MDBCardText>      
+            <MDBCardText className="mb-4"><span className="text-primary font-italic me-1" >Description</span></MDBCardText>      
 
                 {Load ? <MDBCardText className="text-muted">
                 None
