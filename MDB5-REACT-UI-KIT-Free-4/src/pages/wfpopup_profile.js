@@ -15,7 +15,7 @@ export default function ECommerce() {
   var Load = false;
 
     const fetchData = async () => {
-      const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/Alabama`);
+      const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/Julien`);
       setName(res.data['profile']['FullName']);
       setEmail(res.data['profile']['Email']);
       setNb(res.data['profile']['PhoneNb']);

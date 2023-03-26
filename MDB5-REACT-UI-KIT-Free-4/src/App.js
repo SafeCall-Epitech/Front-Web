@@ -8,6 +8,9 @@ import WF_popup_profile from './pages/wfpopup_profile';
 import My_Calendar from './pages/Calendar/Calendar';
 import My_Error from './pages/error';
 import My_login from './pages/login';
+import My_Search from './pages/searchbar';
+import My_Notifications from './pages/notification';
+
 
 
 class App extends Component {
@@ -23,6 +26,9 @@ render() {
 				<Route exact path='/wfpopup_profile' element={< WF_popup_profile />}></Route>
 				<Route exact path='/Calendar' element={< My_Calendar />}></Route>
 				<Route exact path='/error' element={< My_Error />}></Route>
+				<Route exact path='/search' element={< My_Search />}></Route>
+				<Route exact path='/Notifications' element={< My_Notifications />}></Route>
+
 
 		</Routes>
 	</Router>
