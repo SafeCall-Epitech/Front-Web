@@ -16,6 +16,10 @@ button {
   cursor: pointer;
 }
 
+.unread-notification {
+  border: 2px solid red;
+}
+
 .navbar {
   position: fixed;
   z-index: 1;
@@ -35,7 +39,9 @@ button {
 @media only screen and (min-width: 600px) {
   .navbar {
     justify-content: space-between;
-    padding: 0 0 0 16px;
+    padding: 0 0 0  16px;
+    position: fixed;
+
   }
 }
 
@@ -63,44 +69,11 @@ body.open .navbar-overlay {
   }
 }
 
-.navbar-burger {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: grid;
-  place-items: center;
-  width: 64px;
-  height: 64px;
-  padding: 0;
-}
 
 @media only screen and (min-width: 600px) {
   .navbar-burger {
     display: none;
   }
-}
-
-.navbar-title {
-  margin: 0;
-  font-size: 16px;
-}
-
-.navbar-menu {
-  position: fixed;
-  z-index: 3;
-  top: 0;
-  left: 0;
-  translate: -100% 0;
-  width: 270px;
-  height: 100%;
-  padding: 20px;
-  display: flex;
-  gap: 8px;
-  flex-direction: column;
-  align-items: flex-start;
-  background: #000000;
-  visibility: hidden;
-  transition: translate 0.3s;
 }
 
 body.open .navbar-menu {
@@ -133,7 +106,6 @@ body.open .navbar-menu {
 /* ----------------------------- 
 LOGIN PAGE
 ----------------------------- */
-
 
 
 .gradient-custom-2 {
