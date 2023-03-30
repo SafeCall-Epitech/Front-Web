@@ -5,3 +5,7 @@ WARNING : Si il y a cette erreur
 Il faut juste installer ce script :
 npm install react-scripts
 -----------------
+
+### déploiement
+npm install -g serve
+npx serve -s build 
