@@ -53,11 +53,11 @@ export default function ECommerce() {
               <MDBModalDialog>
                 <MDBModalContent>
                   <MDBModalBody>
-                    <MDBCard style={{ borderRadius: "15px", backgroundColor: "#DOCBC8" }}>
+                    <MDBCard style={{ borderRadius: "15px", backgroundColor: "#E6E6E6" }}>
                       <MDBCardBody className="p-4 text-black">
                         <div>
 
-                          {Load ? <MDBTypography tag="h5">Andy Horwitz</MDBTypography>
+                          {Load ? <MDBTypography tag="h5">No Name</MDBTypography>
                             :
                             <MDBTypography tag="h5">{Name}</MDBTypography>
                           }
