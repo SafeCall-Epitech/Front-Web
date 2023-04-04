@@ -3,6 +3,10 @@ import axios from 'axios';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography, MDBIcon, MDBInputGroup, MDBInput } from 'mdb-react-ui-kit';
 
 export default function App() {
+
+    const user = JSON.parse(localStorage.getItem('user'));
+
+
     const [Name, setName] = useState('');
     const [Email, setEmail] = useState('');
     const [Nb, setNb] = useState('');
@@ -11,7 +15,7 @@ export default function App() {
 
     const handleSearch = async () => {
         try {
-            const res = await axios.get(`http://20.234.168.103:8080/profile/${Name}`);
+            const res = await axios.get(`http://20.234.168.103:8080/profile/${user}`);
             if (res.data['profile']) {
                 setSelectedResult(res.data['profile']);
             } else {

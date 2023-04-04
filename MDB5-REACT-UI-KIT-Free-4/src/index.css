@@ -17,7 +17,7 @@ button {
 }
 
 .unread-notification {
-  border: 2px solid red;
+  border: 100px solid red;
 }
 
 .navbar {
@@ -39,7 +39,7 @@ button {
 @media only screen and (min-width: 600px) {
   .navbar {
     justify-content: space-between;
-    padding: 0 0 0  16px;
+    padding: 0 0 0  30px;
     position: fixed;
 
   }
@@ -47,7 +47,7 @@ button {
 
 .navbar-overlay {
   position: fixed;
-  z-index: 2;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 100%;

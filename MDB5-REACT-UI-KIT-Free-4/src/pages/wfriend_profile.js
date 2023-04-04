@@ -4,6 +4,8 @@ import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCar
 
 export default function EditButton() {
 
+  const user = JSON.parse(localStorage.getItem('user'));
+
   const [Name, setName] = useState('');
   const [Email, setEmail] = useState('');
   const [Nb, setNb] = useState('');
@@ -13,7 +15,7 @@ export default function EditButton() {
   var Load = false;
 
     const fetchData = async () => {
-      const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/Julien`);
+      const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`);
       setName(res.data['profile']['FullName']);
       setEmail(res.data['profile']['Email']);
       setNb(res.data['profile']['PhoneNb']);

@@ -1,89 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="SafeCall" content="SafeCall site created using create-react-app" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <link href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" rel="stylesheet" />
+
+  <html lang="en">
+
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="SafeCall"
-      content="SafeCall site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
-      rel="stylesheet"
-    />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SafeCall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>SafeCall</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="./styles.css" rel="stylesheet" />
+  </head>
 
-        <link
-          href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet"
-        />
-        <link href="./styles.css" rel="stylesheet" />
-      </head>
-      <body>
-        <nav class="navbar">
-          <div class="navbar-overlay" onclick="toggleMenuOpen()"></div>
-    
-          <button type="button" class="navbar-burger" onclick="toggleMenuOpen()">
-            <span class="material-icons">menu</span>
-          </button>
+<body>
+  <nav class="navbar">
+    <div class="navbar-overlay" onclick="toggleMenuOpen()"></div>
 
-          <h1 class="navbar-title"> <img src="SafeCallWhite.png" width="120" height="30"  alt="Alternate text"> </h1>
-          <style>
-            img {
-                top: 3;
-                left: 13;
-            }
-          </style>
+    <button type="button" class="navbar-burger" onclick="toggleMenuOpen()">
+      <span class="material-icons">menu</span>
+    </button>
 
-          <nav class="navbar-menu">
+    <h1 class="navbar-title"> <img src="SafeCallWhite.png" width="120" height="30" alt="Alternate text"> </h1>
+    <style>
+      img {
+        top: 3;
+        left: 13;
+      }
+    </style>
 
-            <button onclick="window.location.href='/Login'">Login </button> 
-            <button onclick="window.location.href='/My_user_profile'">Home</button> 
-            <button onclick="window.location.href='/'">Profile</button>
-            <button onclick="window.location.href='/popup_profile'">ProfilePopup</button> 
-            <button onclick="window.location.href='/wfriend_profile'">ProfileAmis </button>
-            <button onclick="window.location.href='/wfpopup_profile'">PopupAmis </button>
-            <button onclick="window.location.href='/Calendar'">Calendrier </button> 
-            <button onclick="window.location.href='/Search'">Search </button> 
-            <button onclick="window.location.href='/Notifications'">Notifications </button> 
+    <nav class="navbar-menu">
+
+      <button onclick="window.location.href='/Login'">Login </button>
+      <button onclick="window.location.href='/My_user_profile'">Home</button>
+      <button onclick="window.location.href='/wfriend_profile'">ProfileAmis </button>
+      <button onclick="window.location.href='/wfpopup_profile'">Popup </button>
+      <button onclick="window.location.href='/popup_profile'">PopupAmis</button>
+
+      <button onclick="window.location.href='/Calendar'">
+        <i class="far fa-calendar-alt"></i>
+      </button>
+      <button onclick="window.location.href='/Search'">
+        <i class="fas fa-search"></i>
+      </button>
+      <button onclick="window.location.href='/'">
+        <i class="fas fa-user"></i>
+      </button>
+      <button onclick="window.location.href='/Notifications'">
+        <i class="fas fa-bell"></i>
+      </button>
+      
 
 
-          </nav>
-        </nav>
-        <script type="text/javascript" src="./main.js"></script>
-      </body>
-    </html>
+    </nav>
+  </nav>
+  <script type="text/javascript" src="./main.js"></script>
+</body>
+
+</html>
 
 <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
 
-    <!--
+<!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
+<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+<!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -92,12 +91,13 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>MDBReact5 Template App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
+<title>MDBReact5 Template App</title>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
 
@@ -107,5 +107,6 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  </body>
+</body>
+
 </html>

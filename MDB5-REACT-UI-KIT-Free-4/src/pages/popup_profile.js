@@ -19,6 +19,9 @@ import {
 } from "mdb-react-ui-kit";
 
 export default function ECommerce() {
+
+  const user = JSON.parse(localStorage.getItem('user'));
+
   const [Name, setName] = useState("");
   const [Email, setEmail] = useState("");
   const [Nb, setNb] = useState("");
@@ -29,7 +32,7 @@ export default function ECommerce() {
   useEffect(() => {
     async function fetchData() {
       const res = await axios.get(
-        `http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/Julien`
+        `http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`
       );
       setName(res.data["profile"]["FullName"]);
       setEmail(res.data["profile"]["Email"]);

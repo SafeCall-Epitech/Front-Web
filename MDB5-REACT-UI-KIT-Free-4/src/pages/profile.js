@@ -16,6 +16,8 @@ import axios from 'axios';
 
 export default function ProfilePage() {
 
+  const user = JSON.parse(localStorage.getItem('user'));
+
   const [Name, setName] = useState('');
   const [Email, setEmail] = useState('');
   const [Nb, setNb] = useState('');
@@ -32,7 +34,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchFriendsList = async () => {
       try {
-        const response = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/:userID`);
+        const response = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/${user}`);
         const fetchedData = response.data.fetched;
         const friendsListData = fetchedData.map((name) => ({ name }));
         setFriendsList(friendsListData);
@@ -43,7 +45,6 @@ export default function ProfilePage() {
 
     fetchFriendsList();
   }, []);
-
 
   const handleNameChange = (e) => {
     setNewName(e.target.value);
@@ -63,7 +64,7 @@ export default function ProfilePage() {
 
   const handleSave = async () => {
     try {
-      const res = await axios.put(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/Julien`, {
+      const res = await axios.put(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`, {
         FullName: newName,
         Email: newEmail,
         PhoneNb: newNb,
@@ -91,7 +92,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/Julien`);
+        const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`);
         setName(res.data['profile']['FullName']);
         setEmail(res.data['profile']['Email']);
         setNb(res.data['profile']['PhoneNb']);
@@ -125,6 +126,21 @@ export default function ProfilePage() {
                     <MDBIcon far icon="cog" /> Modify
                   </MDBBtn>
                 </div>
+
+
+                  {user && (
+                    <MDBBtn color="danger" rounded block size="mg" className="me-2" onClick={() => {
+                      const confirmed = window.confirm('Are you sure you want to disconnect?');
+                      if (confirmed) {
+                        localStorage.removeItem('user');
+                        window.location.href = '/Login';
+                      }
+                    }}>
+                      <MDBIcon fas icon="sign-out-alt" /> Disconnect
+                    </MDBBtn>
+                  )}
+
+
               </MDBCardBody>
             </MDBCard>
 

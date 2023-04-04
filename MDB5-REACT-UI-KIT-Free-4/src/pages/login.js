@@ -23,13 +23,13 @@ function App() {
                 console.log(responseJson);
                 setLoading(false);
                 if (responseJson["success"]) {
-                    window.location.href = '/';
+                  localStorage.setItem('user', JSON.stringify(UserName));
+                  window.location.href = '/';
                 } else {
                     alert("Error: Incorrect Username or Password");
                 }
             })
         };
-    
 
   return (
     <MDBContainer className="my-5 gradient-form">
