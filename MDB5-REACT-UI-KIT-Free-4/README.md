@@ -6,6 +6,11 @@ Il faut juste installer ce script :
 npm install react-scripts
 -----------------
 
-### déploiement
+### Package
+
 npm install -g serve
+
+### déploiement
+
+npm run build
 npx serve -s build 

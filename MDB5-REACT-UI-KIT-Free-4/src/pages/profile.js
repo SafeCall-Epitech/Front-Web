@@ -16,29 +16,96 @@ import axios from 'axios';
 
 export default function ProfilePage() {
 
-    const [Name, setName] = useState('');
-    const [Email, setEmail] = useState('');
-    const [Nb, setNb] = useState('');
-    const [Description, setDescription] = useState('');
+  const [Name, setName] = useState('');
+  const [Email, setEmail] = useState('');
+  const [Nb, setNb] = useState('');
+  const [Description, setDescription] = useState('');
 
-    var Load = false;
+  const [isEditing, setIsEditing] = useState(false);
+  const [newName, setNewName] = useState(Name);
+  const [newEmail, setNewEmail] = useState(Email);
+  const [newNb, setNewNb] = useState(Nb);
+  const [newDescription, setNewDescription] = useState(Description);
 
-      const fetchData = async () => {
+  const [friendsList, setFriendsList] = useState([]);
+
+  useEffect(() => {
+    const fetchFriendsList = async () => {
+      try {
+        const response = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/:userID`);
+        const fetchedData = response.data.fetched;
+        const friendsListData = fetchedData.map((name) => ({ name }));
+        setFriendsList(friendsListData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchFriendsList();
+  }, []);
+
+
+  const handleNameChange = (e) => {
+    setNewName(e.target.value);
+  };
+
+  const handleEmailChange = (e) => {
+    setNewEmail(e.target.value);
+  };
+
+  const handleNbChange = (e) => {
+    setNewNb(e.target.value);
+  };
+
+  const handleDescriptionChange = (e) => {
+    setNewDescription(e.target.value);
+  };
+
+  const handleSave = async () => {
+    try {
+      const res = await axios.put(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/Julien`, {
+        FullName: newName,
+        Email: newEmail,
+        PhoneNb: newNb,
+        Description: newDescription
+      });
+      console.log(res.data);
+      setName(newName);
+      setEmail(newEmail);
+      setNb(newNb);
+      setDescription(newDescription);
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setNewName(Name);
+    setNewEmail(Email);
+    setNewNb(Nb);
+    setNewDescription(Description);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
         const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/Julien`);
-          
         setName(res.data['profile']['FullName']);
         setEmail(res.data['profile']['Email']);
         setNb(res.data['profile']['PhoneNb']);
         setDescription(res.data['profile']['Description']);
-
-        Load = false;
-      };
-      fetchData();
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
-    <section style={{top:'0', bottom:'0', right:'0', left:'0',  backgroundColor: '#E6E6E6'}}>
+    <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
       <MDBContainer className="py-5">
-        
         <MDBRow>
           <MDBCol lg="4">
             <MDBCard className="mb-4">
@@ -48,42 +115,30 @@ export default function ProfilePage() {
                   alt="avatar"
                   className="rounded-circle"
                   style={{ width: '170px' }}
-                  fluid />
+                  fluid
+                />
 
-                  {Load ? <MDBCardText>
-                    None
-                    </MDBCardText>
-                    :
-                    <MDBCardText>
-                    {Name}
-                    </MDBCardText>
-                  }
-
-                <p className>@ID : *******</p>
-                <div className="d-flex justify-content-c  enter mb-2">
-                  <MDBBtn color="dark" rounded block size="mg">
-                  <MDBIcon  far icon="cog" /> Modify</MDBBtn>
+                <MDBCardText>{Name}</MDBCardText>
+                <p className="@ID : *******">@ID : *******</p>
+                <div className="d-flex justify-content-center mb-2">
+                  <MDBBtn color="dark" rounded block size="mg" onClick={() => setIsEditing(true)}>
+                    <MDBIcon far icon="cog" /> Modify
+                  </MDBBtn>
                 </div>
               </MDBCardBody>
             </MDBCard>
 
             <MDBCard className="mb-4 mb-lg-0">
-            <MDBCardBody>
-            <MDBCardText className="mb-4"><span className="text-primary font-italic me-1" >Description</span></MDBCardText>      
+              <MDBCardBody>
+                <MDBCardText className="mb-4">
+                  <span className="text-primary font-italic me-1">Description</span>
+                </MDBCardText>
 
-                {Load ? <MDBCardText className="text-muted">
-                None
-                </MDBCardText>
-                :
-                <MDBCardText className="text-muted">
-                {Description}
-                </MDBCardText>
-                }
-                
+                <MDBCardText className="text-muted">{Description}</MDBCardText>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
-          
+
           <MDBCol lg="8">
             <MDBCard className="mb-4">
               <MDBCardBody>
@@ -92,21 +147,19 @@ export default function ProfilePage() {
                     <MDBCardText>Full Name</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-
-                    {Load ? <MDBCardText className="text-muted">
-                    None
-                    </MDBCardText>
-                    :
-                    <MDBCardText className="text-muted">
-                    {Name}
-                    </MDBCardText>
-                    }
-
+                    {isEditing ? (
+                      <div className="d-flex justify-content-start mb-2">
+                        <input type="text" value={newName} onChange={handleNameChange} />
+                      </div>
+                    ) : (
+                      <MDBCardText className="text-muted">{Name}</MDBCardText>
+                    )}
                   </MDBCol>
                 </MDBRow>
                 <hr />
+
                 <MDBRow>
-                  <MDBCol sm="3"> 
+                  <MDBCol sm="3">
                     <MDBCardText>ID SafeCall</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
@@ -114,42 +167,39 @@ export default function ProfilePage() {
                   </MDBCol>
                 </MDBRow>
                 <hr />
+
                 <MDBRow>
                   <MDBCol sm="3">
                     <MDBCardText>Email</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    
-                  {Load ? <MDBCardText className="text-muted">
-                    None
-                    </MDBCardText>
-                    :
-                    <MDBCardText className="text-muted">
-                    {Email}
-                    </MDBCardText>
-                    }
-
+                    {isEditing ? (
+                      <div className="d-flex justify-content-start mb-2">
+                        <input type="text" value={newEmail} onChange={handleEmailChange} />
+                      </div>
+                    ) : (
+                      <MDBCardText className="text-muted">{Email}</MDBCardText>
+                    )}
                   </MDBCol>
                 </MDBRow>
                 <hr />
+
                 <MDBRow>
                   <MDBCol sm="3">
                     <MDBCardText>Phone Number</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-
-                  {Load ? <MDBCardText className="text-muted">
-                    None
-                    </MDBCardText>
-                    :
-                    <MDBCardText className="text-muted">
-                    {Nb}
-                    </MDBCardText>
-                    }
-
+                    {isEditing ? (
+                      <div className="d-flex justify-content-start mb-2">
+                        <input type="text" value={newNb} onChange={handleNbChange} />
+                      </div>
+                    ) : (
+                      <MDBCardText className="text-muted">{Nb}</MDBCardText>
+                    )}
                   </MDBCol>
                 </MDBRow>
                 <hr />
+
                 <MDBRow>
                   <MDBCol sm="3">
                     <MDBCardText>Password</MDBCardText>
@@ -158,23 +208,40 @@ export default function ProfilePage() {
                     <MDBCardText className="text-muted">********</MDBCardText>
                   </MDBCol>
                 </MDBRow>
+
+                {isEditing && (
+                  <div className="d-flex justify-content-center mt-4">
+                    <MDBBtn color="black" className="me-4" onClick={handleSave}>
+                      Save
+                    </MDBBtn>
+                    <MDBBtn color="warning" onClick={handleCancel}>
+                      Cancel
+                    </MDBBtn>
+                  </div>
+                )}
               </MDBCardBody>
             </MDBCard>
 
             <MDBRow>
-              <MDBCol md="6">
-                <MDBCard className="mb-4 mb-md-0">
+              <MDBCol sm="6">
+                <MDBCard className="mb-4">
                   <MDBCardBody>
                     <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">My Appointments</span></MDBCardText>
                   </MDBCardBody>
                 </MDBCard>
               </MDBCol>
 
-              <MDBCol md="6">
-                <MDBCard className="mb-4 mb-md-0">
+              <MDBCol sm="6">
+                <MDBCard className="mb-4">
                   <MDBCardBody>
                     <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Friends List</span></MDBCardText>
-                   
+                    <MDBListGroup>
+                      {friendsList.map((friend) => (
+                        <MDBListGroupItem key={friend.id}>
+                          {friend.name}
+                        </MDBListGroupItem>
+                      ))}
+                    </MDBListGroup>
                   </MDBCardBody>
                 </MDBCard>
               </MDBCol>
@@ -182,6 +249,6 @@ export default function ProfilePage() {
           </MDBCol>
         </MDBRow>
       </MDBContainer>
-    </section>
+    </section >
   );
 }
