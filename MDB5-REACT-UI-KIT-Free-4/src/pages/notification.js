@@ -12,14 +12,31 @@ import {
   MDBListGroup,
   MDBListGroupItem
 } from 'mdb-react-ui-kit';
+import { fr } from "date-fns/locale";
 
-function NotificationPage() {
-    const [notifications, setNotifications] = useState([
+export default function NotificationPage() {
+
+      const user = JSON.parse(localStorage.getItem('user'));
+      
+      const [friendsList, setFriendsList] = useState([]); 
+
+      const [notifications, setNotifications] = useState([
         { title: "New Message", message: "You have a new message!", type: "message", timestamp: new Date().toLocaleString(), read: false },
         { title: "New Friend Request", message: "You have a new friend request!", type: "friendRequest", timestamp: new Date().toLocaleString(), read: false }
       ]);
 
-    useEffect(() => {
+      useEffect(() => {
+        const fetchFriendsList = async () => {
+          try {
+            const response = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/${user}`);
+            const fetchedData = response.data.fetched;
+            const friendsListData = fetchedData.map((name) => ({ name }));
+            setFriendsList(friendsListData);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+            
         if (!("Notification" in window)) {
           console.log("This browser does not support system notifications");
           return;
@@ -85,7 +102,24 @@ function NotificationPage() {
         timestamp: new Date().toLocaleString()
       });
     };
-  
+  /*
+    const handleNewFriendRequestClick = () => {
+      fetch(`http://20.234.168.103:8080/replyFriend/${user}/:friend/:action`, {
+        method: 'POST',
+       
+      })
+      .then(response => response.json())
+      .then(data => {
+        addNotification({
+          title: "New Friend Request",
+          message: "You have a new friend request!",
+          type: "friendRequest",
+          timestamp: new Date().toLocaleString()
+        });
+      })
+      .catch(error => console.error(error));
+    };*/
+
     // Create a new friend request notification and add it to the list
     const handleNewFriendRequestClick = () => {
       addNotification({
@@ -97,7 +131,20 @@ function NotificationPage() {
     };
   
     return (
+      
         <section style={{top:'0', bottom:'0', right:'0', left:'0',  backgroundColor: '#E6E6E6'}}>
+          <MDBCard className="mb-4">
+                  <MDBCardBody>
+                    <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Friends List</span></MDBCardText>
+                    <MDBListGroup>
+                      {friendsList.map((friend) => (
+                        <MDBListGroupItem key={friend.id}>
+                          {friend.name}
+                        </MDBListGroupItem>
+                      ))}
+                    </MDBListGroup>
+                  </MDBCardBody>
+                </MDBCard>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh" }}>
             <div style={{ display: "flex", justifyContent: "flex-start", width: "80%", marginBottom: "10px" }}>
               <button onClick={() => setNotifications([])} style={{ position: "static", top: "100px", left: "10px"  }}>Clear all Notifications</button>
@@ -109,6 +156,7 @@ function NotificationPage() {
             ) : (
               <div style={{ overflowY: "scroll", maxHeight: "500px", width: "80%" }}>
                 {notifications.map((notification, index) => (
+                  
                     <MDBCard
                     key={index}
                     style={{
@@ -133,7 +181,6 @@ function NotificationPage() {
                       </MDBCardText>
                     </MDBCardBody>
                   </MDBCard>
-                  
                 ))}
               </div>
             )}
@@ -141,6 +188,4 @@ function NotificationPage() {
         </section>
       );      
   }
-  
-  export default NotificationPage;
   

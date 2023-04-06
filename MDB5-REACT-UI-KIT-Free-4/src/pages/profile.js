@@ -54,7 +54,7 @@ export default function ProfilePage() {
     setNewEmail(e.target.value);
   };
 
-  const handleNbChange = (e) => {
+  const handlePhoneNBchange = (e) => {
     setNewNb(e.target.value);
   };
 
@@ -62,19 +62,41 @@ export default function ProfilePage() {
     setNewDescription(e.target.value);
   };
 
-  const handleSave = async () => {
+
+  const handleNameSave = async () => {
     try {
-      const res = await axios.put(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`, {
-        FullName: newName,
-        Email: newEmail,
-        PhoneNb: newNb,
-        Description: newDescription
-      });
-      console.log(res.data);
-      setName(newName);
-      setEmail(newEmail);
+      const res = await axios.post(`http://localhost:8080/Name/${user}/${newName}`);
+      setNb(newName);
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handlePhoneNBSave = async () => {
+    try {
+      const res = await axios.post(`http://localhost:8080/profile/PhoneNB/${user}/${newNb}`);
       setNb(newNb);
-      setDescription(newDescription);
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const handleDescriptionSave = async () => {
+    try {
+      const res = await axios.post(`http://localhost:8080/profile/Description/${user}/${newDescription}`);
+      setNb(newDescription);
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleEmailSave = async () => {
+    try {
+      const res = await axios.post(`http://localhost:8080/profile/Email/${user}/${newEmail}`);
+      console.log(res.data);
+      setEmail(newEmail);
       setIsEditing(false);
     } catch (err) {
       console.error(err);
@@ -128,6 +150,7 @@ export default function ProfilePage() {
                 </div>
 
 
+                <div className="d-flex justify-content-center mb-2">
                   {user && (
                     <MDBBtn color="danger" rounded block size="mg" className="me-2" onClick={() => {
                       const confirmed = window.confirm('Are you sure you want to disconnect?');
@@ -139,8 +162,7 @@ export default function ProfilePage() {
                       <MDBIcon fas icon="sign-out-alt" /> Disconnect
                     </MDBBtn>
                   )}
-
-
+                </div>
               </MDBCardBody>
             </MDBCard>
 
@@ -148,9 +170,19 @@ export default function ProfilePage() {
               <MDBCardBody>
                 <MDBCardText className="mb-4">
                   <span className="text-primary font-italic me-1">Description</span>
+                  <MDBCol sm="14">
+                    {isEditing ? (
+                      <div className="d-flex justify-content-start mb-2">
+                        <input type="text" value={newDescription} onChange={handleDescriptionChange} />
+                        <MDBBtn color="black" className="ms-3" onClick={handleDescriptionSave}>Save</MDBBtn>
+                      </div>
+                    ) : (
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <MDBCardText className="text-muted">{Description}</MDBCardText>
+                      </div>
+                    )}
+                  </MDBCol>
                 </MDBCardText>
-
-                <MDBCardText className="text-muted">{Description}</MDBCardText>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
@@ -166,9 +198,12 @@ export default function ProfilePage() {
                     {isEditing ? (
                       <div className="d-flex justify-content-start mb-2">
                         <input type="text" value={newName} onChange={handleNameChange} />
+                        <MDBBtn color="black" className="ms-3" onClick={handleNameSave}>Save</MDBBtn>
                       </div>
                     ) : (
-                      <MDBCardText className="text-muted">{Name}</MDBCardText>
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <MDBCardText className="text-muted">{Name}</MDBCardText>
+                      </div>
                     )}
                   </MDBCol>
                 </MDBRow>
@@ -192,9 +227,12 @@ export default function ProfilePage() {
                     {isEditing ? (
                       <div className="d-flex justify-content-start mb-2">
                         <input type="text" value={newEmail} onChange={handleEmailChange} />
+                        <MDBBtn color="black" className="ms-3" onClick={handleEmailSave}>Save</MDBBtn>
                       </div>
                     ) : (
-                      <MDBCardText className="text-muted">{Email}</MDBCardText>
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <MDBCardText className="text-muted">{Email}</MDBCardText>
+                      </div>
                     )}
                   </MDBCol>
                 </MDBRow>
@@ -202,15 +240,18 @@ export default function ProfilePage() {
 
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>Phone Number</MDBCardText>
+                    <MDBCardText>Phone Nb</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
                     {isEditing ? (
                       <div className="d-flex justify-content-start mb-2">
-                        <input type="text" value={newNb} onChange={handleNbChange} />
+                        <input type="text" value={newNb} onChange={handlePhoneNBchange} />
+                        <MDBBtn color="black" className="ms-3" onClick={handlePhoneNBSave}>Save</MDBBtn>
                       </div>
                     ) : (
-                      <MDBCardText className="text-muted">{Nb}</MDBCardText>
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <MDBCardText className="text-muted">{Nb}</MDBCardText>
+                      </div>
                     )}
                   </MDBCol>
                 </MDBRow>
@@ -227,10 +268,8 @@ export default function ProfilePage() {
 
                 {isEditing && (
                   <div className="d-flex justify-content-center mt-4">
-                    <MDBBtn color="black" className="me-4" onClick={handleSave}>
-                      Save
-                    </MDBBtn>
-                    <MDBBtn color="warning" onClick={handleCancel}>
+                    
+                    <MDBBtn color="black" onClick={handleCancel}>
                       Cancel
                     </MDBBtn>
                   </div>

@@ -9,6 +9,7 @@ export default function App() {
   const [Description, setDescription] = useState('');
   const [selectedResult, setSelectedResult] = useState(null);
 
+
   const handleSearch = async () => {
     try {
       const res = await axios.get(`http://20.234.168.103:8080/profile/${Name}`);

@@ -76,6 +76,15 @@ body.open .navbar-overlay {
   }
 }
 
+.login-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+}
+
 body.open .navbar-menu {
   translate: 0 0;
   visibility: visible;

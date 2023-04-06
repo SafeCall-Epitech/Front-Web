@@ -14,24 +14,29 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [UserName, setUserName] = useState();
     const [Password, setPassword] = useState();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 
     function getlogin(UserName, Password) {
-            setLoading(true);
-            const Myresponse = fetch('http://20.234.168.103:8080/login/' + UserName + '/' + Password)
-            .then((response)=>response.json())
-            .then((responseJson) => {
-                console.log(responseJson);
-                setLoading(false);
-                if (responseJson["success"]) {
-                  localStorage.setItem('user', JSON.stringify(UserName));
-                  window.location.href = '/';
-                } else {
-                    alert("Error: Incorrect Username or Password");
-                }
-            })
-        };
+      setLoading(true);
+      const Myresponse = fetch('http://20.234.168.103:8080/login/' + UserName + '/' + Password)
+        .then((response) => response.json())
+        .then((responseJson) => {
+          console.log(responseJson);
+          setLoading(false);
+          if (responseJson["success"]) {
+            localStorage.setItem('user', JSON.stringify(UserName));
+            window.location.href = '/';
+          } else {
+            alert("Error: Incorrect Username or Password");
+          }
+        })
+    };
 
   return (
+    <div>
+      {isLoggedIn && <Navbar isLoggedIn={isLoggedIn} />}
+
     <MDBContainer className="my-5 gradient-form">
 
       <MDBRow>
@@ -86,6 +91,8 @@ function App() {
       </MDBRow>
 
     </MDBContainer>
+    </div>
+
   );
 }
 
