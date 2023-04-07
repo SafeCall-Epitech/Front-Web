@@ -38,6 +38,7 @@ export default function ProfilePage() {
         const fetchedData = response.data.fetched;
         const friendsListData = fetchedData.map((name) => ({ name }));
         setFriendsList(friendsListData);
+
       } catch (error) {
         console.error(error);
       }
@@ -268,7 +269,7 @@ export default function ProfilePage() {
 
                 {isEditing && (
                   <div className="d-flex justify-content-center mt-4">
-                    
+
                     <MDBBtn color="black" onClick={handleCancel}>
                       Cancel
                     </MDBBtn>
