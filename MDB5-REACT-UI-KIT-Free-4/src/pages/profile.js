@@ -66,7 +66,7 @@ export default function ProfilePage() {
 
   const handleNameSave = async () => {
     try {
-      const res = await axios.post(`http://localhost:8080/Name/${user}/${newName}`);
+      const res = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileFullName/${user}/${newName}`);
       setNb(newName);
       setIsEditing(false);
     } catch (err) {
@@ -76,7 +76,7 @@ export default function ProfilePage() {
 
   const handlePhoneNBSave = async () => {
     try {
-      const res = await axios.post(`http://localhost:8080/profile/PhoneNB/${user}/${newNb}`);
+      const res = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profilePhoneNB/${user}/${newNb}`);
       setNb(newNb);
       setIsEditing(false);
     } catch (err) {
@@ -85,7 +85,7 @@ export default function ProfilePage() {
   };
   const handleDescriptionSave = async () => {
     try {
-      const res = await axios.post(`http://localhost:8080/profile/Description/${user}/${newDescription}`);
+      const res = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileDescription/${user}/${newDescription}`);
       setNb(newDescription);
       setIsEditing(false);
     } catch (err) {
@@ -95,7 +95,7 @@ export default function ProfilePage() {
 
   const handleEmailSave = async () => {
     try {
-      const res = await axios.post(`http://localhost:8080/profile/Email/${user}/${newEmail}`);
+      const res = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileEmail/${user}/${newEmail}`);
       console.log(res.data);
       setEmail(newEmail);
       setIsEditing(false);
