@@ -96,7 +96,6 @@ export default function ProfilePage() {
   const handleEmailSave = async () => {
     try {
       const res = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileEmail/${user}/${newEmail}`);
-      console.log(res.data);
       setEmail(newEmail);
       setIsEditing(false);
     } catch (err) {
