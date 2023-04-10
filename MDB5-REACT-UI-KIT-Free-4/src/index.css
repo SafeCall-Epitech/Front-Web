@@ -16,10 +16,6 @@ button {
   cursor: pointer;
 }
 
-.unread-notification {
-  border: 100px solid red;
-}
-
 .navbar {
   position: fixed;
   z-index: 1;

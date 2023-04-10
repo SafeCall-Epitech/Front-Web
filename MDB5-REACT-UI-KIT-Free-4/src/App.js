@@ -30,7 +30,6 @@ render() {
 				<Route exact path='/search' element={< My_Search />}></Route>
 				<Route exact path='/Notifications' element={< My_Notifications />}></Route>
 
-
 		</Routes>
 	</Router>
 );

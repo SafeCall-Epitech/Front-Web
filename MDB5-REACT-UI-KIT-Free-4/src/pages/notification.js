@@ -32,14 +32,19 @@ export default function NotificationPage() {
   const [showNotification, setShowNotification] = useState(false);
   const [notifications, setNotifications] = useState(JSON.parse(localStorage.getItem("notifications")) || []);
 
-  const friendRequestNotifications = notifications.filter(notification => notification.type === "friendRequest");
-  const newMessageNotifications = notifications.filter(notification => notification.type === "message");
+  const friendRequestNotifications = notifications.filter(
+    (notification) =>
+      notification.type === "friendRequest" && !notification.removed
+  );
+  const newMessageNotifications = notifications.filter(
+    (notification) => notification.type === "message" && !notification.removed
+  );
+
 
   const [friendsList, setFriendsList] = useState([]);
 
   useEffect(() => {
-    // start checking for new friend requests every 10 seconds
-    const id = setInterval(handleNewFriendRequestClick, 10000);
+    const id = setInterval(handleNewFriendRequestClick, 2500);
     setIntervalId(id);
 
     return () => {
@@ -49,19 +54,38 @@ export default function NotificationPage() {
     };
   }, []);
 
-  const handleAcceptFriendRequest = async (friendName) => {
+
+  const handleAcceptFriendRequest = async (event, friendName, index) => {
+    event.stopPropagation();
     const userID = JSON.parse(localStorage.getItem('user'));
-    const response = await axios.put(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/replyFriend/${userID}/:${friendName}/accept`);
-  }
+    const url = `http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/replyFriend/${userID}/${friendName}/accept`;
+    console.log("url:", url);
+    const response = await axios.post(url);
+    console.log("accepted");
+
+    // Update the notifications state and localStorage
+    const updatedNotifications = [...notifications];
+    updatedNotifications[index].removed = true;
+    setNotifications(updatedNotifications);
+    localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+  };
+
+  const handleDeclineFriendRequest = async (event, friendName, index) => {
+    event.stopPropagation();
+    const userID = JSON.parse(localStorage.getItem('user'));
+    const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/replyFriend/${userID}/${friendName}/deny`);
+    console.log("declined");
+
+    // Update the notifications state and localStorage
+    const updatedNotifications = [...notifications];
+    updatedNotifications[index].removed = true;
+    setNotifications(updatedNotifications);
+    localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+  };
 
   const handleShowNotificationClick = () => {
     setShowNotification(!showNotification);
   };
-
-  const handleDeclineFriendRequest = async (friendName) => {
-    const userID = JSON.parse(localStorage.getItem('user'));
-    const response = await axios.put(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/replyFriend/${userID}/:${friendName}/deny`);
-  }
 
   useEffect(() => {
     const checkForNewFriendRequests = async () => {
@@ -76,20 +100,13 @@ export default function NotificationPage() {
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        // Restart the interval when the tab becomes visible
         startInterval();
       } else {
-        // Clear the interval when the tab is not visible
         clearInterval(intervalId);
       }
     };
-    // Start the interval initially
     startInterval();
-
-    // Add event listener for visibility change
     document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    // Cleanup function to remove the event listener when the component unmounts
     return () => {
       clearInterval(intervalId);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -115,46 +132,12 @@ export default function NotificationPage() {
     }
   };
 
-  const handleRemoveNotificationClick = (event, index) => {
-    event.stopPropagation();
-    const updatedNotifications = [...notifications];
-    updatedNotifications[index] = { ...updatedNotifications[index], removed: true }; // set removed property to true
-    setNotifications(updatedNotifications);
-    localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
-  };
-
-
-
-  const handleNotificationClick = (index) => {
-    const updatedNotifications = [...notifications];
-    updatedNotifications[index] = { ...updatedNotifications[index], read: true };
-    setNotifications(updatedNotifications);
-
-    localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
-  };
-
-  const handleClearAllNotificationsClick = () => {
-    setNotifications([]);
-    localStorage.setItem("notifications", JSON.stringify([])); // Update local storage with an empty array
-  };
-
   const handleVisibilityChange = () => {
     if (document.visibilityState === 'visible') {
       handleNewFriendRequestClick();
     }
   };
 
-  // Create a new message notification and add it to the list
-  const handleNewMessageClick = () => {
-    addNotification({
-      title: "New Message",
-      message: "You have a new message!",
-      type: "message",
-      timestamp: new Date().toLocaleString()
-    });
-  };
-
-  // Create a new friend request notification and add it to the list
   const handleNewFriendRequestClick = async () => {
     if (document.visibilityState === "visible") {
       const response = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/${user}`);
@@ -165,21 +148,25 @@ export default function NotificationPage() {
         pendingFriendRequests.forEach((request) => {
           const friendName = request.substring(1);
           const newNotification = {
-            title: `New Friend Request!`,
-            message: `${friendName} wants to be your friend`,
+            title: `${friendName} added you`,
+            message: `${friendName} wants to be friend with you`,
             type: "friendRequest",
             timestamp: new Date().toLocaleString(),
             removed: false
           };
           const isExistingNotification = notifications.some(notification =>
-            notification.title === newNotification.title &&
-            notification.message === newNotification.message &&
+            notification.title.includes(friendName) &&
             !notification.removed
-          );
+          );          
           if (!isExistingNotification) {
             addNotification(newNotification);
           }
         });
+      } else {
+        // Clear all friend request notifications
+        const updatedNotifications = notifications.filter(notification => notification.type !== "friendRequest");
+        setNotifications(updatedNotifications);
+        localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
       }
     }
   };
@@ -187,12 +174,9 @@ export default function NotificationPage() {
   return (
     <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh" }}>
-        <div style={{ display: "flex", justifyContent: "flex-start", width: "80%", marginBottom: "10px" }}>
-          <button onClick={() => setNotifications([])} style={{ position: "static", top: "100px", left: "10px" }}>Clear all Notifications</button>
-        </div>
         <div style={{ display: "flex", justifyContent: "space-between", width: "80%" }}>
           {/* New message notifications */}
-          <div style={{ width: "100%", marginRight: "5px" }}>
+          <div style={{ width: "100%", marginRight: "5px", marginTop: "-250px" }}>
             <h2>New Messages</h2>
             {newMessageNotifications.length === 0 ? (
               <p style={{ fontSize: "24px", textAlign: "left", marginTop: "40px" }}>No new messages</p>
@@ -203,23 +187,20 @@ export default function NotificationPage() {
                     key={index}
                     style={{
                       marginBottom: "7px",
-                      backgroundColor: notification.read ? "#fff" : "#FFCDD2",
-                      border: notification.read ? "none" : "1px solid #F44336",
-                      cursor: "pointer"
+                      backgroundColor: "#fff",
+                      border: "1px solid #F44336",
+                      cursor: "pointer",
+                      padding: "10px",
+                      borderRadius: "5px",
+                      fontSize: "8px",
+                      lineHeight: "1.2"
                     }}
-                    onClick={() => handleNotificationClick(index)}
                   >
-                    <button
-                      onClick={(event) => handleRemoveNotificationClick(event, index)}
-                      style={{ position: "absolute", top: "5px", right: "5px", backgroundColor: "transparent", border: "none" }}
-                    >
-                      Clear
-                    </button>
                     <MDBCardBody>
                       <MDBCardText>
-                        <h3>{notification.title}</h3>
-                        <p>{notification.message}</p>
-                        <p style={{ fontSize: "12px", color: "#808080" }}>{notification.timestamp}</p>
+                        <h4 style={{ marginBottom: "5px" }}>{notification.title}</h4>
+                        <p style={{ marginBottom: "5px" }}>{notification.message}</p>
+                        <p style={{ fontSize: "12px", color: "#808080", margin: "0" }}>{notification.timestamp}</p>
                       </MDBCardText>
                     </MDBCardBody>
                   </MDBCard>
@@ -228,10 +209,10 @@ export default function NotificationPage() {
             )}
           </div>
           {/* Friend request notifications */}
-          <div style={{ width: "50%", marginLeft: "5px" }}>
+          <div style={{ width: "60%", marginLeft: "5px", marginTop: "-250px" }}>
             <h2>Friend Requests</h2>
             {friendRequestNotifications.length === 0 ? (
-              <p style={{ fontSize: "24px", textAlign: "center", marginTop: "-330px" }}>No new friend requests</p>
+              <p style={{ fontSize: "24px", textAlign: "right", marginTop: "40px" }}>No new friend requests</p>
             ) : (
               <div style={{ overflowY: "scroll", maxHeight: "500px", width: "100%" }}>
                 {friendRequestNotifications.map((notification, index) => (
@@ -239,29 +220,47 @@ export default function NotificationPage() {
                     key={index}
                     style={{
                       marginBottom: "7px",
-                      backgroundColor: notification.read ? "#fff" : "#FFCDD2",
-                      border: notification.read ? "none" : "1px solid #F44336",
+                      backgroundColor: "#FFF",
+                      border: "1px solid #F44336",
                       cursor: "pointer"
                     }}
-                    onClick={() => handleNotificationClick(index)}
                   >
-                    <button
-                      onClick={(event) => handleRemoveNotificationClick(event, index)}
-                      style={{ position: "absolute", top: "5px", right: "5px", backgroundColor: "transparent", border: "none" }}
-                    >
-                      Clear
-                    </button>
                     <MDBCardBody>
                       <MDBCardText>
                         <h3>{notification.title}</h3>
                         <p>{notification.message}</p>
-                        <p style={{ fontSize: "12px", color: "#808080" }}>{notification.timestamp}</p>
                         {notification.type === "friendRequest" && (
                           <div>
-                            <button onClick={() => handleAcceptFriendRequest(notification.message)}>Accept</button>
-                            <button onClick={() => handleDeclineFriendRequest(notification.message)}>Decline</button>
+                            <button
+                              onClick={(event) => handleAcceptFriendRequest(event, notification.title.split(" ")[0], index)}
+                              style={{
+                                backgroundColor: "#4CAF50",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "4px",
+                                padding: "5px 10px",
+                                marginRight: "5px",
+                                cursor: "pointer"
+                              }}
+                            >
+                              Accept
+                            </button>
+                            <button
+                              onClick={(event) => handleDeclineFriendRequest(event, notification.title.split(" ")[0], index)}
+                              style={{
+                                backgroundColor: "#F44336",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "4px",
+                                padding: "5px 10px",
+                                cursor: "pointer"
+                              }}
+                            >
+                              Decline
+                            </button>
                           </div>
                         )}
+                        <p style={{ fontSize: "12px", color: "#808080" }}>{notification.timestamp}</p>
                       </MDBCardText>
                     </MDBCardBody>
                   </MDBCard>
@@ -271,7 +270,6 @@ export default function NotificationPage() {
           </div>
         </div>
       </div>
-
     </section>
   );
 }
