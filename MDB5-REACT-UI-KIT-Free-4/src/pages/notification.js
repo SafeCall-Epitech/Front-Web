@@ -145,23 +145,44 @@ export default function NotificationPage() {
       const pendingFriendRequests = fetchedData.filter(name => name.startsWith("?"));
       console.log("pendingFriendRequests:", pendingFriendRequests);
       if (pendingFriendRequests.length > 0) {
-        pendingFriendRequests.forEach((request) => {
-          const friendName = request.substring(1);
-          const newNotification = {
-            title: `${friendName} added you`,
-            message: `${friendName} wants to be friend with you`,
-            type: "friendRequest",
-            timestamp: new Date().toLocaleString(),
-            removed: false
-          };
-          const isExistingNotification = notifications.some(notification =>
-            notification.title.includes(friendName) &&
-            !notification.removed
-          );          
-          if (!isExistingNotification) {
-            addNotification(newNotification);
+        const newNotifications = pendingFriendRequests
+          .map((request) => {
+            const friendName = request.substring(1);
+            return {
+              title: `${friendName} added you`,
+              message: `${friendName} wants to be friend with you`,
+              type: "friendRequest",
+              timestamp: new Date().toLocaleString(),
+              removed: false
+            };
+          })
+          .filter(newNotification => {
+            const isExistingNotification = notifications.some(notification =>
+              notification.title.includes(newNotification.title.split(" ")[0]) &&
+              !notification.removed
+            );
+            return !isExistingNotification;
+          });
+        
+        if (newNotifications.length > 0) {
+          const updatedNotifications = [...newNotifications, ...notifications];
+          setNotifications(updatedNotifications);
+          localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+  
+          if (Notification.permission === "granted") {
+            newNotifications.forEach(newNotification => {
+              new Notification(newNotification.title);
+            });
+          } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(permission => {
+              if (permission === "granted") {
+                newNotifications.forEach(newNotification => {
+                  new Notification(newNotification.title);
+                });
+              }
+            });
           }
-        });
+        }
       } else {
         // Clear all friend request notifications
         const updatedNotifications = notifications.filter(notification => notification.type !== "friendRequest");
@@ -169,7 +190,7 @@ export default function NotificationPage() {
         localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
       }
     }
-  };
+  };  
 
   return (
     <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
