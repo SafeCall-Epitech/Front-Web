@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ScrollToBottom from "react-scroll-to-bottom";
-import '../style/Chat.css';
-import Print_message from './Print_message';
+import '../Chat_part/style/Chat.css';
+import Print_message from '../Chat_part/Print_message';
 import axios from 'axios';
 import {
     MDBContainer,

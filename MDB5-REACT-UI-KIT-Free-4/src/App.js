@@ -10,8 +10,8 @@ import My_Error from './pages/error';
 import My_login from './pages/login';
 import My_Search from './pages/searchbar';
 import My_Notifications from './pages/notification';
-
-
+import My_Messages from './pages/Chat_part/Selection';
+import My_Form from './pages/popupForm';
 
 class App extends Component {
 render() {
@@ -28,7 +28,8 @@ render() {
 				<Route exact path='/error' element={< My_Error />}></Route>
 				<Route exact path='/search' element={< My_Search />}></Route>
 				<Route exact path='/Notifications' element={< My_Notifications />}></Route>
-
+				<Route exact path='/messages' element={< My_Messages />}></Route>
+				<Route exact path='/Form' element={< My_Form />}></Route>
 		</Routes>
 	</Router>
 );

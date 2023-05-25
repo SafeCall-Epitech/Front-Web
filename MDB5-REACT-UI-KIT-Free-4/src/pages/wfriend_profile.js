@@ -19,58 +19,58 @@ export default function EditButton() {
 
   var Load = false;
 
-    const fetchData = async () => {
-      const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`);
-      setName(res.data['profile']['FullName']);
-      setEmail(res.data['profile']['Email']);
-      setNb(res.data['profile']['PhoneNb']);
-      setDescription(res.data['profile']['Description']);
+  const fetchData = async () => {
+    const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`);
+    setName(res.data['profile']['FullName']);
+    setEmail(res.data['profile']['Email']);
+    setNb(res.data['profile']['PhoneNb']);
+    setDescription(res.data['profile']['Description']);
 
-      Load = false;
-    };
-    fetchData();
+    Load = false;
+  };
+  fetchData();
 
-    const SendCallForm = async () => {
-      const form = JSON.stringify({
-          guest1: Guest1,
-          guest2: Guest2,
-          subject: Subject,
-          date: Date,
-      });
-      axios.post(`http://20.234.168.103:8080/addEvent`, form, {
-          headers: {
-          'Content-Type': 'application/json',
-        }
-      })
+  const SendCallForm = async () => {
+    const form = JSON.stringify({
+      guest1: Guest1,
+      guest2: Guest2,
+      subject: Subject,
+      date: Date,
+    });
+    axios.post(`http://20.234.168.103:8080/addEvent`, form, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
       .then(res => {
-          console.log(res.data)
+        console.log(res.data)
       })
-    }
+  }
   return (
-    <section style={{top:'0', bottom:'0', right:'0', left:'0',  backgroundColor: '#E6E6E6'}}>
+    <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
       <MDBContainer className="py-5 h-100">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol lg="9" xl="8">
             <MDBCard>
-              
+
               <div className="rounded-top text-white d-flex flex-row" style={{ backgroundColor: '#000', height: '200px' }}>
                 <div className="ms-4 mt-5 d-flex flex-column" style={{ width: '150px' }}>
                   <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
                     alt="Generic placeholder image" className="mt-4 mb-2 img-thumbnail" fluid style={{ width: '150px', zIndex: '1' }} />
                 </div>
-                
+
                 <div className="ms-3" style={{ marginTop: '135px' }}>
 
-                {Load ?  <MDBTypography tag="h5">Andy Horwitz</MDBTypography>
+                  {Load ? <MDBTypography tag="h5">Andy Horwitz</MDBTypography>
                     :
                     <MDBTypography tag="h5">{Name}</MDBTypography>
                   }
 
                   <MDBCardText>@ID</MDBCardText>
-                  
-                  
+
+
                   <MDBBtn color="black" rounded size="lg">
-                - DELETE FRIEND
+                    - DELETE FRIEND
                   </MDBBtn>
                   <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark">Dark</button>
                   <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="light">Dark</button>
@@ -79,79 +79,79 @@ export default function EditButton() {
 
 
                   <MDBBtn color="light" rounded size="lg">BOOK A CALL</MDBBtn>
-                  
+
                 </div>
               </div>
-              
+
               <div className="p-4 text-black" style={{ backgroundColor: '#f8f9fa' }}>
                 <div className="d-flex justify-content-end text-center py-1">
                 </div>
-                  <div className="mb-5">
+                <div className="mb-5">
                   <p className="lead fw-normal mb-1">About</p>
                   <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
 
-                  {Load ? <MDBCardText className="text-muted">
-                    None
+                    {Load ? <MDBCardText className="text-muted">
+                      None
                     </MDBCardText>
-                    :
-                    <MDBCardText className="text-muted">
-                    {Description}
-                    </MDBCardText>
-                  }
+                      :
+                      <MDBCardText className="text-muted">
+                        {Description}
+                      </MDBCardText>
+                    }
 
                   </div>
-              </div>
-              
                 </div>
-              <MDBCardBody className="text-black p-4">
-              <p className="lead fw-normal mb-1">Friend's list</p>
-              <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
-				  	        <MDBCol md="6">
-                	  <MDBCard className="mb-4 mb-md-0">
-                      
-                </MDBCard>
-              </MDBCol>
+
               </div>
-              <p className="lead fw-normal mb-1">Call Form</p>
-              <label for="name">Guest1 :</label>
-              <br />
-              <input
-                type="text"
-                value={Guest1}
-                onChange={(e) => setGuest1(e.target.value)}
-              />
-              <br />
-              <br />
-              <label for="name">Guest2 :</label>
-              <br />
-              <input
-                type="text"
-                value={Guest2}
-                onChange={(e) => setGuest2(e.target.value)}
-              />
-              <br />
-              <br />
-              <label for="name">Subject :</label>
-              <br />
-              <input
-                type="text"
-                value={Subject}
-                onChange={(e) => setSubject(e.target.value)}
-              />
-              <br />
-              <br />
-              <label for="name">Date :</label>
-              <br />
-              <input
-                type="text"
-                value={Date}
-                onChange={(e) => setDate(e.target.value)}
-              />
-              <br />
-              <br />
-              <MDBBtn color="primary" rounded size="lg" onClick={() => {SendCallForm()}}>
-                - Send Form
-              </MDBBtn>
+              <MDBCardBody className="text-black p-4">
+                <p className="lead fw-normal mb-1">Friend's list</p>
+                <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
+                  <MDBCol md="6">
+                    <MDBCard className="mb-4 mb-md-0">
+
+                    </MDBCard>
+                  </MDBCol>
+                </div>
+                <p className="lead fw-normal mb-1">Call Form</p>
+                <label for="name">Guest1 :</label>
+                <br />
+                <input
+                  type="text"
+                  value={Guest1}
+                  onChange={(e) => setGuest1(e.target.value)}
+                />
+                <br />
+                <br />
+                <label for="name">Guest2 :</label>
+                <br />
+                <input
+                  type="text"
+                  value={Guest2}
+                  onChange={(e) => setGuest2(e.target.value)}
+                />
+                <br />
+                <br />
+                <label for="name">Subject :</label>
+                <br />
+                <input
+                  type="text"
+                  value={Subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                />
+                <br />
+                <br />
+                <label for="name">Date :</label>
+                <br />
+                <input
+                  type="text"
+                  value={Date}
+                  onChange={(e) => setDate(e.target.value)}
+                />
+                <br />
+                <br />
+                <MDBBtn color="primary" rounded size="lg" onClick={() => { SendCallForm() }}>
+                  - Send Form
+                </MDBBtn>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>

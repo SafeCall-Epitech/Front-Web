@@ -1,5 +1,5 @@
 // import "bootstrap/dist/css/bootstrap.min.css";
-import '../style/Chat.css'
+import '../Chat_part/style/Chat.css'
 // import Card from 'react-bootstrap/Card';
 import ScrollToBottom from "react-scroll-to-bottom";
 

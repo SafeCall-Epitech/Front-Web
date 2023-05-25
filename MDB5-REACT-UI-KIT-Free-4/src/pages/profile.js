@@ -36,6 +36,7 @@ export default function ProfilePage() {
       try {
         const response = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/${user}`);
         const fetchedData = response.data.fetched;
+       // console.log(fetchedData);
         const friendsListData = fetchedData.map((name) => ({ name }));
         setFriendsList(friendsListData);
 
@@ -115,6 +116,7 @@ export default function ProfilePage() {
     const fetchData = async () => {
       try {
         const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`);
+        
         setName(res.data['profile']['FullName']);
         setEmail(res.data['profile']['Email']);
         setNb(res.data['profile']['PhoneNb']);

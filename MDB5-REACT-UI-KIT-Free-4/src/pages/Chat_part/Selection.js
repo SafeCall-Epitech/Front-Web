@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import DiscList from './DiscList';
-import Chat from './Chat';
-import '../style/Selection.css';
+import DiscList from '../Chat_part/DiscList';
+import Chat from '../Chat_part/Chat';
+import '../Chat_part/style/Selection.css';
 
 function MainComponent() {
     const [selectedFriend, setSelectedFriend] = useState("");

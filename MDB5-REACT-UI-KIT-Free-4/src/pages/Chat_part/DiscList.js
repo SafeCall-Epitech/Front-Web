@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { MDBCard, MDBCardBody, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
-import '../style/DiscList.css';
+import '../Chat_part/style/DiscList.css';
 
 function DiscList({ onFriendSelect }) {
     const [friendList, setFriendList] = useState([]);

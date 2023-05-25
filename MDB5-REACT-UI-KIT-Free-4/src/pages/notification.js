@@ -15,13 +15,8 @@ import {
 import { fr } from "date-fns/locale";
 import axios from 'axios';
 
-// add friend : http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend/:user/:?friend/add
-// rm friend : http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend/:user/:?friend/rm
-
-// Je veux parser la friend list et chercher un profil avec "?" (ex : "?Julien") et là je peux accepter ou deny
-
-// accept request : http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/replyFriend/:userID/:?friend/:accept
-// deny request : http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/replyFriend/:userID/:?friend/:deny
+// add friend : http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend/user/friend/add
+// rm friend : http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend/user/friend/rm
 
 export default function NotificationPage() {
 
