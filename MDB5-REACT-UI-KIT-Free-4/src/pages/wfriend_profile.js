@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
-
+MDBBtn
 export default function EditButton() {
 
   const user = JSON.parse(localStorage.getItem('user'));
@@ -11,6 +11,11 @@ export default function EditButton() {
   const [Nb, setNb] = useState('');
   const [Description, setDescription] = useState('');
 
+  //Dynamic parameters for the call form
+  const [Guest1, setGuest1] = useState('');
+  const [Guest2, setGuest2] = useState('');
+  const [Subject, setSubject] = useState('');
+  const [Date, setDate] = useState('');
 
   var Load = false;
 
@@ -25,6 +30,22 @@ export default function EditButton() {
     };
     fetchData();
 
+    const SendCallForm = async () => {
+      const form = JSON.stringify({
+          guest1: Guest1,
+          guest2: Guest2,
+          subject: Subject,
+          date: Date,
+      });
+      axios.post(`http://20.234.168.103:8080/addEvent`, form, {
+          headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      .then(res => {
+          console.log(res.data)
+      })
+    }
   return (
     <section style={{top:'0', bottom:'0', right:'0', left:'0',  backgroundColor: '#E6E6E6'}}>
       <MDBContainer className="py-5 h-100">
@@ -90,9 +111,47 @@ export default function EditButton() {
                       
                 </MDBCard>
               </MDBCol>
-                   
-                </div>
-              
+              </div>
+              <p className="lead fw-normal mb-1">Call Form</p>
+              <label for="name">Guest1 :</label>
+              <br />
+              <input
+                type="text"
+                value={Guest1}
+                onChange={(e) => setGuest1(e.target.value)}
+              />
+              <br />
+              <br />
+              <label for="name">Guest2 :</label>
+              <br />
+              <input
+                type="text"
+                value={Guest2}
+                onChange={(e) => setGuest2(e.target.value)}
+              />
+              <br />
+              <br />
+              <label for="name">Subject :</label>
+              <br />
+              <input
+                type="text"
+                value={Subject}
+                onChange={(e) => setSubject(e.target.value)}
+              />
+              <br />
+              <br />
+              <label for="name">Date :</label>
+              <br />
+              <input
+                type="text"
+                value={Date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+              <br />
+              <br />
+              <MDBBtn color="primary" rounded size="lg" onClick={() => {SendCallForm()}}>
+                - Send Form
+              </MDBBtn>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
