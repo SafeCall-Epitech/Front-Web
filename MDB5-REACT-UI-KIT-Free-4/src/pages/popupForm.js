@@ -60,7 +60,7 @@ export default function ECommerce() {
                         <MDBModal show={modalShow} tabIndex="-1" onClick={() => setModalShow(false)}>
                             <MDBModalDialog>
                                 <MDBModalContent>
-                                    <MDBModalBody>
+                                    <MDBModalBody onClick={(e) => e.stopPropagation()}>
                                         <MDBCard style={{ borderRadius: "15px", backgroundColor: "#E6E6E6" }}>
                                             <MDBCardBody className="p-4 text-black">
 
