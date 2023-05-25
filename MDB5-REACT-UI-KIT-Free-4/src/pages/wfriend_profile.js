@@ -112,46 +112,6 @@ export default function EditButton() {
                     </MDBCard>
                   </MDBCol>
                 </div>
-                <p className="lead fw-normal mb-1">Call Form</p>
-                <label for="name">Guest1 :</label>
-                <br />
-                <input
-                  type="text"
-                  value={Guest1}
-                  onChange={(e) => setGuest1(e.target.value)}
-                />
-                <br />
-                <br />
-                <label for="name">Guest2 :</label>
-                <br />
-                <input
-                  type="text"
-                  value={Guest2}
-                  onChange={(e) => setGuest2(e.target.value)}
-                />
-                <br />
-                <br />
-                <label for="name">Subject :</label>
-                <br />
-                <input
-                  type="text"
-                  value={Subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                />
-                <br />
-                <br />
-                <label for="name">Date :</label>
-                <br />
-                <input
-                  type="text"
-                  value={Date}
-                  onChange={(e) => setDate(e.target.value)}
-                />
-                <br />
-                <br />
-                <MDBBtn color="primary" rounded size="lg" onClick={() => { SendCallForm() }}>
-                  - Send Form
-                </MDBBtn>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
