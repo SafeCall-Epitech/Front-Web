@@ -9,8 +9,10 @@ function DiscList({ onFriendSelect }) {
 
     useEffect(() => {
         const fetchFriendList = async () => {
-            const response = await axios.get('http://localhost:3002/get_a_conv/' + sessionStorage.getItem("user_name"));
-            setFriendList(response.data)
+            sessionStorage.setItem("user_name", JSON.parse(localStorage.getItem('user')).toLowerCase())
+            const response = await axios.get('http://20.234.168.103:8080/conversations/' + sessionStorage.getItem("user_name"));
+            console.log(response.data)
+            setFriendList(response.data["Success "])
             // setLastMessages(Array(response.data.length).fill("Dernier message"));
         };
         fetchFriendList();

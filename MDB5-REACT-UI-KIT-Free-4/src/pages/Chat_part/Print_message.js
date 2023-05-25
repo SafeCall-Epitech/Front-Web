@@ -16,7 +16,7 @@ export default function Print_message(props) {
 
         <ScrollToBottom className="p_mess">
             {props._messageList.map((msg) =>
-                <div className="contain"><div className={sessionStorage.getItem("user_name") === msg[0] ? "me" : "other"}>{sessionStorage.getItem("user_name") === msg[0] ? "me" + " : " + msg[1] : msg[0] + " : " + msg[1]}</div></div>)}
+                <div className="contain"><div className={sessionStorage.getItem("user_name") === msg["Sender"] ? "me" : "other"}>{sessionStorage.getItem("user_name") === msg["Sender"] ? "me" + " : " + msg["Message"] : msg["Sender"] + " : " + msg["Message"]}</div></div>)}
             {/* <Card bg="info" style={{ width: '18rem' }}>{msg.username + " : " + msg.text}</Card>)}
                 <Card bg={sessionStorage.getItem("user_name") === msg.username ? "info" : "light"} style={{ width: '6rem' }}>{msg.username + " : " + msg.text}</Card>)} */}
         </ScrollToBottom>
