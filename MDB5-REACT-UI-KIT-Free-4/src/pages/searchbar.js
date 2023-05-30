@@ -9,7 +9,6 @@ export default function App() {
   const [Description, setDescription] = useState('');
   const [selectedResult, setSelectedResult] = useState(null);
 
-
   const handleSearch = async () => {
     try {
       const res = await axios.get(`http://20.234.168.103:8080/profile/${Name}`);
@@ -25,6 +24,12 @@ export default function App() {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const AddFriend = async (event, friendName, index) => {
+    const userID = JSON.parse(localStorage.getItem('user'));
+    const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend/${userID}/${Name}/add`);
+    console.log(response);
   };
 
   return (
@@ -105,7 +110,8 @@ export default function App() {
                     <hr />
                     <MDBCardText>{selectedResult['Description']}</MDBCardText>
                     <hr />
-                    <MDBBtn color="dark" rounded block size="lg">
+                    <MDBBtn color="dark" rounded block size="lg" onClick={AddFriend}>
+
                       <MDBIcon /> + Add Friend
                     </MDBBtn>
                   </MDBCardBody>
