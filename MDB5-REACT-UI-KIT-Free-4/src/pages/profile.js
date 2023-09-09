@@ -14,6 +14,9 @@ import {
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
 
+import { Uploader } from "uploader";
+import { UploadDropzone } from "react-uploader";
+
 export default function ProfilePage() {
 
   const user = JSON.parse(localStorage.getItem('user'));
@@ -22,6 +25,7 @@ export default function ProfilePage() {
   const [Email, setEmail] = useState('');
   const [Nb, setNb] = useState('');
   const [Description, setDescription] = useState('');
+  const [ProfilePic, setProfilePic] = useState("https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png");
 
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState(Name);
@@ -30,6 +34,14 @@ export default function ProfilePage() {
   const [newDescription, setNewDescription] = useState(Description);
 
   const [friendsList, setFriendsList] = useState([]);
+
+  const uploader = Uploader({
+    apiKey: "free"
+  });
+
+  // Configuration options: https://www.bytescale.com/docs/upload-widget/frameworks/react#customize
+  const options = { multi: true };
+
 
   useEffect(() => {
     const fetchFriendsList = async () => {
@@ -128,6 +140,36 @@ export default function ProfilePage() {
     fetchData();
   }, []);
 
+  const uploaderOptions = {
+    multi: true,
+  
+    // Comment out this line & use 'onUpdate' instead of 
+    // 'onComplete' to have the dropzone close after upload.
+    showFinishButton: true,
+    
+    styles: {
+      colors: {
+        primary: "#377dff"
+      }
+    }
+  }
+  
+  const MyDropzone = ({setFiles}) => 
+  <UploadDropzone uploader={uploader}
+                  options={uploaderOptions}
+                  onComplete={setFiles}
+                  width="500px"
+                  height="200px" />
+
+  const MyUploadedFiles = ({files}) => files.map(file => {
+    // Tip: save 'filePath' to your DB (not 'fileUrl').
+    const filePath = file.filePath 
+    // "raw" for un-transformed file.
+    const fileUrl  = uploader.url(filePath, "thumbnail")
+    setProfilePic(fileUrl);
+  })
+  const [files, setFiles] = useState([])
+
   return (
     <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
       <MDBContainer className="py-5">
@@ -136,12 +178,18 @@ export default function ProfilePage() {
             <MDBCard className="mb-4">
               <MDBCardBody className="text-center">
                 <MDBCardImage
-                  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                  src={ProfilePic}
                   alt="avatar"
                   className="rounded-circle"
                   style={{ width: '170px' }}
                   fluid
                 />
+                <>
+                  {files.length 
+                    ? <MyUploadedFiles files={files} /> 
+                    : <MyDropzone setFiles={setFiles} />
+                  }
+                </>
 
                 <MDBCardText>{Name}</MDBCardText>
                 <p className="@ID : *******">@ID : *******</p>
@@ -150,7 +198,6 @@ export default function ProfilePage() {
                     <MDBIcon far icon="cog" /> Modify
                   </MDBBtn>
                 </div>
-
 
                 <div className="d-flex justify-content-center mb-2">
                   {user && (
