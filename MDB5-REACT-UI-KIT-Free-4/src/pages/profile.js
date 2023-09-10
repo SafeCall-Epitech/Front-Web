@@ -79,9 +79,16 @@ export default function ProfilePage() {
 
   const handleNameSave = async () => {
     try {
-      const res = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileFullName/${user}/${newName}`);
-      setNb(newName);
-      setIsEditing(false);
+      const form = JSON.stringify({
+        UserID: user,
+        Data: newName,
+      });
+      axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileFullName`, form, {
+            headers: {
+                'Content-Type': 'application/json',
+              }
+            })
+            setIsEditing(false);
     } catch (err) {
       console.error(err);
     }
@@ -89,18 +96,32 @@ export default function ProfilePage() {
 
   const handlePhoneNBSave = async () => {
     try {
-      const res = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profilePhoneNB/${user}/${newNb}`);
-      setNb(newNb);
-      setIsEditing(false);
+      const form = JSON.stringify({
+        UserID: user,
+        Data: newNb,
+      });
+      axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profilePhoneNB`, form, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        setIsEditing(false);
     } catch (err) {
       console.error(err);
     }
   };
   const handleDescriptionSave = async () => {
     try {
-      const res = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileDescription/${user}/${newDescription}`);
-      setNb(newDescription);
-      setIsEditing(false);
+      const form = JSON.stringify({
+        UserID: user,
+        Data: newDescription,
+      });
+      axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileDescription`, form, {
+            headers: {
+                'Content-Type': 'application/json',
+              }
+            })
+            setIsEditing(false);
     } catch (err) {
       console.error(err);
     }
@@ -108,9 +129,16 @@ export default function ProfilePage() {
 
   const handleEmailSave = async () => {
     try {
-      const res = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileEmail/${user}/${newEmail}`);
-      setEmail(newEmail);
-      setIsEditing(false);
+      const form = JSON.stringify({
+        UserID: user,
+        Data: newEmail,
+      });
+      axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileEmail`, form, {
+            headers: {
+                'Content-Type': 'application/json',
+              }
+            })
+            setIsEditing(false);
     } catch (err) {
       console.error(err);
     }

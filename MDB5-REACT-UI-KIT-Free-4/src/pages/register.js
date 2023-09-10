@@ -19,9 +19,19 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   function getregister(UserName, Password, Email) {
+
     setLoading(true);
-    axios.post('http://20.234.168.103:8080/register/' + UserName + '/' + Password + '/' + Email)
-      .then((responseJson) => {
+    const form = JSON.stringify({
+      Login: UserName,
+      Password: Password,
+      Email: Email,
+  });
+  axios.post(`http://20.234.168.103:8080/register`, form, {
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+        .then((responseJson) => {
         setLoading(false);
         window.location.href = '/login';
       })
