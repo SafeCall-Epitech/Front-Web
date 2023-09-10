@@ -34,6 +34,8 @@ export default function ProfilePage() {
   const [newDescription, setNewDescription] = useState(Description);
 
   const [friendsList, setFriendsList] = useState([]);
+  const [agenda, setAgenda] = useState([]);
+
 
   const uploader = Uploader({
     apiKey: "free"
@@ -57,6 +59,28 @@ export default function ProfilePage() {
       }
     };
 
+    const fetchAgenda = async () => {
+      try {
+        const res2 = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listEvent/${user}`)
+
+        const data = res2.data["Success "];
+        if (data && data.length > 0) {
+          for (let i = 0; i < data.length; i++) {
+            const event = data[i];
+            const guests = event.Guests;
+            const date = event.Date;
+            const subject = event.Subject;
+            const Event = event.Guests + " / " + event.Date + " / " + event.Subject; 
+          }
+        }
+        setAgenda(data);
+
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchAgenda();
     fetchFriendsList();
   }, []);
 
@@ -75,7 +99,6 @@ export default function ProfilePage() {
   const handleDescriptionChange = (e) => {
     setNewDescription(e.target.value);
   };
-
 
   const handleNameSave = async () => {
     try {
@@ -155,8 +178,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`);
-        
+        const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`);        
         setName(res.data['profile']['FullName']);
         setEmail(res.data['profile']['Email']);
         setNb(res.data['profile']['PhoneNb']);
@@ -359,6 +381,22 @@ export default function ProfilePage() {
                 <MDBCard className="mb-4">
                   <MDBCardBody>
                     <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">My Appointments</span></MDBCardText>
+
+
+
+                <ul>
+                {agenda.map((event, index) => (
+                <li key={index}>
+                  Guests: {event.Guests}<br />
+                  Date: {event.Date}<br />
+                  Subject: {event.Subject}<br />
+                  Confirmed: {event.Confirmed ? "Yes" : "No"}<br />
+                  --- 
+                </li>
+                ))}
+                </ul>
+                    
+
                   </MDBCardBody>
                 </MDBCard>
               </MDBCol>
