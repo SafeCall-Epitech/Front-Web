@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
 
 export default function EditButton() {
@@ -11,6 +12,8 @@ export default function EditButton() {
   const [Nb, setNb] = useState('');
   const [Description, setDescription] = useState('');
   const { username } = useParams();
+  const [friendsList, setFriendsList] = useState([]);
+  const navigate = useNavigate();
 
   var Load = false;
 
@@ -29,32 +32,38 @@ export default function EditButton() {
   }, [username]);
 
   const DeleteFriend = async (event, friendName, index) => {
-    const userID = JSON.parse(localStorage.getItem('user'));
-    
+    const user = JSON.parse(localStorage.getItem('user'));
+
       try {
         const form = JSON.stringify({
           UserID: user,
           Friend: friendName,
           Action: "rm",
         });
-    
         const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json',   
           }
         });
-    
-        console.log("friend deleted");
-    
-        const updatedNotifications = [...notifications];
-        updatedNotifications[index].removed = true;
-        setNotifications(updatedNotifications);
-        localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
-    
+
       } catch (err) {
         console.error(err);
       }
-    
+      const isFriend = friendsList.some((friend) => friend.name === Name);
+
+      if (isFriend != friendsList.includes(Name)) {
+        navigate(`/My_user_profile/${Name}`);   }
+
+      async function fetchFriends() {
+      try {
+        const response = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/${user}`);
+        const fetchedData = response.data.fetched;
+         const friendsListData = fetchedData.map((name) => ({ name }));
+         setFriendsList(friendsListData);
+        } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   return (
@@ -80,7 +89,7 @@ export default function EditButton() {
                   <MDBCardText>@ID</MDBCardText>
 
 
-                  <MDBBtn color="black" rounded size="lg">
+                  <MDBBtn color="dark" rounded size="lg" onClick={DeleteFriend}>
                     - DELETE FRIEND
                   </MDBBtn>
                   <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark">Dark</button>

@@ -41,7 +41,6 @@ export default function ProfilePage() {
     apiKey: "free"
   });
 
-  // Configuration options: https://www.bytescale.com/docs/upload-widget/frameworks/react#customize
   const options = { multi: true };
 
   useEffect(() => {
@@ -49,7 +48,6 @@ export default function ProfilePage() {
       try {
         const response = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/${user}`);
         const fetchedData = response.data.fetched;
-       // console.log(fetchedData);
         const friendsListData = fetchedData.map((name) => ({ name }));
         setFriendsList(friendsListData);
 

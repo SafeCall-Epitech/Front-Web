@@ -14,13 +14,22 @@ export default function App() {
   const [selectedResult, setSelectedResult] = useState(null);
   const [friendsList, setFriendsList] = useState([]);
   const navigate = useNavigate();
+  const isFriend = friendsList.some((friend) => friend.name === Name);
+  const user = JSON.parse(localStorage.getItem('user'));
+
+
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+
     async function fetchFriends() {
       try {
         const response = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/${user}`);
-        setFriendsList(response.data.fetched || []);
-      } catch (error) {
+        const fetchedData = response.data.fetched;
+        // console.log(fetchedData);
+         const friendsListData = fetchedData.map((name) => ({ name }));
+         setFriendsList(friendsListData);
+        } catch (error) {
         console.error(error);
       }
     }
@@ -44,7 +53,30 @@ export default function App() {
     }
   };
 
+  const DeleteFriend = async () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    try {
+      const form = JSON.stringify({
+        UserID: user,
+        Friend: Name,
+        Action: "rm",  // assuming you want to send the string "add"
+      });
+      await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
+    console.log(Name);
+
+  };
+
   const AddFriend = async () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+
     try {
       const form = JSON.stringify({
         UserID: user,
@@ -62,15 +94,21 @@ export default function App() {
   };
 
   const redirectToProfile = () => {
-    const isFriend = friendsList.some(friend => friend.name === Name());
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    const isFriend = friendsList.some((friend) => friend.name === Name);
 
     if (isFriend) {
+      console.log("isFriend");
       navigate(`/My_wfriend_profile/${Name}`);
     } else {
+      console.log("not");
       navigate(`/My_user_profile/${Name}`);
     }
   };
 
+
+  
   return (
     <div className="vh-100" style={{ backgroundColor: '#E6E6E6' }}>
       <MDBContainer>
@@ -149,10 +187,21 @@ export default function App() {
                     <hr />
                     <MDBCardText>{selectedResult['Description']}</MDBCardText>
                     <hr />
-                    <MDBBtn color="dark" rounded block size="lg" onClick={AddFriend}>
-
-                      <MDBIcon /> + Add Friend
-                    </MDBBtn>
+                    <MDBBtn
+                    color="dark"
+                    rounded
+                    block
+                    size="lg"
+                    onClick={() => {
+                      if (isFriend) {
+                        DeleteFriend();
+                      } else {
+                        AddFriend();
+                      }
+                    }}
+                  >
+                    <MDBIcon /> {isFriend ? "- Delete Friend" : "+ Add Friend"}
+                  </MDBBtn>
                   </MDBCardBody>
                 </MDBCard>
               ) : (
