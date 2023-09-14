@@ -16,31 +16,34 @@ import {
 } from "mdb-react-ui-kit";
 
 function Chat({ selectedFriend }) {
-
-    const user = JSON.parse(localStorage.getItem('user'));
-
     const [currentMessage, setCurrentMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
-    console.log(selectedFriend);
-    console.log("messageList", messageList);
-
+    const user = JSON.parse(localStorage.getItem('user'));
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
                 const response = await axios.get('http://20.234.168.103:8080/messages/' + sessionStorage.getItem("user_name") + "/" + selectedFriend);
-                setMessageList(response.data["Success "]);
+                if (response.data["Success "] == null) {
+                    setMessageList([]);
+                } else {
+                    setMessageList(response.data["Success "]);
+                }
             } catch (error) {
                 console.error("Error fetching messages:", error);
             }
+
+
+
         };
-        
-        fetchMessages();    
+
+        fetchMessages();
     }, [selectedFriend]);
 
     const sendMessage = async () => {
         if (currentMessage !== "") {
             const msg = { "Sender": sessionStorage.getItem("user_name"), "Message": currentMessage };
+            console.log(selectedFriend)
             await axios.post('http://20.234.168.103:8080/sendMessage', {
                 message: currentMessage,
                 username: sessionStorage.getItem("user_name"),

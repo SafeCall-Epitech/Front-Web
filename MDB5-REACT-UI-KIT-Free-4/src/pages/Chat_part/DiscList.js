@@ -1,17 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { MDBCard, MDBCardBody, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
 import '../Chat_part/style/DiscList.css';
-
+import {
+    MDBInput,
+    MDBContainer,
+    MDBRow,
+    MDBCol,
+    MDBCard,
+    MDBCardBody,
+    MDBIcon,
+    MDBTypography,
+    MDBModal,
+    MDBModalBody,
+    MDBModalHeader,
+    MDBModalFooter,
+    MDBInputGroup,
+    MDBScrollbar,
+    MDBBtn
+} from "mdb-react-ui-kit";
 function DiscList({ onFriendSelect }) {
     const [friendList, setFriendList] = useState([]);
-    const [lastMessages, setLastMessages] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [textInput, setTextInput] = useState('');
+    const [currentMessage, setCurrentMessage] = useState("");
 
     useEffect(() => {
         const fetchFriendList = async () => {
             sessionStorage.setItem("user_name", JSON.parse(localStorage.getItem('user')).toLowerCase())
             const response = await axios.get('http://20.234.168.103:8080/conversations/' + sessionStorage.getItem("user_name"));
-            console.log(response.data)
+            console.log(response.data["Success "])
             setFriendList(response.data["Success "])
             // setLastMessages(Array(response.data.length).fill("Dernier message"));
         };
@@ -42,14 +59,84 @@ function DiscList({ onFriendSelect }) {
         onFriendSelect(friendName);
     };
 
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleInputChange = (event) => {
+        setTextInput(event.target.value);
+    };
+
+    const handleModalSubmit = async () => {
+        const response = await axios.get('http://20.234.168.103:8080/messages/' + sessionStorage.getItem("user_name") + "/" + currentMessage);
+        window.location.reload();
+        console.log(textInput);
+        closeModal();
+    };
+
+
+
+    // return (
+    //     <MDBCard className="conv_zone">
+    //         <MDBCardBody>
+    //             <div className="d-flex justify-content-between align-items-center"> {/* Add a div for alignment */}
+    //                 <h5 className="font-weight-bold mb-3 text-center text-lg-start">Conversation</h5>
+    //                 <MDBBtn onClick={openModal}>New conversation</MDBBtn>
+    //             </div>
+    //             {/* <h5 className="font-weight-bold mb-3 text-center text-lg-start">Conversation</h5> */}
+    //             <MDBTypography listUnStyled>
+    //                 {friendList.map((friend, index) => (
+    //                     <li className="p-2 border-bottom friend" key={friend} >
+    //                         <a href="#!" className="d-flex justify-content-between" onClick={() => handleFriendClick(friend.replace(sessionStorage.getItem("user_name"), "").split(":")[0])}>
+    //                             <div className="d-flex flex-row">
+    //                                 <img
+    //                                     src="https://via.placeholder.com/60"
+    //                                     alt="Profile"
+    //                                     className="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
+    //                                     width="60"
+    //                                 />
+    //                                 <div className="pt-1">
+    //                                     <p className="fw-bold mb-0">{friend.replace(sessionStorage.getItem("user_name"), "").split(":")[0]}</p>
+    //                                     <p className="small text-muted">{friend.split(":")[1]}{" : "}{friend.split(":")[2]}{":"}{friend.split(":")[3]}</p>
+    //                                 </div>
+    //                             </div>
+    //                             <div className="pt-1">
+    //                                 {/* <p className="small text-muted mb-1">Just now</p> */}
+    //                             </div>
+    //                         </a>
+    //                     </li>
+    //                 ))}
+    //             </MDBTypography>
+    //         </MDBCardBody>
+    //     </MDBCard>
+    // );
     return (
         <MDBCard className="conv_zone">
             <MDBCardBody>
-                <h5 className="font-weight-bold mb-3 text-center text-lg-start">Conversation</h5>
+                <div className="d-flex justify-content-between align-items-center">
+                    <h5 className="font-weight-bold mb-3 text-center text-lg-start">
+                        Conversation
+                    </h5>
+                    <MDBBtn size="sm" onClick={openModal}>
+                        Open Modal
+                    </MDBBtn>
+                </div>
                 <MDBTypography listUnStyled>
                     {friendList.map((friend, index) => (
-                        <li className="p-2 border-bottom friend" key={friend} >
-                            <a href="#!" className="d-flex justify-content-between" onClick={() => handleFriendClick(friend.replace(sessionStorage.getItem("user_name"), ""))}>
+                        <li className="p-2 border-bottom friend" key={friend}>
+                            <a
+                                href="#!"
+                                className="d-flex justify-content-between"
+                                onClick={() =>
+                                    handleFriendClick(
+                                        friend.replace(sessionStorage.getItem('user_name'), '').split(':')[0]
+                                    )
+                                }
+                            >
                                 <div className="d-flex flex-row">
                                     <img
                                         src="https://via.placeholder.com/60"
@@ -58,20 +145,55 @@ function DiscList({ onFriendSelect }) {
                                         width="60"
                                     />
                                     <div className="pt-1">
-                                        <p className="fw-bold mb-0">{friend.replace(sessionStorage.getItem("user_name"), "")}</p>
-                                        <p className="small text-muted">{lastMessages[index]}</p>
+                                        <p className="fw-bold mb-0">
+                                            {friend.replace(sessionStorage.getItem('user_name'), '').split(':')[0]}
+                                        </p>
+                                        <p className="small text-muted">
+                                            {friend.split(':')[1]} : {friend.split(':')[2]}:{friend.split(':')[3]}
+                                        </p>
                                     </div>
                                 </div>
-                                <div className="pt-1">
-                                    {/* <p className="small text-muted mb-1">Just now</p> */}
-                                </div>
+                                <div className="pt-1"></div>
                             </a>
                         </li>
                     ))}
                 </MDBTypography>
+                <div style={{ width: '30px' }}>
+                    <MDBModal
+                        show={isModalOpen}
+                        onHide={closeModal}
+                        className="custom-modal"
+                        contentClassName="overlay-modal-content"
+                        size="sm" // Set the modal size to small
+                    >
+                        <MDBModalHeader className="rounded-top">Search your friend</MDBModalHeader>
+                        <MDBModalBody className="rounded-bottom">
+
+                            <input
+                                type="text"
+                                className="form-control-plaintext form-control-lg"
+                                value={currentMessage}
+                                placeholder="Entrer votre message"
+                                onChange={(event) => {
+                                    setCurrentMessage(event.target.value);
+                                }}
+
+                            />
+                        </MDBModalBody>
+                        <MDBModalFooter className="rounded-bottom">
+                            <MDBBtn color="secondary" onClick={closeModal}>
+                                Close
+                            </MDBBtn>
+                            <MDBBtn color="primary" onClick={handleModalSubmit}>
+                                Submit
+                            </MDBBtn>
+                        </MDBModalFooter>
+                    </MDBModal>
+                </div>
             </MDBCardBody>
         </MDBCard>
     );
+
 }
 
 export default DiscList;

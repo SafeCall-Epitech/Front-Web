@@ -108,3 +108,39 @@
 .arrow-icon {
     color: #555;
 }
+
+/* Custom styles for the modal */
+.custom-modal {
+    border-radius: 10px;
+    /* Adjust the border-radius as needed */
+    background-color: #ffffff;
+    /* White background color */
+}
+
+/* Custom styles for the modal header */
+.custom-modal .modal-header {
+    border-top-left-radius: 10px;
+    /* Rounded top-left corner */
+    border-top-right-radius: 10px;
+    /* Rounded top-right corner */
+    background-color: #007bff;
+    /* Header background color */
+    color: #ffffff;
+    /* Header text color */
+}
+
+/* Custom styles for the modal body */
+.custom-modal .modal-body {
+    border-bottom-left-radius: 10px;
+    /* Rounded bottom-left corner */
+    border-bottom-right-radius: 10px;
+    /* Rounded bottom-right corner */
+}
+
+/* Custom styles for the modal footer */
+.custom-modal .modal-footer {
+    border-bottom-left-radius: 10px;
+    /* Rounded bottom-left corner */
+    border-bottom-right-radius: 10px;
+    /* Rounded bottom-right corner */
+}
