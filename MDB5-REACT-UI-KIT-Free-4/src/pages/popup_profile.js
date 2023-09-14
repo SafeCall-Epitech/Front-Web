@@ -14,6 +14,8 @@ export default function App() {
   const [selectedResult, setSelectedResult] = useState(null);
   const [friendsList, setFriendsList] = useState([]);
   const navigate = useNavigate();
+  const [ProfilePic, setProfilePic] = useState("https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png");
+
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -63,7 +65,17 @@ export default function App() {
     }
   };
 
-
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`);        
+        setProfilePic(res.data['profile']['ProfilePic']);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchData();
+  }, []);
   
   return (
     <div className="vh-100" style={{ backgroundColor: '#E6E6E6' }}>
@@ -107,7 +119,7 @@ export default function App() {
                         <MDBCardImage
                           style={{ width: '70px' }}
                           className="img-fluid rounded-circle border border-dark border-3"
-                          src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp'
+                          src={ProfilePic}
                           alt='Generic placeholder image'
                           fluid
                         />

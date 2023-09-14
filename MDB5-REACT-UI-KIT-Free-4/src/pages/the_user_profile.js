@@ -11,6 +11,8 @@ export default function EditButton() {
   const [Nb, setNb] = useState('');
   const [Description, setDescription] = useState('');
   const { username } = useParams();
+  const [ProfilePic, setProfilePic] = useState("https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png");
+
 
   var Load = false;
 
@@ -20,7 +22,7 @@ export default function EditButton() {
     setEmail(res.data['profile']['Email']);
     setNb(res.data['profile']['PhoneNb']);
     setDescription(res.data['profile']['Description']);
-
+    setProfilePic(res.data['profile']['ProfilePic']);
     Load = false;
   };
 
@@ -42,7 +44,7 @@ export default function EditButton() {
             <MDBCard>
               <div className="rounded-top text-white d-flex flex-row" style={{ backgroundColor: '#000', height: '200px' }}>
                 <div className="ms-4 mt-5 d-flex flex-column" style={{ width: '150px' }}>
-                  <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                  <MDBCardImage src={ProfilePic}
                     alt="Generic placeholder image" className="mt-4 mb-2 img-thumbnail" fluid style={{ width: '150px', zIndex: '1' }} />
                 </div>
                 <div className="ms-3" style={{ marginTop: '135px' }}>

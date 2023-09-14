@@ -168,6 +168,23 @@ export default function ProfilePage() {
     }
   };
 
+  const handleProfilePicSave = async (fileUrl) => {
+    try {
+      const form = JSON.stringify({
+        UserID: user,
+        Data: fileUrl,
+      });
+      axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profilePic`, form, {
+            headers: {
+                'Content-Type': 'application/json',
+              }
+            })
+            setIsEditing(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleCancel = () => {
     setIsEditing(false);
     setNewName(Name);
@@ -184,6 +201,7 @@ export default function ProfilePage() {
         setEmail(res.data['profile']['Email']);
         setNb(res.data['profile']['PhoneNb']);
         setDescription(res.data['profile']['Description']);
+        setProfilePic(res.data['profile']['ProfilePic']);
       } catch (err) {
         console.error(err);
       }
@@ -218,6 +236,7 @@ export default function ProfilePage() {
     // "raw" for un-transformed file.
     const fileUrl  = uploader.url(filePath, "thumbnail")
     setProfilePic(fileUrl);
+    handleProfilePicSave(fileUrl);
   })
   const [files, setFiles] = useState([])
 
@@ -384,7 +403,7 @@ export default function ProfilePage() {
                     <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">My Appointments</span></MDBCardText>
 
 
-
+{/* 
                 <ul>
                 {agenda.map((event, index) => (
                 <li key={index}>
@@ -395,7 +414,7 @@ export default function ProfilePage() {
                   --- 
                 </li>
                 ))}
-                </ul>
+                </ul> */}
                     
 
                   </MDBCardBody>

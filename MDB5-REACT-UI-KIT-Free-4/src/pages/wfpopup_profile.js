@@ -28,6 +28,7 @@ export default function ECommerce() {
   const [Description, setDescription] = useState("");
   const [modalShow, setModalShow] = useState(true);
   const [Load, setLoad] = useState(true);
+  const [ProfilePic, setProfilePic] = useState("https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png");
 
   useEffect(() => {
     async function fetchData() {
@@ -38,6 +39,7 @@ export default function ECommerce() {
       setEmail(res.data["profile"]["Email"]);
       setNb(res.data["profile"]["PhoneNb"]);
       setDescription(res.data["profile"]["Description"]);
+      setProfilePic(res.data['profile']['ProfilePic']);
       setLoad(false);
     }
     fetchData();
@@ -73,7 +75,7 @@ export default function ECommerce() {
                             <MDBCardImage
                               style={{ width: '70px' }}
                               className="img-fluid rounded-circle border border-dark border-3"
-                              src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp'
+                              src={ProfilePic}
                               alt='Generic placeholder image'
                               fluid />
                           </div>
