@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
 
@@ -9,13 +10,12 @@ export default function EditButton() {
   const [Email, setEmail] = useState('');
   const [Nb, setNb] = useState('');
   const [Description, setDescription] = useState('');
-
+  const { username } = useParams();
 
   var Load = false;
 
   const fetchData = async () => {
-    const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`);
-
+    const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${username}`);
     setName(res.data['profile']['FullName']);
     setEmail(res.data['profile']['Email']);
     setNb(res.data['profile']['PhoneNb']);
@@ -23,7 +23,16 @@ export default function EditButton() {
 
     Load = false;
   };
-  fetchData();
+
+  useEffect(() => {
+    fetchData();
+  }, [username]);
+
+  const AddFriend = async (event, friendName, index) => {
+    const userID = JSON.parse(localStorage.getItem('user'));
+    const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend/${userID}/${Name}/add`);
+    console.log(response);
+  };
 
   return (
     <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
@@ -42,7 +51,7 @@ export default function EditButton() {
                     <MDBTypography tag="h5">{Name}</MDBTypography>
                   }
                   <MDBCardText>@ID</MDBCardText>
-                  <MDBBtn color="black" rounded size="lg">
+                  <MDBBtn color="dark" rounded block size="lg" onClick={AddFriend}>
                     + ADD FRIEND
                   </MDBBtn>
                 </div>

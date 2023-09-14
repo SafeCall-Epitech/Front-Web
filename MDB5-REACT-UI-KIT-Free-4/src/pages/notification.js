@@ -53,10 +53,32 @@ export default function NotificationPage() {
   const handleAcceptFriendRequest = async (event, friendName, index) => {
     event.stopPropagation();
     const userID = JSON.parse(localStorage.getItem('user'));
-    const url = `http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/replyFriend/${userID}/${friendName}/accept`;
-    console.log("url:", url);
-    const response = await axios.post(url);
-    console.log("accepted");
+    
+      try {
+        const form = JSON.stringify({
+          UserID: user,
+          Friend: friendName,
+          Action: "accept",
+        });
+    
+        const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+    
+        console.log("accepted");
+    
+        const updatedNotifications = [...notifications];
+        updatedNotifications[index].removed = true;
+        setNotifications(updatedNotifications);
+        localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+    
+      } catch (err) {
+        console.error(err);
+      }
+
+    
 
     // Update the notifications state and localStorage
     const updatedNotifications = [...notifications];
@@ -68,8 +90,31 @@ export default function NotificationPage() {
   const handleDeclineFriendRequest = async (event, friendName, index) => {
     event.stopPropagation();
     const userID = JSON.parse(localStorage.getItem('user'));
-    const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/replyFriend/${userID}/${friendName}/deny`);
-    console.log("declined");
+    
+      try {
+        const form = JSON.stringify({
+          UserID: user,
+          Friend: friendName,
+          Action: "deny",
+        });
+    
+        const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+    
+        console.log("declined");
+    
+        const updatedNotifications = [...notifications];
+        updatedNotifications[index].removed = true;
+        setNotifications(updatedNotifications);
+        localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+    
+      } catch (err) {
+        console.error(err);
+      }
+    
 
     // Update the notifications state and localStorage
     const updatedNotifications = [...notifications];

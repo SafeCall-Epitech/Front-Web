@@ -44,7 +44,6 @@ export default function ProfilePage() {
   // Configuration options: https://www.bytescale.com/docs/upload-widget/frameworks/react#customize
   const options = { multi: true };
 
-
   useEffect(() => {
     const fetchFriendsList = async () => {
       try {
@@ -59,29 +58,33 @@ export default function ProfilePage() {
       }
     };
 
-    const fetchAgenda = async () => {
-      try {
-        const res2 = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listEvent/${user}`)
+    fetchFriendsList();
+  }, []);
 
-        const data = res2.data["Success "];
-        if (data && data.length > 0) {
-          for (let i = 0; i < data.length; i++) {
-            const event = data[i];
-            const guests = event.Guests;
-            const date = event.Date;
-            const subject = event.Subject;
-            const Event = event.Guests + " / " + event.Date + " / " + event.Subject; 
-          }
+
+  useEffect(() => {
+  const fetchAgenda = async () => {
+    try {
+      const res2 = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listEvent/${user}`)
+
+      const data = res2.data["Success "];
+      if (data && data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          const event = data[i];
+          const guests = event.Guests;
+          const date = event.Date;
+          const subject = event.Subject;
+          const Event = event.Guests + " / " + event.Date + " / " + event.Subject; 
         }
-        setAgenda(data);
-
-      } catch (error) {
-        console.error(error);
       }
-    };
+      setAgenda(data);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
     fetchAgenda();
-    fetchFriendsList();
   }, []);
 
   const handleNameChange = (e) => {

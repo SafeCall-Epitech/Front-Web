@@ -1,26 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
-MDBBtn
+
 export default function EditButton() {
 
   const user = JSON.parse(localStorage.getItem('user'));
-
   const [Name, setName] = useState('');
   const [Email, setEmail] = useState('');
   const [Nb, setNb] = useState('');
   const [Description, setDescription] = useState('');
-
-  //Dynamic parameters for the call form
-  const [Guest1, setGuest1] = useState('');
-  const [Guest2, setGuest2] = useState('');
-  const [Subject, setSubject] = useState('');
-  const [Date, setDate] = useState('');
+  const { username } = useParams();
 
   var Load = false;
 
   const fetchData = async () => {
-    const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`);
+    const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${username}`);
     setName(res.data['profile']['FullName']);
     setEmail(res.data['profile']['Email']);
     setNb(res.data['profile']['PhoneNb']);
@@ -28,24 +23,40 @@ export default function EditButton() {
 
     Load = false;
   };
-  fetchData();
 
-  const SendCallForm = async () => {
-    const form = JSON.stringify({
-      guest1: Guest1,
-      guest2: Guest2,
-      subject: Subject,
-      date: Date,
-    });
-    axios.post(`http://20.234.168.103:8080/addEvent`, form, {
-      headers: {
-        'Content-Type': 'application/json',
+  useEffect(() => {
+    fetchData();
+  }, [username]);
+
+  const DeleteFriend = async (event, friendName, index) => {
+    const userID = JSON.parse(localStorage.getItem('user'));
+    
+      try {
+        const form = JSON.stringify({
+          UserID: user,
+          Friend: friendName,
+          Action: "rm",
+        });
+    
+        const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+    
+        console.log("friend deleted");
+    
+        const updatedNotifications = [...notifications];
+        updatedNotifications[index].removed = true;
+        setNotifications(updatedNotifications);
+        localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+    
+      } catch (err) {
+        console.error(err);
       }
-    })
-      .then(res => {
-        console.log(res.data)
-      })
-  }
+    
+  };
+
   return (
     <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
       <MDBContainer className="py-5 h-100">
@@ -61,7 +72,7 @@ export default function EditButton() {
 
                 <div className="ms-3" style={{ marginTop: '135px' }}>
 
-                  {Load ? <MDBTypography tag="h5">Andy Horwitz</MDBTypography>
+                  {Load ? <MDBTypography tag="h5">No Name</MDBTypography>
                     :
                     <MDBTypography tag="h5">{Name}</MDBTypography>
                   }

@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography, MDBIcon, MDBInputGroup, MDBInput } from 'mdb-react-ui-kit';
+import {
+  MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage,
+  MDBBtn, MDBTypography, MDBIcon, MDBInputGroup, MDBInput
+} from 'mdb-react-ui-kit';
 
 export default function App() {
   const [Name, setName] = useState('');
@@ -8,6 +12,20 @@ export default function App() {
   const [Nb, setNb] = useState('');
   const [Description, setDescription] = useState('');
   const [selectedResult, setSelectedResult] = useState(null);
+  const [friendsList, setFriendsList] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchFriends() {
+      try {
+        const response = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/${user}`);
+        setFriendsList(response.data.fetched || []);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchFriends();
+  }, []);
 
   const handleSearch = async () => {
     try {
@@ -26,10 +44,31 @@ export default function App() {
     }
   };
 
-  const AddFriend = async (event, friendName, index) => {
-    const userID = JSON.parse(localStorage.getItem('user'));
-    const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend/${userID}/${Name}/add`);
-    console.log(response);
+  const AddFriend = async () => {
+    try {
+      const form = JSON.stringify({
+        UserID: user,
+        Friend: Name,
+        Action: "add",  // assuming you want to send the string "add"
+      });
+      await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const redirectToProfile = () => {
+    const isFriend = friendsList.some(friend => friend.name === Name());
+
+    if (isFriend) {
+      navigate(`/My_wfriend_profile/${Name}`);
+    } else {
+      navigate(`/My_user_profile/${Name}`);
+    }
   };
 
   return (
@@ -103,7 +142,7 @@ export default function App() {
 
                         </div>
                         <div>
-                          <MDBBtn outline color="dark" rounded size="sm" className="mx-1">profile</MDBBtn>
+                        <MDBBtn outline color="dark" rounded size="sm" className="mx-1" onClick={redirectToProfile}>profile</MDBBtn>
                         </div>
                       </div>
                     </div>
