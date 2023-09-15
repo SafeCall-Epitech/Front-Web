@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
+import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography, MDBModal, MDBModalDialog, MDBModalContent, MDBModalBody } from 'mdb-react-ui-kit';
 
 export default function EditButton() {
 
@@ -15,6 +15,12 @@ export default function EditButton() {
   const [friendsList, setFriendsList] = useState([]);
   const [ProfilePic, setProfilePic] = useState("https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png");
   const navigate = useNavigate();
+  const [modalShow, setModalShow] = useState(false);
+  // CALL FORM
+  const [Guest1, setGuest1] = useState('');
+  const [Guest2, setGuest2] = useState('');
+  const [Subject, setSubject] = useState('');
+  const [Date, setDate] = useState('');
 
   var Load = false;
 
@@ -31,6 +37,28 @@ export default function EditButton() {
   useEffect(() => {
     fetchData();
   }, [username]);
+
+
+  const SendCallForm = async () => {
+    const form = JSON.stringify({
+        guest1: user,
+        guest2: username,
+        subject: Subject,
+        date: Date,
+    });
+    axios.post(`http://20.234.168.103:8080/addEvent`, form, {
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(res => {
+            console.log(res.data)
+            setModalShow(false); // Close the modal after sending the form.
+        })
+      .catch(error => {
+          console.error(error); // Handle any errors here if necessary.
+      });
+}
 
   const DeleteFriend = async (event, friendName, index) => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -54,6 +82,7 @@ export default function EditButton() {
 
       if (isFriend != friendsList.includes(Name)) {
         navigate(`/My_user_profile/${Name}`);   }
+        
 
       async function fetchFriends() {
       try {
@@ -99,8 +128,56 @@ export default function EditButton() {
 
 
 
-                  <MDBBtn color="light" rounded size="lg">BOOK A CALL</MDBBtn>
+                  <MDBBtn color="light" rounded size="lg" onClick={() => setModalShow(true)}>
+                  BOOK A CALL
+                </MDBBtn>
+                <MDBModal show={modalShow} tabIndex="-1" onClick={() => setModalShow(false)}>
+                            <MDBModalDialog>
+                                <MDBModalContent>
+                                    <MDBModalBody onClick={(e) => e.stopPropagation()}>
+                                        <MDBCard style={{ borderRadius: "15px", backgroundColor: "#E6E6E6" }}>
+                                            <MDBCardBody className="p-4 text-black">
 
+                                                <p className="lead fw-normal mb-1">Call Form</p>
+                                                <br />
+
+                                                <MDBTypography tag="h5" className="mb-2">To {username}</MDBTypography>
+
+                                                <br />
+                                                <label htmlFor="name">Subject:</label>
+                                                <br />
+                                                <input
+                                                    type="text"
+                                                    value={Subject}
+                                                    onChange={(e) => setSubject(e.target.value)}
+                                                />
+                                                <br />
+                                                <br />
+                                                <label htmlFor="name">Date:</label>
+                                                <br />
+                                                <input
+                                                    type="text"
+                                                    value={Date}
+                                                    onChange={(e) => setDate(e.target.value)}
+                                                />
+                                                <br />
+                                                <br />
+                                                <MDBBtn
+                                                    color="primary"
+                                                    rounded
+                                                    size="lg"
+                                                    onClick={() => {
+                                                        SendCallForm();
+                                                    }}
+                                                >
+                                                    - Send Form
+                                                </MDBBtn>
+                                            </MDBCardBody>
+                                        </MDBCard>
+                                    </MDBModalBody>
+                                </MDBModalContent>
+                            </MDBModalDialog>
+                        </MDBModal>
                 </div>
               </div>
 

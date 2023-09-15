@@ -17,7 +17,7 @@ export default function App() {
   const isFriend = friendsList.some((friend) => friend.name === Name);
   const [ProfilePic, setProfilePic] = useState("https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png");
   const user = JSON.parse(localStorage.getItem('user'));
-  
+
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -95,8 +95,6 @@ export default function App() {
     }
   };
 
-  
-
   const redirectToProfile = () => {
 
     const user = JSON.parse(localStorage.getItem('user'));
@@ -110,8 +108,6 @@ export default function App() {
       navigate(`/My_user_profile/${Name}`);
     }
   };
-
-
   
   return (
     <div className="vh-100" style={{ backgroundColor: '#E6E6E6' }}>
@@ -192,20 +188,19 @@ export default function App() {
                     <MDBCardText>{selectedResult['Description']}</MDBCardText>
                     <hr />
                     <MDBBtn
-      color="dark"
-      rounded
-      block
-      size="lg"
-      onClick={() => {
-        if (isFriend) {
-          DeleteFriend();
-        } else {
-          AddFriend();
-        }
-      }}
-    >
-      <MDBIcon /> {isFriend ? "- Delete Friend" : "+ Add Friend"}
-    </MDBBtn>
+                    color="dark"
+                    rounded
+                    block
+                    size="lg"
+                    onClick={() => {
+                      if (isFriend) {
+                        DeleteFriend();
+                      } else {
+                        AddFriend();
+                      }
+                    }}>
+                 <MDBIcon /> {isFriend ? "- Delete Friend" : "+ Add Friend"}
+                 </MDBBtn>
                   </MDBCardBody>
                 </MDBCard>
               ) : (
