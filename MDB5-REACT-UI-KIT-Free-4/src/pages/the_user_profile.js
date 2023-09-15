@@ -13,7 +13,6 @@ export default function EditButton() {
   const { username } = useParams();
   const [ProfilePic, setProfilePic] = useState("https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png");
 
-
   var Load = false;
 
   const fetchData = async () => {
@@ -30,11 +29,27 @@ export default function EditButton() {
     fetchData();
   }, [username]);
 
-  const AddFriend = async (event, friendName, index) => {
-    const userID = JSON.parse(localStorage.getItem('user'));
-    const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend/${userID}/${Name}/add`);
-    console.log(response);
+  const AddFriend = async () => {
+    try {
+      const form = JSON.stringify({
+        UserID: user,
+        Friend: Name,
+        Action: "add",
+      });
+      await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      // Update the isFriend variable to indicate that the user is now a friend
+      isFriend = true;
+    } catch (err) {
+      console.error(err);
+    }
   };
+
+  
 
   return (
     <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
@@ -43,9 +58,9 @@ export default function EditButton() {
           <MDBCol lg="9" xl="8">
             <MDBCard>
               <div className="rounded-top text-white d-flex flex-row" style={{ backgroundColor: '#000', height: '200px' }}>
-                <div className="ms-4 mt-5 d-flex flex-column" style={{ width: '150px' }}>
+                <div className="ms-4 mt-6 d-flex flex-column" style={{ width: '120px' }}>
                   <MDBCardImage src={ProfilePic}
-                    alt="Generic placeholder image" className="mt-4 mb-2 img-thumbnail" fluid style={{ width: '150px', zIndex: '1' }} />
+                    alt="Generic placeholder image" className="mt-4 mb-2 img-thumbnail" fluid style={{ width: '150px', zIndex: '1'}} />
                 </div>
                 <div className="ms-3" style={{ marginTop: '135px' }}>
                   {Load ? <MDBTypography tag="h5">No Name</MDBTypography>

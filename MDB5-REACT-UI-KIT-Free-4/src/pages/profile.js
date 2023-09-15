@@ -271,7 +271,7 @@ export default function ProfilePage() {
 
                 <div className="d-flex justify-content-center mb-2">
                   {user && (
-                    <MDBBtn color="danger" rounded block size="mg" className="me-2" onClick={() => {
+                    <MDBBtn color="danger" rounded block size="mg" onClick={() => {
                       const confirmed = window.confirm('Are you sure you want to disconnect?');
                       if (confirmed) {
                         localStorage.removeItem('user');
@@ -402,8 +402,6 @@ export default function ProfilePage() {
                   <MDBCardBody>
                     <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">My Appointments</span></MDBCardText>
 
-
-{/* 
                 <ul>
                 {agenda.map((event, index) => (
                 <li key={index}>
@@ -414,7 +412,7 @@ export default function ProfilePage() {
                   --- 
                 </li>
                 ))}
-                </ul> */}
+                </ul> 
                     
 
                   </MDBCardBody>

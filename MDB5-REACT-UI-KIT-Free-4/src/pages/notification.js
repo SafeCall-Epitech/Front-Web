@@ -273,7 +273,7 @@ export default function NotificationPage() {
           <div style={{ width: "60%", marginLeft: "5px", marginTop: "-250px" }}>
             <h2>Friend Requests</h2>
             {friendRequestNotifications.length === 0 ? (
-              <p style={{ fontSize: "24px", textAlign: "right", marginTop: "40px" }}>No new friend requests</p>
+              <p style={{ fontSize: "24px", textAlign: "left", marginTop: "40px" }}>No new friend requests</p>
             ) : (
               <div style={{ overflowY: "scroll", maxHeight: "500px", width: "100%" }}>
                 {friendRequestNotifications.map((notification, index) => (

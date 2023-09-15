@@ -16,8 +16,7 @@ export default function App() {
   const navigate = useNavigate();
   const isFriend = friendsList.some((friend) => friend.name === Name);
   const user = JSON.parse(localStorage.getItem('user'));
-
-
+  
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -54,44 +53,47 @@ export default function App() {
   };
 
   const DeleteFriend = async () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-
     try {
       const form = JSON.stringify({
         UserID: user,
         Friend: Name,
-        Action: "rm",  // assuming you want to send the string "add"
+        Action: "rm",
       });
       await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
         headers: {
           'Content-Type': 'application/json',
         }
       });
+  
+      // Update the isFriend variable to indicate that the user is no longer a friend
+      isFriend = false;
     } catch (err) {
       console.error(err);
     }
     console.log(Name);
-
   };
-
+  
   const AddFriend = async () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-
     try {
       const form = JSON.stringify({
         UserID: user,
         Friend: Name,
-        Action: "add",  // assuming you want to send the string "add"
+        Action: "add",
       });
       await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
         headers: {
           'Content-Type': 'application/json',
         }
       });
+  
+      // Update the isFriend variable to indicate that the user is now a friend
+      isFriend = true;
     } catch (err) {
       console.error(err);
     }
   };
+
+  
 
   const redirectToProfile = () => {
 
@@ -188,20 +190,20 @@ export default function App() {
                     <MDBCardText>{selectedResult['Description']}</MDBCardText>
                     <hr />
                     <MDBBtn
-                    color="dark"
-                    rounded
-                    block
-                    size="lg"
-                    onClick={() => {
-                      if (isFriend) {
-                        DeleteFriend();
-                      } else {
-                        AddFriend();
-                      }
-                    }}
-                  >
-                    <MDBIcon /> {isFriend ? "- Delete Friend" : "+ Add Friend"}
-                  </MDBBtn>
+      color="dark"
+      rounded
+      block
+      size="lg"
+      onClick={() => {
+        if (isFriend) {
+          DeleteFriend();
+        } else {
+          AddFriend();
+        }
+      }}
+    >
+      <MDBIcon /> {isFriend ? "- Delete Friend" : "+ Add Friend"}
+    </MDBBtn>
                   </MDBCardBody>
                 </MDBCard>
               ) : (

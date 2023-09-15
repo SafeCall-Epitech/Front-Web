@@ -32,9 +32,6 @@ function Chat({ selectedFriend }) {
             } catch (error) {
                 console.error("Error fetching messages:", error);
             }
-
-
-
         };
 
         fetchMessages();
