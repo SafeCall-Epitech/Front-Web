@@ -201,7 +201,8 @@ export default function ProfilePage() {
         setEmail(res.data['profile']['Email']);
         setNb(res.data['profile']['PhoneNb']);
         setDescription(res.data['profile']['Description']);
-        setProfilePic(res.data['profile']['ProfilePic']);
+        if (res.data['profile']['ProfilePic'])
+          setProfilePic(res.data['profile']['ProfilePic']);
       } catch (err) {
         console.error(err);
       }

@@ -15,6 +15,7 @@ export default function App() {
   const [friendsList, setFriendsList] = useState([]);
   const navigate = useNavigate();
   const isFriend = friendsList.some((friend) => friend.name === Name);
+  const [ProfilePic, setProfilePic] = useState("https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png");
   const user = JSON.parse(localStorage.getItem('user'));
   
 
@@ -44,6 +45,7 @@ export default function App() {
         setNb(res.data['profile']['PhoneNb']);
         setDescription(res.data['profile']['Description']);
         setSelectedResult(res.data['profile']);
+        setProfilePic(res.data['profile']['ProfilePic']);
       } else {
         setSelectedResult(false);
       }
@@ -153,7 +155,7 @@ export default function App() {
                         <MDBCardImage
                           style={{ width: '70px' }}
                           className="img-fluid rounded-circle border border-dark border-3"
-                          src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp'
+                          src={ProfilePic}
                           alt='Generic placeholder image'
                           fluid
                         />
