@@ -255,12 +255,14 @@ export default function ProfilePage() {
                   style={{ width: '170px' }}
                   fluid
                 />
+                {isEditing && (
                 <>
                   {files.length 
                     ? <MyUploadedFiles files={files} /> 
                     : <MyDropzone setFiles={setFiles} />
                   }
                 </>
+              )}
 
                 <MDBCardText>{Name}</MDBCardText>
                 <p className="@ID : *******">@ID : *******</p>
@@ -389,7 +391,7 @@ export default function ProfilePage() {
                 {isEditing && (
                   <div className="d-flex justify-content-center mt-4">
 
-                    <MDBBtn color="black" onClick={handleCancel}>
+                    <MDBBtn color="danger" onClick={handleCancel}>
                       Cancel
                     </MDBBtn>
                   </div>
