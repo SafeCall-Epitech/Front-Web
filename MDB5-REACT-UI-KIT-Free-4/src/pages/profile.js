@@ -403,7 +403,7 @@ export default function ProfilePage() {
               <MDBCol sm="6">
                 <MDBCard className="mb-4">
                   <MDBCardBody>
-                    <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">My Appointments</span></MDBCardText>
+                    <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Next on the Agenda</span></MDBCardText>
 
                 <ul>
                 {agenda.map((event, index) => (

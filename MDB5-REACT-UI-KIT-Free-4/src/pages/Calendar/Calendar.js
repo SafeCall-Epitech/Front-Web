@@ -4,8 +4,8 @@ import Calendar from 'react-calendar';
 import "./Calendar.css";
 
 const eventDate = [
-    { label: "1", value: "Fri Sep 30 2022" },
-    { label: "2", value: "Thu Oct 13 2022" },
+    { label: "1", value: "Fri Sep 30 2023" },
+    { label: "2", value: "Thu Oct 13 2023" },
   ];
 
 const CalendarPage = () => {
@@ -19,7 +19,19 @@ const CalendarPage = () => {
                 <Box pb={20}>
                 </Box>
                     <Center>
-                    <Calendar locale="en-GB" onChange={setDate} value={date} onClickDay={() => setShowTime(true)}/>
+                    <Calendar
+                            locale="en-GB"
+                            onChange={setDate}
+                            value={date}
+                            onClickDay={() => setShowTime(true)}
+                            tileContent={({ date, view }) => {
+                                if (view === 'month') {
+                                const selectedDate = date.toDateString();
+                                const hasEvent = eventDate.some((event) => event.value === selectedDate);
+                                return hasEvent ? <div className="dot"></div> : null;
+                                }
+                            }}
+                            />
                     </Center>
             </Box>
             <Center m={2}>

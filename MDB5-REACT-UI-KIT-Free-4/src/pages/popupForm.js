@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import {
     MDBContainer,
     MDBRow,
@@ -31,23 +33,27 @@ export default function ECommerce() {
     const [Subject, setSubject] = useState('');
     const [Date, setDate] = useState('');
     const [modalShow, setModalShow] = useState(true);
+    const [selectedDate, setSelectedDate] = useState(null);
+
 
     const SendCallForm = async () => {
         const form = JSON.stringify({
-            guest1: Guest1,
-            guest2: Guest2,
-            subject: Subject,
-            date: Date,
+          guest1: Guest1,
+          guest2: Guest2,
+          subject: Subject,
+          date: selectedDate, // Use the selected date
         });
+      
         axios.post(`http://20.234.168.103:8080/addEvent`, form, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
+          headers: {
+            'Content-Type': 'application/json',
+          },
         })
-            .then(res => {
-                console.log(res.data)
-            })
-    }
+          .then(res => {
+            console.log(res.data)
+          });
+      }
+
     return (
         <div className="vh-100" style={{ backgroundColor: "#E6E6E6" }}>
             <MDBContainer>
@@ -94,10 +100,11 @@ export default function ECommerce() {
                                                 <br />
                                                 <label htmlFor="name">Date:</label>
                                                 <br />
-                                                <input
-                                                    type="text"
-                                                    value={Date}
-                                                    onChange={(e) => setDate(e.target.value)}
+                                                <DatePicker
+                                                selected={selectedDate}
+                                                onChange={(date) => setSelectedDate(date)}
+                                                dateFormat="yyyy-MM-dd" // You can customize the date format
+                                                className="form-control" // You can add CSS classes for styling
                                                 />
                                                 <br />
                                                 <br />
