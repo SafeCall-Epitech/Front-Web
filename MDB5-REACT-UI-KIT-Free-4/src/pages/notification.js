@@ -269,9 +269,9 @@ export default function NotificationPage() {
               </div>
             )}
           </div>
-          {/* Friend request notifications */}
+          {/* Contact request notifications */}
           <div style={{ width: "60%", marginLeft: "5px", marginTop: "-250px" }}>
-            <h2>Friend Requests</h2>
+            <h2>Contact Requests</h2>
             {friendRequestNotifications.length === 0 ? (
               <p style={{ fontSize: "24px", textAlign: "left", marginTop: "40px" }}>No new friend requests</p>
             ) : (

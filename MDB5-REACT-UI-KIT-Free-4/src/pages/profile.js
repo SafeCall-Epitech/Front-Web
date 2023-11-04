@@ -66,6 +66,8 @@ export default function ProfilePage() {
       const res2 = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listEvent/${user}`)
 
       const data = res2.data["Success "];
+      console.log(data);
+
       if (data && data.length > 0) {
         for (let i = 0; i < data.length; i++) {
           const event = data[i];
@@ -406,26 +408,26 @@ export default function ProfilePage() {
                     <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Next on the Agenda</span></MDBCardText>
 
                 <ul>
-                {agenda.map((event, index) => (
-                <li key={index}>
-                  Guests: {event.Guests}<br />
-                  Date: {event.Date}<br />
-                  Subject: {event.Subject}<br />
-                  Confirmed: {event.Confirmed ? "Yes" : "No"}<br />
-                  --- 
-                </li>
-                ))}
+                {agenda && agenda.map((event, index) => (
+  <li key={index}>
+    Guests: {event.Guests}<br />
+    Date: {event.Date}<br />
+    Subject: {event.Subject}<br />
+    Confirmed: {event.Confirmed ? "Yes" : "No"}<br />
+    ---
+  </li>
+))}
+
                 </ul> 
                     
 
                   </MDBCardBody>
                 </MDBCard>
               </MDBCol>
-
               <MDBCol sm="6">
                 <MDBCard className="mb-4">
                   <MDBCardBody>
-                    <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Friends List</span></MDBCardText>
+                    <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Contact List</span></MDBCardText>
                     <MDBListGroup>
                       {friendsList.map((friend) => (
                         <MDBListGroupItem key={friend.id}>

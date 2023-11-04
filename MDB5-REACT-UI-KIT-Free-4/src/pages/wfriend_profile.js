@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
+import TimePicker from 'react-time-picker';
 import 'react-datepicker/dist/react-datepicker.css';
+import 'react-time-picker/dist/TimePicker.css';
 
 import {
   MDBCol,
@@ -14,6 +15,7 @@ import {
   MDBCardBody,
   MDBCardImage,
   MDBBtn,
+  MDBIcon,
   MDBTypography,
   MDBModal,
   MDBModalDialog,
@@ -22,24 +24,24 @@ import {
 } from 'mdb-react-ui-kit';
 
 export default function EditButton() {
-  const [selectedDate, setSelectedDate] = useState(new Date()); // Change variable name to selectedDate
+
+  const [invitationSent, setInvitationSent] = useState(false); // State variable to track invitation status
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState('10:00 AM');
   const user = JSON.parse(localStorage.getItem('user'));
+  const [friendsList, setFriendsList] = useState([]);
+  const isFriend = friendsList.some((friend) => friend.name === Name);
   const [Name, setName] = useState('');
   const [Email, setEmail] = useState('');
   const [Nb, setNb] = useState('');
   const [Description, setDescription] = useState('');
   const { username } = useParams();
-  const [friendsList, setFriendsList] = useState([]);
   const [ProfilePic, setProfilePic] = useState(
     'https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png'
   );
   const navigate = useNavigate();
   const [modalShow, setModalShow] = useState(false);
-  // CALL FORM
-  const [Guest1, setGuest1] = useState('');
-  const [Guest2, setGuest2] = useState('');
   const [Subject, setSubject] = useState('');
-
   var Load = false;
 
   const fetchData = async () => {
@@ -63,8 +65,10 @@ export default function EditButton() {
       guest1: user,
       guest2: username,
       subject: Subject,
-      date: selectedDate.toISOString(), // Use selectedDate
+      date: selectedDate.toISOString(),
+      time: selectedTime,
     });
+
     axios
       .post(`http://20.234.168.103:8080/addEvent`, form, {
         headers: {
@@ -73,52 +77,34 @@ export default function EditButton() {
       })
       .then((res) => {
         console.log(res.data);
-        setModalShow(false); // Close the modal after sending the form.
+        setModalShow(false);
       })
       .catch((error) => {
-        console.error(error); // Handle any errors here if necessary.
+        console.error(error);
       });
   };
 
-  const DeleteFriend = async (event, friendName, index) => {
-    const user = JSON.parse(localStorage.getItem('user'));
-
+  const DeleteFriend = async () => {
     try {
       const form = JSON.stringify({
         UserID: user,
-        Friend: friendName,
-        Action: 'rm',
+        Friend: Name,
+        Action: "rm",
       });
-      const response = await axios.post(
-        `http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`,
-        form,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
+        headers: {
+          'Content-Type': 'application/json',
         }
-      );
+      });
+
+      // Update the friendsList state by filtering out the removed friend
+      setFriendsList(friendsList.filter((friend) => friend.name !== Name));
     } catch (err) {
       console.error(err);
     }
-    const isFriend = friendsList.some((friend) => friend.name === Name);
+    console.log(Name);
+    navigate(`/My_user_profile/${username}`);
 
-    if (isFriend != friendsList.includes(Name)) {
-      navigate(`/My_user_profile/${Name}`);
-    }
-
-    async function fetchFriends() {
-      try {
-        const response = await axios.get(
-          `http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/${user}`
-        );
-        const fetchedData = response.data.fetched;
-        const friendsListData = fetchedData.map((name) => ({ name }));
-        setFriendsList(friendsListData);
-      } catch (error) {
-        console.error(error);
-      }
-    }
   };
 
   return (
@@ -138,26 +124,25 @@ export default function EditButton() {
                   />
                 </div>
 
-                <div className="ms-3" style={{ marginTop: '135px' }}>
-                  {Load ? <MDBTypography tag="h5">No Name</MDBTypography> : <MDBTypography tag="h5">{Name}</MDBTypography>}
-                  <MDBCardText>@ID</MDBCardText>
+                  <div className="ms-3" style={{ marginTop: '130px' }}>
+                    {Load ? <MDBTypography tag="h5">No Name</MDBTypography> : <MDBTypography tag="h5">{Name}</MDBTypography>}
+                    <MDBCardText>@ID</MDBCardText>
 
-                  <MDBBtn color="dark" rounded size="lg" onClick={DeleteFriend}>
-                    - DELETE FRIEND
-                  </MDBBtn>
-                  <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark">
-                    Dark
-                  </button>
-                  <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="light">
-                    Dark
-                  </button>
-                  <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="light">
-                    Dark
-                  </button>
-
-                  <MDBBtn color="light" rounded size="lg" onClick={() => setModalShow(true)}>
-                    BOOK A CALL
-                  </MDBBtn>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <MDBBtn
+                        color="dark"
+                        rounded
+                        size="lg"
+                        onClick={() => {
+                          DeleteFriend();
+                        }}
+                      >
+                        <MDBIcon /> {"- Delete Contact"}
+                      </MDBBtn>
+                      <MDBBtn color="light" rounded size="lg" onClick={() => setModalShow(true)}>
+                        BOOK A CALL
+                      </MDBBtn>
+                    </div>
                   <MDBModal show={modalShow} tabIndex="-1" onClick={() => setModalShow(false)}>
                     <MDBModalDialog>
                       <MDBModalContent>
@@ -187,13 +172,34 @@ export default function EditButton() {
                                 onChange={(date) => setSelectedDate(date)}
                                 dateFormat="dd/MM/yyyy"
                                 style={{
-                                  backgroundColor: '#007bff', // Change the background color to your desired color
-                                  color: '#fff', // Text color
+                                  backgroundColor: '#007bff',
+                                  color: '#fff',
                                   border: 'none',
-                                  padding: '10px 20px', // Adjust padding as needed
-                                  borderRadius: '5px', // Add rounded corners
+                                  padding: '10px 20px',
+                                  borderRadius: '5px',
                                   cursor: 'pointer',
-                                  transition: 'background-color 0.3s ease', // Add a smooth transition effect
+                                  transition: 'background-color 0.3s ease',
+                                }}
+                              />
+                              <br />
+                              <br />
+                              <label htmlFor="time">Time:</label>
+                              <br />
+                              <TimePicker
+                                onChange={setSelectedTime}
+                                value={selectedTime}
+                                format="h:mm a"
+                                clearIcon={null}
+                                clockIcon={null}
+                                disableClock={true}
+                                style={{
+                                  backgroundColor: '#007bff',
+                                  color: '#fff',
+                                  border: 'none',
+                                  padding: '10px 20px',
+                                  borderRadius: '5px',
+                                  cursor: 'pointer',
+                                  transition: 'background-color 0.3s ease',
                                 }}
                               />
                               <br />
@@ -232,7 +238,7 @@ export default function EditButton() {
                 </div>
               </div>
               <MDBCardBody className="text-black p-4">
-                <p className="lead fw-normal mb-1">Friend's list</p>
+                <p className="lead fw-normal mb-1">Contact's list</p>
                 <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
                   <MDBCol md="6">
                     <MDBCard className="mb-4 mb-md-0"></MDBCard>

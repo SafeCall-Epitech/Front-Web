@@ -64,7 +64,6 @@ export default function App() {
                                     <div>
                                         <MDBTypography tag="h5">{selectedResult['FullName']}</MDBTypography>
                                         <div className="d-flex align-items-center justify-content-between mb-3">
-                                            <p className="small mb-0"><MDBIcon far icon="clock me-2" />6 hrs ago</p>
                                         </div>
                                         <div className="d-flex align-items-center mb-4">
                                             <div className="flex-shrink-0">
@@ -110,7 +109,7 @@ export default function App() {
                                         <MDBCardText>Email: {selectedResult['Email']}</MDBCardText>
                                         <MDBCardText>Phone Number: {selectedResult['PhoneNb']}</MDBCardText>
                                         <MDBBtn color="dark" rounded block size="lg">
-                                            <MDBIcon /> + Add FRIEND
+                                            <MDBIcon /> + Add Contact
                                         </MDBBtn>
                                     </div>
                                 ) : (

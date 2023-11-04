@@ -46,7 +46,7 @@ function App() {
         <MDBRow>
 
           <MDBCol col='6' className="mb-5">
-            <div className="d-flex flex-column ms-5">
+            <div className="d-flex flex-column ms-5"> 
 
               <div className="text-center">
                 <img src="SafeCallBlack.png" width="250" height="60" alt="Alternate text" />

@@ -35,7 +35,7 @@ class App extends Component {
           <Route exact path="/Register" element={<My_Register />} />
           <Route exact path="/Call" element={<My_Call />} />
 		      <Route exact path="/My_user_profile/:username" element={<The_user_profile />} />
-		      <Route exact path="/My_wfriend_profile/:username" element={<My_wfriend_profile />} />
+		      <Route exact path="/My_wfriend_profile/:username" element={<My_wfriend_profile />} /> 
 
         </Routes>
       </Router>

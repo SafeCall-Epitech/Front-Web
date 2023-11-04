@@ -109,7 +109,7 @@ export default function ECommerce() {
                         </div>
                         <hr />
                         <MDBBtn color="dark" rounded block size="lg">
-                          <MDBIcon /> + Add FRIEND
+                          <MDBIcon /> + Add Contact
                         </MDBBtn>
                       </MDBCardBody>
                     </MDBCard>
