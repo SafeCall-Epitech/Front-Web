@@ -1,0 +1,39 @@
+.Chat {
+    height: 500px;
+    width: 100%;
+}
+
+.Col {
+    height: 600px;
+}
+
+.me,
+.other {
+    width: 120px;
+    border-radius: 10px;
+    padding-left: 2%;
+    padding-right: 1%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    font: "Andale Mono";
+    font-weight: 500;
+}
+
+.me {
+    background-color: whitesmoke;
+    /* float: left; */
+}
+
+.other {
+    color: whitesmoke;
+    background-color: lightskyblue;
+    margin-left: 85%;
+    /* Aligns the content to the right */
+    /* float: right; */
+}
+
+.contain {
+    /* border: solid black;
+    background-color: blue; */
+    margin-bottom: 10px;
+}

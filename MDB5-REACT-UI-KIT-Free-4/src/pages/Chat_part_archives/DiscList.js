@@ -78,12 +78,42 @@ function DiscList({ onFriendSelect }) {
         closeModal();
     };
 
-    const handleDeleteConversation = async (friend) => {
-        const fr = friend.split(":");
-        const response = await axios.get('http://20.234.168.103:8080/del_room/' + fr[0]);
-        window.location.reload();
-    };
 
+
+    // return (
+    //     <MDBCard className="conv_zone">
+    //         <MDBCardBody>
+    //             <div className="d-flex justify-content-between align-items-center"> {/* Add a div for alignment */}
+    //                 <h5 className="font-weight-bold mb-3 text-center text-lg-start">Conversation</h5>
+    //                 <MDBBtn onClick={openModal}>New conversation</MDBBtn>
+    //             </div>
+    //             {/* <h5 className="font-weight-bold mb-3 text-center text-lg-start">Conversation</h5> */}
+    //             <MDBTypography listUnStyled>
+    //                 {friendList.map((friend, index) => (
+    //                     <li className="p-2 border-bottom friend" key={friend} >
+    //                         <a href="#!" className="d-flex justify-content-between" onClick={() => handleFriendClick(friend.replace(sessionStorage.getItem("user_name"), "").split(":")[0])}>
+    //                             <div className="d-flex flex-row">
+    //                                 <img
+    //                                     src="https://via.placeholder.com/60"
+    //                                     alt="Profile"
+    //                                     className="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
+    //                                     width="60"
+    //                                 />
+    //                                 <div className="pt-1">
+    //                                     <p className="fw-bold mb-0">{friend.replace(sessionStorage.getItem("user_name"), "").split(":")[0]}</p>
+    //                                     <p className="small text-muted">{friend.split(":")[1]}{" : "}{friend.split(":")[2]}{":"}{friend.split(":")[3]}</p>
+    //                                 </div>
+    //                             </div>
+    //                             <div className="pt-1">
+    //                                 {/* <p className="small text-muted mb-1">Just now</p> */}
+    //                             </div>
+    //                         </a>
+    //                     </li>
+    //                 ))}
+    //             </MDBTypography>
+    //         </MDBCardBody>
+    //     </MDBCard>
+    // );
     return (
         <MDBCard className="conv_zone">
             <MDBCardBody>
@@ -123,11 +153,7 @@ function DiscList({ onFriendSelect }) {
                                         </p>
                                     </div>
                                 </div>
-                                <div className="d-flex align-items-stretch">
-                                    <MDBBtn color="danger" className="w-100" size="sm" onClick={() => handleDeleteConversation(friend)}>
-                                        Supprimer
-                                    </MDBBtn>
-                                </div>
+                                <div className="pt-1"></div>
                             </a>
                         </li>
                     ))}
@@ -138,10 +164,11 @@ function DiscList({ onFriendSelect }) {
                         onHide={closeModal}
                         className="custom-modal"
                         contentClassName="overlay-modal-content"
-                        size="sm"
+                        size="sm" // Set the modal size to small
                     >
                         <MDBModalHeader className="rounded-top">Search your friend</MDBModalHeader>
                         <MDBModalBody className="rounded-bottom">
+
                             <input
                                 type="text"
                                 className="form-control-plaintext form-control-lg"
@@ -150,6 +177,7 @@ function DiscList({ onFriendSelect }) {
                                 onChange={(event) => {
                                     setCurrentMessage(event.target.value);
                                 }}
+
                             />
                         </MDBModalBody>
                         <MDBModalFooter className="rounded-bottom">
@@ -165,90 +193,6 @@ function DiscList({ onFriendSelect }) {
             </MDBCardBody>
         </MDBCard>
     );
-
-
-
-
-
-    // return (
-    //     <MDBCard className="conv_zone">
-    //         <MDBCardBody>
-    //             <div className="d-flex justify-content-between align-items-center">
-    //                 <h5 className="font-weight-bold mb-3 text-center text-lg-start">
-    //                     Conversation
-    //                 </h5>
-    //                 <MDBBtn size="sm" onClick={openModal}>
-    //                     Open Modal
-    //                 </MDBBtn>
-    //             </div>
-    //             <MDBTypography listUnStyled>
-    //                 {friendList.map((friend, index) => (
-    //                     <li className="p-2 border-bottom friend" key={friend}>
-    //                         <a
-    //                             href="#!"
-    //                             className="d-flex justify-content-between"
-    //                             onClick={() =>
-    //                                 handleFriendClick(
-    //                                     friend.replace(sessionStorage.getItem('user_name'), '').split(':')[0]
-    //                                 )
-    //                             }
-    //                         >
-    //                             <div className="d-flex flex-row">
-    //                                 <img
-    //                                     src="https://via.placeholder.com/60"
-    //                                     alt="Profile"
-    //                                     className="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
-    //                                     width="60"
-    //                                 />
-    //                                 <div className="pt-1">
-    //                                     <p className="fw-bold mb-0">
-    //                                         {friend.replace(sessionStorage.getItem('user_name'), '').split(':')[0]}
-    //                                     </p>
-    //                                     <p className="small text-muted">
-    //                                         {friend.split(':')[1]} : {friend.split(':')[2]}:{friend.split(':')[3]}
-    //                                     </p>
-    //                                 </div>
-    //                             </div>
-    //                             <div className="pt-1"></div>
-    //                         </a>
-    //                     </li>
-    //                 ))}
-    //             </MDBTypography>
-    //             <div style={{ width: '30px' }}>
-    //                 <MDBModal
-    //                     show={isModalOpen}
-    //                     onHide={closeModal}
-    //                     className="custom-modal"
-    //                     contentClassName="overlay-modal-content"
-    //                     size="sm" // Set the modal size to small
-    //                 >
-    //                     <MDBModalHeader className="rounded-top">Search your friend</MDBModalHeader>
-    //                     <MDBModalBody className="rounded-bottom">
-
-    //                         <input
-    //                             type="text"
-    //                             className="form-control-plaintext form-control-lg"
-    //                             value={currentMessage}
-    //                             placeholder="Entrer votre message"
-    //                             onChange={(event) => {
-    //                                 setCurrentMessage(event.target.value);
-    //                             }}
-
-    //                         />
-    //                     </MDBModalBody>
-    //                     <MDBModalFooter className="rounded-bottom">
-    //                         <MDBBtn color="secondary" onClick={closeModal}>
-    //                             Close
-    //                         </MDBBtn>
-    //                         <MDBBtn color="primary" onClick={handleModalSubmit}>
-    //                             Submit
-    //                         </MDBBtn>
-    //                     </MDBModalFooter>
-    //                 </MDBModal>
-    //             </div>
-    //         </MDBCardBody>
-    //     </MDBCard>
-    // );
 
 }
 
