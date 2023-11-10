@@ -14,6 +14,7 @@ import {
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
 
+import { DropdownButton, Dropdown } from 'react-bootstrap';
 import { Uploader } from "uploader";
 import { UploadDropzone } from "react-uploader";
 
@@ -106,6 +107,26 @@ export default function ProfilePage() {
 
   const handleDescriptionChange = (e) => {
     setNewDescription(e.target.value);
+  };
+
+  const DeleteFriend = async (friend) => {
+    try {
+      const form = JSON.stringify({
+        UserID: user,
+        Friend: friend.id,
+        Subject : friend.subject,
+        Action: "delete",
+      });
+      await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+    } catch (err) {
+      console.error(err);
+    }
+    console.log(friend);
   };
 
   const handleNameSave = async () => {
@@ -247,6 +268,23 @@ export default function ProfilePage() {
     handleProfilePicSave(fileUrl);
   })
   const [files, setFiles] = useState([])
+
+  const [selectedFriend, setSelectedFriend] = useState(null);
+  const [actionResult, setActionResult] = useState('');
+
+  const handleDropdownSelect = (friend, action) => {
+
+    if (action === 'option1') {
+      DeleteFriend(friend);
+    } else {
+      setActionResult('');
+    }
+    if (action === 'option2') {
+      DeleteFriend(friend);
+    } else {
+      setActionResult('');
+    }
+  };
 
   return (
     <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
@@ -432,11 +470,22 @@ export default function ProfilePage() {
               <MDBCol sm="6">
                 <MDBCard className="mb-4">
                   <MDBCardBody>
-                    <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Contact List</span></MDBCardText>
+                    <MDBCardText className="mb-4">
+                      <span className="text-primary font-italic me-1">Friends List</span>
+                    </MDBCardText>
                     <MDBListGroup>
                       {friendsList.map((friend) => (
-                        <MDBListGroupItem key={friend}>
-                          {friend.id} | {friend.subject}
+                        <MDBListGroupItem key={friend.id}>
+                          {friend.id}
+                          <DropdownButton
+                            title="Actions"
+                            onSelect={(action) => handleDropdownSelect(friend, action)}
+                            id={`dropdown-basic-${friend.id}`}
+                          >
+                            <Dropdown.Item eventKey="option1">Delete friend</Dropdown.Item>
+                            <Dropdown.Item eventKey="option2">Report</Dropdown.Item>
+                            {/* Add more options as needed */}
+                          </DropdownButton>
                         </MDBListGroupItem>
                       ))}
                     </MDBListGroup>
