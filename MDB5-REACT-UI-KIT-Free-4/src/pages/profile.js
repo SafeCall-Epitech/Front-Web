@@ -48,9 +48,14 @@ export default function ProfilePage() {
       try {
         const response = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/${user}`);
         const fetchedData = response.data.fetched;
-        const friendsListData = fetchedData.map((name) => ({ name }));
-        setFriendsList(friendsListData);
 
+        const friendsListData = fetchedData.map(friend => ({
+          id: friend.Id,
+          subject: friend.Subject,
+          active: friend.Active
+        }));
+
+        setFriendsList(friendsListData);
       } catch (error) {
         console.error(error);
       }
@@ -430,8 +435,8 @@ export default function ProfilePage() {
                     <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Contact List</span></MDBCardText>
                     <MDBListGroup>
                       {friendsList.map((friend) => (
-                        <MDBListGroupItem key={friend.id}>
-                          {friend.name}
+                        <MDBListGroupItem key={friend}>
+                          {friend.id} | {friend.subject}
                         </MDBListGroupItem>
                       ))}
                     </MDBListGroup>
