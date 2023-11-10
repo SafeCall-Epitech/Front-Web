@@ -80,7 +80,8 @@ function DiscList({ onFriendSelect }) {
 
     const handleDeleteConversation = async (friend) => {
         const fr = friend.split(":");
-        const response = await axios.get('http://20.234.168.103:8080/del_room/' + fr[0]);
+        console.log(fr[0])
+        axios.get('http://20.234.168.103:8080/delRoom/' + fr[0]);
         window.location.reload();
     };
 

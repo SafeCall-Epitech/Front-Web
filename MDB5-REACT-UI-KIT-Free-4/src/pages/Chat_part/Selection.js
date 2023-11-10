@@ -6,6 +6,14 @@ import '../Chat_part/style/Selection.css';
 function MainComponent() {
     const [selectedFriend, setSelectedFriend] = useState("");
 
+    const date = new Date();
+
+    const currentOffsetMinutes = date.getTimezoneOffset();
+
+    const currentDifferenceHours = currentOffsetMinutes / 60;
+
+    sessionStorage.setItem("UTC", currentDifferenceHours);
+
     const handleFriendSelection = (friendName) => {
         setSelectedFriend(friendName);
     };
