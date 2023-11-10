@@ -14,8 +14,14 @@ import {
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
 
+import { DropdownButton, Dropdown } from 'react-bootstrap';
 import { Uploader } from "uploader";
 import { UploadDropzone } from "react-uploader";
+
+function removeQuestionMarkFromName(name) {
+  // Use a regular expression to match and remove the question mark at the beginning
+  return name.replace(/^\?/, '');
+}
 
 export default function ProfilePage() {
 
@@ -101,6 +107,25 @@ export default function ProfilePage() {
 
   const handleDescriptionChange = (e) => {
     setNewDescription(e.target.value);
+  };
+
+  const DeleteFriend = async () => {
+    try {
+      const form = JSON.stringify({
+        UserID: user,
+        Friend: selectedFriend,
+        Action: "rm",
+      });
+      await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+    } catch (err) {
+      console.error(err);
+    }
+    console.log(Name);
   };
 
   const handleNameSave = async () => {
@@ -242,6 +267,26 @@ export default function ProfilePage() {
     handleProfilePicSave(fileUrl);
   })
   const [files, setFiles] = useState([])
+
+  const [selectedFriend, setSelectedFriend] = useState(null);
+  const [actionResult, setActionResult] = useState('');
+
+  const handleDropdownSelect = (friend, action) => {
+    const TreatedName = removeQuestionMarkFromName(friend.name);
+    setSelectedFriend(TreatedName);
+
+    if (action === 'option1') {
+      DeleteFriend();
+    } else {
+      setActionResult('');
+    }
+    if (action === 'option2') {
+      DeleteFriend();
+    } else {
+      setActionResult('');
+    }
+  };
+
 
   return (
     <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
@@ -407,19 +452,19 @@ export default function ProfilePage() {
                   <MDBCardBody>
                     <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Next on the Agenda</span></MDBCardText>
 
-                <ul>
-                {agenda && agenda.map((event, index) => (
-  <li key={index}>
-    Guests: {event.Guests}<br />
-    Date: {event.Date}<br />
-    Subject: {event.Subject}<br />
-    Confirmed: {event.Confirmed ? "Yes" : "No"}<br />
-    ---
-  </li>
-))}
+                                        <ul>
+                                        {agenda && agenda.map((event, index) => (
+                          <li key={index}>
+                            Guests: {event.Guests}<br />
+                            Date: {event.Date}<br />
+                            Subject: {event.Subject}<br />
+                            Confirmed: {event.Confirmed ? "Yes" : "No"}<br />
+                            ---
+                          </li>
+                        ))}
 
-                </ul> 
-                    
+                                        </ul> 
+                                            
 
                   </MDBCardBody>
                 </MDBCard>
@@ -427,16 +472,33 @@ export default function ProfilePage() {
               <MDBCol sm="6">
                 <MDBCard className="mb-4">
                   <MDBCardBody>
-                    <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Contact List</span></MDBCardText>
+                    <MDBCardText className="mb-4">
+                      <span className="text-primary font-italic me-1">Friends List</span>
+                    </MDBCardText>
                     <MDBListGroup>
                       {friendsList.map((friend) => (
                         <MDBListGroupItem key={friend.id}>
                           {friend.name}
+                          <DropdownButton
+                            title="Actions"
+                            onSelect={(action) => handleDropdownSelect(friend, action)}
+                            id={`dropdown-basic-${friend.id}`}
+                          >
+                            <Dropdown.Item eventKey="option1">Delete friend</Dropdown.Item>
+                            <Dropdown.Item eventKey="option2">Report</Dropdown.Item>
+                            {/* Add more options as needed */}
+                          </DropdownButton>
                         </MDBListGroupItem>
                       ))}
                     </MDBListGroup>
                   </MDBCardBody>
                 </MDBCard>
+                {selectedFriend && (
+                    <div>
+                    You selected {selectedFriend.name}. Perform the desired action here.
+                    {/* You can render specific actions or a modal for the selected friend */}
+                  </div>
+                )}
               </MDBCol>
             </MDBRow>
           </MDBCol>
