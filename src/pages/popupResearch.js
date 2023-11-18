@@ -31,7 +31,7 @@ export default function App() {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`);        
+            const res = await axios.get(`/api/profile/${user}`);        
             setProfilePic(res.data['profile']['ProfilePic']);
           } catch (err) {
             console.error(err);

@@ -46,7 +46,7 @@ export default function EditButton() {
 
   const fetchData = async () => {
     const res = await axios.get(
-      `http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${username}`
+      `/api/profile/${username}`
     );
     setName(res.data['profile']['FullName']);
     setEmail(res.data['profile']['Email']);
@@ -91,7 +91,7 @@ export default function EditButton() {
         Friend: Name,
         Action: "rm",
       });
-      await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
+      await axios.post(`/api/manageFriend`, form, {
         headers: {
           'Content-Type': 'application/json',
         }

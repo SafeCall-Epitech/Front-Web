@@ -33,7 +33,7 @@ export default function ECommerce() {
   useEffect(() => {
     async function fetchData() {
       const res = await axios.get(
-        `http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`
+        `/api/profile/${user}`
       );
       setName(res.data["profile"]["FullName"]);
       setEmail(res.data["profile"]["Email"]);

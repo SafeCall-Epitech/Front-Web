@@ -48,7 +48,7 @@ export default function ProfilePage() {
     useEffect(() => {
         const fetchFriendsList = async () => {
             try {
-                const response = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listFriends/${user}`);
+                const response = await axios.get(`/api/listFriends/${user}`);
                 const fetchedData = response.data.fetched;
 
                 const friendsListData = fetchedData.map(friend => ({
@@ -70,7 +70,7 @@ export default function ProfilePage() {
     useEffect(() => {
         const fetchAgenda = async () => {
             try {
-                const res2 = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listEvent/${user}`)
+                const res2 = await axios.get(`/api/listEvent/${user}`)
 
                 const data = res2.data["Success "];
                 console.log(data);
@@ -118,7 +118,7 @@ export default function ProfilePage() {
                 Subject: friend.subject,
                 Action: "delete",
             });
-            await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
+            await axios.post(`/api/manageFriend`, form, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -137,7 +137,7 @@ export default function ProfilePage() {
                 Subject: friend.subject,
                 Action: "delete",
             });
-            // await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/manageFriend`, form, {
+            // await axios.post(`/api/manageFriend`, form, {
             //     headers: {
             //         'Content-Type': 'application/json',
             //     }
@@ -156,7 +156,7 @@ export default function ProfilePage() {
                 UserID: user,
                 Data: newName,
             });
-            axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileFullName`, form, {
+            axios.post(`/api/profileFullName`, form, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -173,7 +173,7 @@ export default function ProfilePage() {
                 UserID: user,
                 Data: newNb,
             });
-            axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profilePhoneNB`, form, {
+            axios.post(`/api/profilePhoneNB`, form, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -189,7 +189,7 @@ export default function ProfilePage() {
                 UserID: user,
                 Data: newDescription,
             });
-            axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileDescription`, form, {
+            axios.post(`/api/profileDescription`, form, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -206,7 +206,7 @@ export default function ProfilePage() {
                 UserID: user,
                 Data: newEmail,
             });
-            axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profileEmail`, form, {
+            axios.post(`/api/profileEmail`, form, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -223,7 +223,7 @@ export default function ProfilePage() {
                 UserID: user,
                 Data: fileUrl,
             });
-            axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profilePic`, form, {
+            axios.post(`/api/profilePic`, form, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -245,7 +245,7 @@ export default function ProfilePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/profile/${user}`);
+                const res = await axios.get(`/api/profile/${user}`);
                 setName(res.data['profile']['FullName']);
                 setEmail(res.data['profile']['Email']);
                 setNb(res.data['profile']['PhoneNb']);
