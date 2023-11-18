@@ -30,6 +30,7 @@ function App() {
       headers: {
         'Content-Type': 'application/json',
       },
+      crossorigin: true,
     })
       .then(res => {
         console.log(res.data)
