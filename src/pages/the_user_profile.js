@@ -35,7 +35,7 @@ export default function EditButton() {
 
     async function fetchFriends() {
       try {
-        const response = await axios.get(`/api/listFriends/${user}`);
+        const response = await axios.get(`http://20.234.168.103:8080/listFriends/${user}`);
         const fetchedData = response.data.fetched;
         const friendsListData = fetchedData.map((name) => ({ name }));
         setFriendsList(friendsListData);
@@ -47,7 +47,7 @@ export default function EditButton() {
   }, []);
 
   const fetchData = async () => {
-    const res = await axios.get(`/api/profile/${username}`);
+    const res = await axios.get(`http://20.234.168.103:8080/profile/${username}`);
     setName(res.data['profile']['FullName']);
     setEmail(res.data['profile']['Email']);
     setNb(res.data['profile']['PhoneNb']);
@@ -68,7 +68,7 @@ export default function EditButton() {
         Friend: Name,
         Action: "rm",
       });
-      await axios.post(`/api/manageFriend`, form, {
+      await axios.post(`http://20.234.168.103:8080/manageFriend`, form, {
         headers: {
           'Content-Type': 'application/json',
         }
@@ -89,7 +89,7 @@ export default function EditButton() {
         Friend: Name,
         Action: "add",
       });
-      await axios.post(`/api/manageFriend`, form, {
+      await axios.post(`http://20.234.168.103:8080/manageFriend`, form, {
         headers: {
           'Content-Type': 'application/json',
         }

@@ -22,7 +22,7 @@ export default function App() {
 
     async function fetchFriends() {
       try {
-        const response = await axios.get(`/api/listFriends/${user}`);
+        const response = await axios.get(`http://20.234.168.103:8080/listFriends/${user}`);
         const fetchedData = response.data.fetched;
         // console.log(fetchedData);
          const friendsListData = fetchedData.map((name) => ({ name }));
@@ -41,7 +41,7 @@ export default function App() {
         Friend: Name,
         Action: "add",  // assuming you want to send the string "add"
       });
-      await axios.post(`/api/manageFriend`, form, {
+      await axios.post(`http://20.234.168.103:8080/manageFriend`, form, {
         headers: {
           'Content-Type': 'application/json',
         }
@@ -68,7 +68,7 @@ export default function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/api/profile/${user}`);        
+        const res = await axios.get(`http://20.234.168.103:8080/profile/${user}`);        
         setProfilePic(res.data['profile']['ProfilePic']);
       } catch (err) {
         console.error(err);

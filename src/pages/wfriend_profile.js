@@ -46,7 +46,7 @@ export default function EditButton() {
 
   const fetchData = async () => {
     const res = await axios.get(
-      `/api/profile/${username}`
+      `http://20.234.168.103:8080/profile/${username}`
     );
     setName(res.data['profile']['FullName']);
     setEmail(res.data['profile']['Email']);
@@ -91,7 +91,7 @@ export default function EditButton() {
         Friend: Name,
         Action: "rm",
       });
-      await axios.post(`/api/manageFriend`, form, {
+      await axios.post(`http://20.234.168.103:8080/manageFriend`, form, {
         headers: {
           'Content-Type': 'application/json',
         }

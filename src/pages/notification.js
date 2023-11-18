@@ -15,8 +15,8 @@ import {
 import { fr } from "date-fns/locale";
 import axios from 'axios';
 
-// add friend : /api/manageFriend/user/friend/add
-// rm friend : /api/manageFriend/user/friend/rm
+// add friend : http://20.234.168.103:8080/manageFriend/user/friend/add
+// rm friend : http://20.234.168.103:8080/manageFriend/user/friend/rm
 
 export default function NotificationPage() {
 
@@ -61,7 +61,7 @@ export default function NotificationPage() {
           Action: "accept",
         });
     
-        const response = await axios.post(`/api/manageFriend`, form, {
+        const response = await axios.post(`http://20.234.168.103:8080/manageFriend`, form, {
           headers: {
             'Content-Type': 'application/json',
           }
@@ -98,7 +98,7 @@ export default function NotificationPage() {
           Action: "deny",
         });
     
-        const response = await axios.post(`/api/manageFriend`, form, {
+        const response = await axios.post(`http://20.234.168.103:8080/manageFriend`, form, {
           headers: {
             'Content-Type': 'application/json',
           }
@@ -180,7 +180,7 @@ export default function NotificationPage() {
 
   const handleNewFriendRequestClick = async () => {
     if (document.visibilityState === "visible") {
-      const response = await axios.get(`/api/listFriends/${user}`);
+      const response = await axios.get(`http://20.234.168.103:8080/listFriends/${user}`);
       const fetchedData = response.data.fetched;
       const pendingFriendRequests = fetchedData.filter(name => name.startsWith("?"));
       console.log("pendingFriendRequests:", pendingFriendRequests);

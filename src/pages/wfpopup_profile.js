@@ -33,7 +33,7 @@ export default function ECommerce() {
   useEffect(() => {
     async function fetchData() {
       const res = await axios.get(
-        `/api/profile/${user}`
+        `http://20.234.168.103:8080/profile/${user}`
       );
       setName(res.data["profile"]["FullName"]);
       setEmail(res.data["profile"]["Email"]);
