@@ -46,7 +46,7 @@ export default function EditButton() {
 
   const fetchData = async () => {
     const res = await axios.get(
-      `http://20.234.168.103:8080/profile/${username}`
+      `https://20.234.168.103:8080/profile/${username}`
     );
     setName(res.data['profile']['FullName']);
     setEmail(res.data['profile']['Email']);
@@ -70,7 +70,7 @@ export default function EditButton() {
     });
 
     axios
-      .post(`http://20.234.168.103:8080/addEvent`, form, {
+      .post(`https://20.234.168.103:8080/addEvent`, form, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -91,7 +91,7 @@ export default function EditButton() {
         Friend: Name,
         Action: "rm",
       });
-      await axios.post(`http://20.234.168.103:8080/manageFriend`, form, {
+      await axios.post(`https://20.234.168.103:8080/manageFriend`, form, {
         headers: {
           'Content-Type': 'application/json',
         }

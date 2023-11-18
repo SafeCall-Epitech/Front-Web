@@ -44,7 +44,7 @@ export default function ECommerce() {
           date: selectedDate, // Use the selected date
         });
       
-        axios.post(`http://20.234.168.103:8080/addEvent`, form, {
+        axios.post(`https://20.234.168.103:8080/addEvent`, form, {
           headers: {
             'Content-Type': 'application/json',
           },

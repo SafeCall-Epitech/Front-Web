@@ -36,7 +36,7 @@ export default function ECommerce() {
             date: Date,
             message: Feedback,
         });
-        axios.post(`http://20.234.168.103:8080/feedback`, form, {
+        axios.post(`https://20.234.168.103:8080/feedback`, form, {
             headers: {
                 'Content-Type': 'application/json',
             }

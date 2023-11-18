@@ -26,11 +26,10 @@ function App() {
       Password: Password
     });
 
-    axios.post(`http://20.234.168.103:8080/login`, form, {
+    axios.post(`https://20.234.168.103:8080/login`, form, {
       headers: {
         'Content-Type': 'application/json',
       },
-      crossorigin: true,
     })
       .then(res => {
         console.log(res.data)
@@ -42,7 +41,7 @@ function App() {
           alert("Error: Incorrect Username or Password");
         }
       });
-    // const Myresponse = fetch('http://20.234.168.103:8080/login/' + UserName + '/' + Password)
+    // const Myresponse = fetch('https://20.234.168.103:8080/login/' + UserName + '/' + Password)
     //   .then((response) => response.json())
     //   .then((responseJson) => {
     //     console.log(responseJson);

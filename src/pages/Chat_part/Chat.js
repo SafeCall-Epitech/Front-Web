@@ -23,7 +23,7 @@ function Chat({ selectedFriend }) {
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await axios.get('http://20.234.168.103:8080/messages/' + sessionStorage.getItem("user_name") + "/" + selectedFriend);
+                const response = await axios.get('https://20.234.168.103:8080/messages/' + sessionStorage.getItem("user_name") + "/" + selectedFriend);
                 if (response.data["Success "] == null) {
                     setMessageList([]);
                 } else {
@@ -41,7 +41,7 @@ function Chat({ selectedFriend }) {
         if (currentMessage !== "") {
             const msg = { "Sender": sessionStorage.getItem("user_name"), "Message": currentMessage };
             console.log(selectedFriend)
-            await axios.post('http://20.234.168.103:8080/sendMessage', {
+            await axios.post('https://20.234.168.103:8080/sendMessage', {
                 message: currentMessage,
                 username: sessionStorage.getItem("user_name"),
                 friendname: selectedFriend

@@ -27,7 +27,7 @@ function DiscList({ onFriendSelect }) {
     useEffect(() => {
         const fetchFriendList = async () => {
             sessionStorage.setItem("user_name", JSON.parse(localStorage.getItem('user')).toLowerCase())
-            const response = await axios.get('http://20.234.168.103:8080/conversations/' + sessionStorage.getItem("user_name"));
+            const response = await axios.get('https://20.234.168.103:8080/conversations/' + sessionStorage.getItem("user_name"));
             console.log(response.data["Success "])
             setFriendList(response.data["Success "])
             // setLastMessages(Array(response.data.length).fill("Dernier message"));
@@ -38,12 +38,12 @@ function DiscList({ onFriendSelect }) {
 
 
     // const fetchFriendList = async () => {
-    //     const response = await axios.get('http://localhost:3002/get_a_conv/' + sessionStorage.getItem("user_name"));
+    //     const response = await axios.get('https://localhost:3002/get_a_conv/' + sessionStorage.getItem("user_name"));
     //     setFriendList(response.data)
     //     // setLastMessages(Array(response.data.length).fill("Dernier message"));
     // };
     // const fetchMessages = async () => {
-    //     const response = await axios.post('http://localhost:3002/lastmess/', {
+    //     const response = await axios.post('https://localhost:3002/lastmess/', {
     //         friend: friendList
     //     });
     //     console.log("ok")
@@ -72,7 +72,7 @@ function DiscList({ onFriendSelect }) {
     };
 
     const handleModalSubmit = async () => {
-        const response = await axios.get('http://20.234.168.103:8080/messages/' + sessionStorage.getItem("user_name") + "/" + currentMessage);
+        const response = await axios.get('https://20.234.168.103:8080/messages/' + sessionStorage.getItem("user_name") + "/" + currentMessage);
         window.location.reload();
         console.log(textInput);
         closeModal();
