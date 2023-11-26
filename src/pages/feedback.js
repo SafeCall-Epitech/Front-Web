@@ -36,7 +36,7 @@ export default function ECommerce() {
             date: Date,
             message: Feedback,
         });
-        axios.post(`https://20.234.168.103:8080/feedback`, form, {
+        axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/feedback`, form, {
             headers: {
                 'Content-Type': 'application/json',
             }

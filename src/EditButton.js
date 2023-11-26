@@ -12,7 +12,7 @@ export default function EditButton() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`https://20.234.168.103:8080/profile/${name}`);
+        const res = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/profile/${name}`);
         setName(res.data['profile']['FullName']);
         setLoad(false);
       } catch (err) {

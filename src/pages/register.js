@@ -26,7 +26,7 @@ function App() {
       Password: Password,
       Email: Email,
   });
-  axios.post(`https://20.234.168.103:8080/register`, form, {
+  axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/register`, form, {
       headers: {
           'Content-Type': 'application/json',
       }

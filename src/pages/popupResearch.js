@@ -17,7 +17,7 @@ export default function App() {
 
     const handleSearch = async () => {
         try {
-            const res = await axios.get(`https://20.234.168.103:8080/profile/${user}`);
+            const res = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/profile/${user}`);
             if (res.data['profile']) {
                 setSelectedResult(res.data['profile']);
             } else {
@@ -31,7 +31,7 @@ export default function App() {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const res = await axios.get(`https://20.234.168.103:8080/profile/${user}`);        
+            const res = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/profile/${user}`);        
             setProfilePic(res.data['profile']['ProfilePic']);
           } catch (err) {
             console.error(err);

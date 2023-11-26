@@ -35,7 +35,7 @@ export default function EditButton() {
 
     async function fetchFriends() {
       try {
-        const response = await axios.get(`https://20.234.168.103:8080/listFriends/${user}`);
+        const response = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/listFriends/${user}`);
         const fetchedData = response.data.fetched;
         const friendsListData = fetchedData.map((name) => ({ name }));
         setFriendsList(friendsListData);
@@ -47,7 +47,7 @@ export default function EditButton() {
   }, []);
 
   const fetchData = async () => {
-    const res = await axios.get(`https://20.234.168.103:8080/profile/${username}`);
+    const res = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/profile/${username}`);
     setName(res.data['profile']['FullName']);
     setEmail(res.data['profile']['Email']);
     setNb(res.data['profile']['PhoneNb']);
@@ -68,7 +68,7 @@ export default function EditButton() {
         Friend: Name,
         Action: "rm",
       });
-      await axios.post(`https://20.234.168.103:8080/manageFriend`, form, {
+      await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/manageFriend`, form, {
         headers: {
           'Content-Type': 'application/json',
         }
@@ -89,7 +89,7 @@ export default function EditButton() {
         Friend: Name,
         Action: "add",
       });
-      await axios.post(`https://20.234.168.103:8080/manageFriend`, form, {
+      await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/manageFriend`, form, {
         headers: {
           'Content-Type': 'application/json',
         }

@@ -44,7 +44,7 @@ export default function ECommerce() {
           date: selectedDate, // Use the selected date
         });
       
-        axios.post(`https://20.234.168.103:8080/addEvent`, form, {
+        axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/addEvent`, form, {
           headers: {
             'Content-Type': 'application/json',
           },

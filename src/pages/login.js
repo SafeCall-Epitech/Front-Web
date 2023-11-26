@@ -26,7 +26,7 @@ function App() {
       Password: Password
     });
 
-    axios.post(`https://20.234.168.103:8080/login`, form, {
+    axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/login`, form, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -41,7 +41,7 @@ function App() {
           alert("Error: Incorrect Username or Password");
         }
       });
-    // const Myresponse = fetch('https://20.234.168.103:8080/login/' + UserName + '/' + Password)
+    // const Myresponse = fetch('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/login/' + UserName + '/' + Password)
     //   .then((response) => response.json())
     //   .then((responseJson) => {
     //     console.log(responseJson);
