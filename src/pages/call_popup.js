@@ -63,7 +63,6 @@ export default function ECommerce() {
   const connectionRef = useRef();
 
   const callUser = (id) => {
-    console.log("CallUser");
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -95,6 +94,32 @@ export default function ECommerce() {
     connectionRef.current = peer;
   };
 
+  const answerCall = () => {
+    setCallAccepted(true);
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream: stream
+    });
+
+    peer.on("signal", (data) => {
+      socket.emit("answerCall", {signal: data, to: caller});
+    });
+
+    peer.on("stream", (stream) => {
+      stream.getAudioTracks()[0].enabled = sound;
+      if (userVideo.current)
+        userVideo.current.srcObject = stream;
+    });
+
+    socket.on("callEnded", () => {
+      leaveCall();
+    });
+
+    peer.signal(callerSignal);
+    connectionRef.current = peer;
+  };
+  
   const leaveCall = () => {
     setCallEnded(true);
     socket.disconnect();
@@ -217,7 +242,7 @@ export default function ECommerce() {
                   <MDBModalContent>
                   <MDBModalBody onClick={(e) => e.stopPropagation()}>
                       <div className="d-flex justify-content-end">
-                        <h4>TEST me.id = {me}endme </h4>
+                        <h4>TEST me.id = {me} </h4>
                         </div>
                         <input onChange={(e) => setIdToCall(e.target.value)} value={idToCall} ></input>
                         <h4>Test ID to call : {idToCall}</h4>
@@ -232,6 +257,17 @@ export default function ECommerce() {
                           <button onClick={answerCall} >Answer</button>
                       </div>
                     ) : null}
+
+                    <div className="video-container">
+                      <div className="video">
+                        {stream &&  <video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
+                      </div>
+                      <div className="video">
+                        {callAccepted && !callEnded ?
+                        <video playsInline ref={userVideo} autoPlay style={{ width: "300px"}} />:
+                        null}
+                      </div>
+                    </div>
 
                     </MDBModalBody>
                   </MDBModalContent>
