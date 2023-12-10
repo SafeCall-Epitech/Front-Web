@@ -164,11 +164,11 @@ export default function ECommerce() {
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({video: true, audio: true}).then((stream) => {
+      console.log("UseEffectMedia", stream)
       setStream(stream);
       if (myVideo.current)
         myVideo.current.srcObject = stream;
     });
-
     socket.on("me", (id) => {
       setMe(id);
     });
