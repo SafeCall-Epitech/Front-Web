@@ -69,6 +69,8 @@ export default function ECommerce() {
       stream: stream
     });
 
+    console.log("Call print myvideo", myVideo)
+
     peer.on("signal", (data) => {
       console.log("Peer.onSignal", data)
       socket.emit("callUser", {
