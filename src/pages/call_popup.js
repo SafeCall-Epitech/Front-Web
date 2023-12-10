@@ -265,7 +265,7 @@ export default function ECommerce() {
 
                     <div className="video-container">
                       <div className="video">
-                        {stream &&  <video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
+                        {<video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
                       </div>
                       <div className="video">
                         {callAccepted && !callEnded ?
