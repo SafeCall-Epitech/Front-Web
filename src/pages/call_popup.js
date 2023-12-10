@@ -169,6 +169,7 @@ export default function ECommerce() {
       if (myVideo.current)
         myVideo.current.srcObject = stream;
     });
+    console.log("En dehors", myVideo)
     socket.on("me", (id) => {
       setMe(id);
     });
