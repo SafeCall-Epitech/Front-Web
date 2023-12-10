@@ -26,7 +26,7 @@ import Peer from "simple-peer"
 import io from "socket.io-client"
 import { Input } from "@chakra-ui/react"; 
 
-const socket = io.connect("http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
+const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
 
 export default function ECommerce() {
   const user = JSON.parse(localStorage.getItem("user"));
