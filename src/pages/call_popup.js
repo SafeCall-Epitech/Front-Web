@@ -70,6 +70,7 @@ export default function ECommerce() {
     });
 
     peer.on("signal", (data) => {
+      console.log("Peer.onSignal", data)
       socket.emit("callUser", {
         userToCall: id,
         signalData: data,
@@ -78,6 +79,7 @@ export default function ECommerce() {
     });
 
     peer.on("stream", (stream) => {
+      console.log("Peer.onStream", stream)
       if (userVideo.current)
         userVideo.current.srcObject = stream;
     });
