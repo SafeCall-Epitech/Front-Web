@@ -13,6 +13,34 @@ const CalendarPage = () => {
     const [showTime, setShowTime] = useState(false);
     const initRef = React.useRef()
 
+
+    useEffect(() => {
+        const fetchAgenda = async () => {
+          try {
+            const res2 = await axios.get(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:8080/listEvent/${user}`)
+      
+            const data = res2.data["Success "];
+            console.log(data);
+      
+            if (data && data.length > 0) {
+              for (let i = 0; i < data.length; i++) {
+                const event = data[i];
+                const guests = event.Guests;
+                const date = event.Date;
+                const subject = event.Subject;
+                const Event = event.Guests + " / " + event.Date + " / " + event.Subject; 
+              }
+            }
+            setAgenda(data);
+      
+          } catch (error) {
+            console.error(error);
+          }
+        };
+      
+          fetchAgenda();
+        }, []);
+
     return (
         <>
             <Box p={15} m={50}>
