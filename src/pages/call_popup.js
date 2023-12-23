@@ -86,8 +86,7 @@ export default function ECommerce() {
 
   const answerCall = () => {
     setCallAccepted(true);
-    // setShowCallPopup(false); // Remove this line to keep the call popup open
-    setShowCallAnswerModal(true); // Show the call answer modal
+    setShowCallAnswerModal(true); // Show the call answer modal on the receiver's side
     const peer = new Peer({
       initiator: false,
       trickle: false,
@@ -111,6 +110,7 @@ export default function ECommerce() {
     peer.signal(callerSignal);
     connectionRef.current = peer;
   };
+  
   
 
   const leaveCall = () => {
@@ -137,6 +137,30 @@ export default function ECommerce() {
       setMe(id);
     });
 
+    socket.on("answerCall", (data) => {
+      setCallAccepted(true);
+      const peer = new Peer({
+        initiator: true,
+        trickle: false,
+        stream: stream
+      });
+    
+      console.log("??????");
+      peer.on("signal", (signalData) => {
+        socket.emit("acceptCall", { signalData, to: data.from });
+      });
+    
+      peer.on("stream", (stream) => {
+        if (userVideo.current) userVideo.current.srcObject = stream;
+      });
+    
+      // Display the call popup on the caller's side
+      setShowCallPopup(true);
+    
+      peer.signal(data.signal);
+      connectionRef.current = peer;
+    });
+
     socket.on("callUser", (data) => {
       setReceivingCall(true);
       setCaller(data.from);
@@ -144,6 +168,21 @@ export default function ECommerce() {
       setShowCallPopup(true); // Show the modal
     });
   }, []);
+
+
+  useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+      console.log("User media stream:", stream); // Add this line
+      setStream(stream);
+      if (myVideo.current) {
+        myVideo.current.srcObject = stream;
+      }
+    });
+  
+    // Other code or useEffect dependencies can be placed here, if applicable.
+  
+  }, []);
+  
 
   useEffect(() => {
     async function fetchData() {
@@ -169,13 +208,13 @@ export default function ECommerce() {
             
             {/* Place the video container here */}
             <div className="video-container">
-              <div className="video">
-                {stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
-              </div>
-              <div className="video">
-                {callAccepted && !callEnded && <video playsInline ref={userVideo} autoPlay style={{ width: "300px" }} />}
-              </div>
-            </div>
+            <div className="video">
+                        {stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
+                      </div>
+                      <div className="video">
+                        {callAccepted && !callEnded ? <video playsInline ref={userVideo} autoPlay style={{ width: "300px"}} /> : null}
+                      </div>
+</div>
           </MDBModalBody>
           <MDBModalFooter>
             <MDBBtn color="danger" onClick={leaveCall}>End Call</MDBBtn>
@@ -185,8 +224,6 @@ export default function ECommerce() {
     </MDBModal>
   );
   
-  
-
   const CallPopupModal = () => (
     <MDBModal show={showCallPopup} tabIndex="-1">
       <MDBModalDialog>
@@ -241,12 +278,13 @@ export default function ECommerce() {
                       ) : null}
   
                       <div className="video-container">
-                        <div className="video">
-                          {stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
-                        </div>
-                        <div className="video">
-                          {callAccepted && !callEnded ? <video playsInline ref={userVideo} autoPlay style={{ width: "300px"}} /> : null}
-                        </div>
+                      <div className="video">
+                        {stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
+                      </div>
+                      <div className="video">
+                        {callAccepted && !callEnded ? <video playsInline ref={userVideo} autoPlay style={{ width: "300px"}} /> : null}
+                      </div>
+
                       </div>
                     </MDBModalBody>
                   </MDBModalContent>
@@ -264,4 +302,4 @@ export default function ECommerce() {
       </MDBContainer>
     </div>
   );
-}
+}  
