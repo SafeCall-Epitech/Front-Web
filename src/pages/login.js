@@ -17,10 +17,8 @@ function App() {
   const [Password, setPassword] = useState();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-
   function getlogin(UserName, Password) {
     setLoading(true);
-
     const form = JSON.stringify({
       Login: UserName,
       Password: Password
@@ -41,80 +39,52 @@ function App() {
           alert("Error: Incorrect Username or Password");
         }
       });
-    // const Myresponse = fetch('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/login/' + UserName + '/' + Password)
-    //   .then((response) => response.json())
-    //   .then((responseJson) => {
-    //     console.log(responseJson);
-    //     setLoading(false);
-    //     if (responseJson["success"]) {
-    //       localStorage.setItem('user', JSON.stringify(UserName));
-    //       window.location.href = '/';
-    //     } else {
-    //       alert("Error: Incorrect Username or Password");
-    //     }
-    //   })
   };
 
   return (
     <div>
       {isLoggedIn && <Navbar isLoggedIn={isLoggedIn} />}
 
-      <MDBContainer className="my-5 gradient-form">
-
-        <MDBRow>
-
+      <MDBContainer className="my-5" style={{ backgroundColor: 'white', borderRadius: '25px' }}>
+        <MDBRow >
           <MDBCol col='6' className="mb-5">
-            <div className="d-flex flex-column ms-5">
-
+            <div className="d-flex flex-column ms-2">
               <div className="text-center">
                 <img src="SafeCallBlack.png" width="250" height="60" alt="Alternate text" />
                 <h5 className="mt-1 mb-5 pb-1">Welcome to SafeCall!</h5>
               </div>
 
-              <p>Please login to your account</p>
-
+              <h5 className="mt-1 pb-1">Sign in to your account</h5>
 
               <MDBInput wrapperClass='mb-4' label='Username' id='form1' type='username' onChange={e => setUserName(e.target.value)} required />
               <MDBInput wrapperClass='mb-4' label='Password' id='form2' type='password' onChange={e => setPassword(e.target.value)} required />
 
-
-              <div className="text-center pt-1 mb-5 pb-1">
-                <MDBBtn className="mb-4 w-100 gradient-custom-2" onClick={() => { getlogin(UserName, Password) }}>Sign in</MDBBtn>
-                <a className="text-muted" href="#!">Forgot password?</a>
+              <div className="text-center pt-1 pb-1">
+              <MDBBtn className="mb-4 w-100" style={{
+                backgroundColor: 'black',
+                borderRadius: '25px',
+                color: 'white',
+                }}
+                onClick={() => getlogin(UserName, Password)}>
+                Sign in
+              </MDBBtn>
               </div>
 
-              <div className="d-flex flex-row align-items-center justify-content-center pb-4 mb-4">
-                <p className="mb-0">Don't have an account?</p>
-                <MDBBtn outline className='mx-2' color='danger'>
-                  Create New
-                </MDBBtn>
+              <div className="d-flex flex-row align-items-center justify-content-center pb-4">
+                <p className="mb-0">Don't have an account ?</p>
+                <span
+                  onClick={() => {
+                      window.location.href = '/Register';
+                  }}
+                  style={{ cursor: 'pointer', textDecoration: 'underline' }}>
+                  &nbsp;Sign up
+                </span>
               </div>
-
             </div>
-
           </MDBCol>
-
-          <MDBCol col='6' className="mb-5">
-            <div className="d-flex flex-column  justify-content-center gradient-custom-2 h-100 mb-4">
-
-              <div className="text-white px-3 py-4 p-md-5 mx-md-4">
-                <h4 class="mb-4">Keep your informations Safe with us</h4>
-                <p class="small mb-0">SafeCall is a secure alternative to not having to put your phone number on the internet.
-                  The principle is simple, we are in partnership with other companies, so instead of putting your
-                  phone number when registering, the user can enter their SafeCall ID instead. We will certify
-                  the site that you have correctly entered your phone number and will be reachable via the application.
-                </p>
-              </div>
-
-            </div>
-
-          </MDBCol>
-
         </MDBRow>
-
       </MDBContainer>
     </div>
-
   );
 }
 
