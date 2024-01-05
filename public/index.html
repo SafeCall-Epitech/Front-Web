@@ -12,7 +12,6 @@
   <link href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" rel="stylesheet" />
 
   <html lang="en">
-
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -24,54 +23,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link href="./styles.css" rel="stylesheet" />
+    <style>
+      .navbar-menu button,
+      .navbar-menu i {
+        margin-right: 10px;
+      }
+    </style>  
   </head>
 
-<body>
-  <nav class="navbar">
-    <div class="navbar-overlay" onclick="toggleMenuOpen()"></div>
-
-    <button type="button" class="navbar-burger" onclick="toggleMenuOpen()">
-      <span class="material-icons">menu</span>
-    </button>
-
-    <h1 class="navbar-title"> <img src="/SafeCallWhite.png" width="120" height="30" alt="Alternate text"> </h1>
-    <style>
-      img {
-        top: 3;
-        left: 13;
-      }
-    </style>
-
-    <nav class="navbar-menu">
-
-      <button onclick="window.location.href='/Register'">Register </button>
-      <button onclick="window.location.href='/Login'">Login </button>
-      <button onclick="window.location.href='/call'">Call </button>
-
-
-      <button onclick="window.location.href='/messages'">
-        <i class="fas fa-envelope"></i>
-      </button>
-      <button onclick="window.location.href='/Calendar'">
-        <i class="far fa-calendar-alt"></i>
-      </button>
-      <button onclick="window.location.href='/Search'">
-        <i class="fas fa-search"></i>
-      </button>
-      <button onclick="window.location.href='/'">
-        <i class="fas fa-user"></i>
-      </button>
-      <button onclick="window.location.href='/Notifications'">
-        <i class="fas fa-bell"></i>
-      </button>
-      
-
-
-    </nav>
-  </nav>
-  <script type="text/javascript" src="./main.js"></script>
+  <body>
+    <nav class="navbar">
+        <div class="navbar-overlay" onclick="toggleMenuOpen()"></div>
+        <button type="button" class="navbar-burger" onclick="toggleMenuOpen()">
+            <span class="material-icons">menu</span>
+        </button>
+        <h1 class="navbar-title">
+            <img src="/SafeCallWhite.png" width="120" height="30" alt="Alternate text" />
+        </h1>
+        <nav class="navbar-menu" id="navbarMenu"></nav>
+      </nav>
+    <script type="text/javascript" src="./main.js"></script>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
 </body>
-
 </html>
 
 <!--
@@ -110,5 +84,4 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 </body>
-
 </html>
