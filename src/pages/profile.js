@@ -347,7 +347,7 @@ export default function ProfilePage() {
                                             const confirmed = window.confirm('Are you sure you want to disconnect?');
                                             if (confirmed) {
                                                 localStorage.removeItem('user');
-                                                window.location.href = '/Login';
+                                                window.location.href = '/login';
                                             }
                                         }}>
                                             <MDBIcon fas icon="sign-out-alt" /> Disconnect
