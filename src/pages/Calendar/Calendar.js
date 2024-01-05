@@ -43,7 +43,7 @@ const CalendarPage = () => {
               <Popover>
                     <PopoverTrigger>
                     <Center>
-                        <Button bgColor="#29C9B3" color="white" width={'160px'}>Add an Event</Button>
+                    <Button class="ripple ripple-surface btn btn-dark btn-rounded btn-mg btn-block" width={'160px'}>Add an Event</Button>
                     </Center>
                     </PopoverTrigger>
                     <PopoverContent>
@@ -69,7 +69,7 @@ const CalendarPage = () => {
                 <Popover>
                     <PopoverTrigger>
                     <Center>
-                        <Button bgColor="#29C9B3" color="white" width={'160px'}>Daily Events</Button>
+                        <Button class="ripple ripple-surface btn btn-dark btn-rounded btn-mg btn-block" width={'160px'}>Daily Events</Button>
                     </Center>
                     </PopoverTrigger>
                     <PopoverContent>
@@ -86,7 +86,7 @@ const CalendarPage = () => {
                 <Popover>
                     <PopoverTrigger>
                     <Center>
-                        <Button bgColor="#29C9B3" color="white" width={'160px'} isDisabled>Edit/Delete an Event</Button>
+                        <Button class="ripple ripple-surface btn btn-dark btn-rounded btn-mg btn-block" width={'160px'}>Edit/Delete an Event</Button>
                     </Center>
                     </PopoverTrigger>
                     <PopoverContent>
