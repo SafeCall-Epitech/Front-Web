@@ -71,13 +71,13 @@ function App() {
               </div>
 
               <div className="d-flex flex-row align-items-center justify-content-center pb-4">
-                <p className="mb-0">Don't have an account ?</p>
+                <p className="mb-0">Don't have an account ?&nbsp;</p>
                 <span
                   onClick={() => {
                       window.location.href = '/Register';
                   }}
                   style={{ cursor: 'pointer', textDecoration: 'underline' }}>
-                  &nbsp;Sign up
+                  Sign up
                 </span>
               </div>
             </div>
