@@ -24,8 +24,8 @@ import io from "socket.io-client";
 import { Input } from "@chakra-ui/react";
 import { faMicrophone, faPhone, faVideo } from "@fortawesome/free-solid-svg-icons"; // Import FontAwesome icons
 
-// const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
-const socket = io.connect("http://localhost:5002/");
+const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
+//const socket = io.connect("http://localhost:5002/");
 
 
 export default function ECommerce() {
