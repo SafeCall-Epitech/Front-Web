@@ -26,8 +26,8 @@ import { faMicrophone, faPhone, faVideo } from "@fortawesome/free-solid-svg-icon
 import { faVolumeHigh, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
 
 
-const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
-// const socket = io.connect("http://localhost:5002/");
+ const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
+ // const socket = io.connect("http://localhost:5002/");
 
 
 export default function ECommerce() {
@@ -338,6 +338,19 @@ export default function ECommerce() {
                       </>
                     )}
                   </MDBBtn>
+                   {/* Button to mute/demute the sound */}
+                   <MDBBtn
+                    color="primary"
+                    onClick={() => muteSound()}
+                    style={{ marginRight: "10px" }}
+
+                  >
+                    {sound ? (
+                      <FontAwesomeIcon icon={faVolumeHigh} />
+                    ) : (
+                      <FontAwesomeIcon icon={faVolumeMute} />
+                    )}
+                  </MDBBtn>
                   {/* Button to hide/unhide your camera */}
                   <MDBBtn
                     color="success"
@@ -355,17 +368,7 @@ export default function ECommerce() {
                       </>
                     )}
                   </MDBBtn>
-                  {/* Button to mute/demute the sound */}
-                  <MDBBtn
-                    color="primary"
-                    onClick={() => muteSound()}
-                  >
-                    {sound ? (
-                      <FontAwesomeIcon icon={faVolumeHigh} />
-                    ) : (
-                      <FontAwesomeIcon icon={faVolumeMute} />
-                    )}
-                  </MDBBtn>
+                 
                 </div>
 
               )}
