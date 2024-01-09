@@ -23,9 +23,11 @@ import Peer from "simple-peer";
 import io from "socket.io-client";
 import { Input } from "@chakra-ui/react";
 import { faMicrophone, faPhone, faVideo } from "@fortawesome/free-solid-svg-icons"; // Import FontAwesome icons
+import { faVolumeHigh, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
+
 
 const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
-//const socket = io.connect("http://localhost:5002/");
+// const socket = io.connect("http://localhost:5002/");
 
 
 export default function ECommerce() {
@@ -84,9 +86,9 @@ export default function ECommerce() {
       trickle: false,
       stream: stream,
     });
-  
+
     console.log("CallUser function called"); // Add this line for debugging
-  
+
     peer.on("signal", (data) => {
       console.log("Peer.onSignal", data);
       socket.emit("callUser", {
@@ -95,21 +97,23 @@ export default function ECommerce() {
         from: me,
       });
     });
-  
-    peer.on("stream", (stream) => {
-      console.log("Peer.onStream", stream);
-      if (userVideo.current) userVideo.current.srcObject = stream;
+
+    peer.on("stream", (str) => {
+      console.log("Peer.onStream", str);
+      if (userVideo.current) userVideo.current.srcObject = str;
+      if (myVideo.current) myVideo.current.srcObject = stream;
+
     });
-  
+
     socket.on("callEnded", () => {
       leaveCall();
     });
-  
+
     socket.on("callAccepted", (signal) => {
       setCallAccepted(true);
       peer.signal(signal);
     });
-  
+
     connectionRef.current = peer;
   };
 
@@ -125,9 +129,10 @@ export default function ECommerce() {
       socket.emit("answerCall", { signal: data, to: caller });
     });
 
-    peer.on("stream", (stream) => {
-      stream.getAudioTracks()[0].enabled = sound;
-      if (userVideo.current) userVideo.current.srcObject = stream;
+    peer.on("stream", (str) => {
+      str.getAudioTracks()[0].enabled = sound;
+      if (userVideo.current) userVideo.current.srcObject = str;
+      if (myVideo.current) myVideo.current.srcObject = stream;
     });
 
     socket.on("callEnded", () => {
@@ -155,6 +160,8 @@ export default function ECommerce() {
   };
 
   const cutCam = () => {
+    if (myVideo.current)
+      myVideo.current.srcObject = stream;
     stream.getVideoTracks()[0].enabled = !cam;
     setCam(!cam);
   };
@@ -179,9 +186,11 @@ export default function ECommerce() {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
       console.log("UseEffectMedia", stream);
       setStream(stream);
-      if (myVideo.current) myVideo.current.srcObject = stream;
+      if (myVideo.current) {
+        myVideo.current.srcObject = stream;
+      }
     });
-    console.log("En dehors", myVideo);
+
     socket.on("me", (id) => {
       setMe(id);
     });
@@ -192,9 +201,8 @@ export default function ECommerce() {
       setCallerSignal(data.signal);
       setShowCallRequestModal(true); // Show the call request modal
       CustomModal({ callerName: data.callerName, onAcceptCall: acceptCall, onDeclineCall: declineCall });
-
     });
-    
+
   }, []);
 
   const acceptCall = () => {
@@ -254,119 +262,132 @@ export default function ECommerce() {
   }, [callDuration]);
 
   return (
-  <div className="vh-100" style={{ backgroundColor: "#E6E6E6" }}>
-    <MDBContainer>
-      <MDBRow className="justify-content-center">
-        <MDBCol md="6" lg="5" xl="4" className="mt-5">
-          {/* Top part of the screen */}
-          <div className="text-center mb-4">
-            <h4>My ID = {me}</h4>
-          </div>
+    <div className="vh-100" style={{ backgroundColor: "#E6E6E6" }}>
+      <MDBContainer>
+        <MDBRow className="justify-content-center">
+          <MDBCol md="6" lg="5" xl="4" className="mt-5">
+            {/* Top part of the screen */}
+            <div className="text-center mb-4">
+              <h4>My ID = {me}</h4>
+            </div>
 
-          {/* Left part of the screen */}
-          <div style={{ backgroundColor: "#ffffff", padding: "30px", borderRadius: '20px' }}>
-  <div className="text-center mb-4">
-    {/* Center the input field */}
-    <input
-      onChange={(e) => setIdToCall(e.target.value)}
-      value={idToCall}
-      placeholder="Enter User ID"
-      className="form-control"
-    />
-    <MDBBtn
-      color="success"
-      onClick={() => callUser(idToCall)}
-      style={{ marginTop: "10px" }}
-    >
-      <i className="fas fa-phone"></i> Call
-    </MDBBtn>
-  </div>
+            {/* Left part of the screen */}
+            <div style={{ backgroundColor: "#ffffff", padding: "30px", borderRadius: '20px' }}>
+              <div className="text-center mb-4">
+                {/* Center the input field */}
+                <input
+                  onChange={(e) => setIdToCall(e.target.value)}
+                  value={idToCall}
+                  placeholder="Enter User ID"
+                  className="form-control"
+                />
+                <MDBBtn
+                  color="success"
+                  onClick={() => callUser(idToCall)}
+                  style={{ marginTop: "10px" }}
+                >
+                  <i className="fas fa-phone"></i> Call
+                </MDBBtn>
+              </div>
 
-  {/* Video feeds */}
-  {callAccepted && !callEnded ? (
-    <div className="video-container">
-      <div className="video">
-        <video
-          playsInline
-          muted
-          ref={myVideo}
-          autoPlay
-          style={{ width: "90%" }}
+              {/* Video feeds */}
+              {callAccepted && !callEnded ? (
+                <div className="video-container">
+                  <div className="video">
+                    <video
+                      playsInline
+                      muted
+                      ref={myVideo}
+                      autoPlay
+                      style={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="video">
+                    <video
+                      playsInline
+                      ref={userVideo}
+                      autoPlay
+                      style={{ width: "100%" }}
+                    />
+                  </div>
+                </div>
+              ) : null}
+
+              {callAccepted && !callEnded && (
+                <div className="call-controls">
+                  {/* Button to end the call */}
+                  <MDBBtn
+                    color="danger"
+                    onClick={() => leaveCall()}
+                    style={{ marginRight: "10px" }}
+                  >
+                    <i className="fas fa-phone-slash"></i>
+                  </MDBBtn>
+                  <MDBBtn
+                    color="primary"
+                    onClick={() => muteMicro()}
+                    style={{ marginRight: "10px" }}
+                  >
+                    {micro ? (
+                      <>
+                        <i className="fas fa-microphone"></i>
+                      </>
+                    ) : (
+                      <>
+                        <i className="fas fa-microphone-slash"></i>
+                      </>
+                    )}
+                  </MDBBtn>
+                  {/* Button to hide/unhide your camera */}
+                  <MDBBtn
+                    color="success"
+                    onClick={() => cutCam()}
+                    style={{ marginRight: "10px" }}
+
+                  >
+                    {cam ? (
+                      <>
+                        <i className="fas fa-video me-2"></i>
+                      </>
+                    ) : (
+                      <>
+                        <i className="fas fa-video-slash me-2"></i>
+                      </>
+                    )}
+                  </MDBBtn>
+                  {/* Button to mute/demute the sound */}
+                  <MDBBtn
+                    color="primary"
+                    onClick={() => muteSound()}
+                  >
+                    {sound ? (
+                      <FontAwesomeIcon icon={faVolumeHigh} />
+                    ) : (
+                      <FontAwesomeIcon icon={faVolumeMute} />
+                    )}
+                  </MDBBtn>
+                </div>
+
+              )}
+            </div>
+          </MDBCol>
+          <MDBCol md="6" lg="5" xl="4" className="mt-5">
+            {/* Right part of the screen for conversation box */}
+            <div style={{ backgroundColor: "#f2f2f2", padding: "30px", borderRadius: '20px' }}>
+              {/* Add your conversation box component here */}
+            </div>
+          </MDBCol>
+        </MDBRow>
+      </MDBContainer>
+
+      {/* Modal rendering */}
+      {showCallRequestModal && (
+        <CustomModal
+          callerName={caller} // Pass the caller's name as a prop
+          onAcceptCall={acceptCall}
+          onDeclineCall={declineCall}
         />
-      </div>
-      <div className="video">
-        <video
-          playsInline
-          ref={userVideo}
-          autoPlay
-          style={{ width: "90%" }}
-        />
-      </div>
+      )}
     </div>
-  ) : null}
-
-  {callAccepted && !callEnded && (
-    <div className="call-controls">
-      {/* Button to end the call */}
-      <MDBBtn
-        color="danger"
-        onClick={() => leaveCall()}
-        style={{ marginRight: "10px" }}
-      >
-        <i className="fas fa-phone-slash"></i>
-      </MDBBtn>
-      <MDBBtn
-        color="primary"
-        onClick={() => muteMicro()}
-        style={{ marginRight: "10px" }}
-      >
-        {micro ? (
-          <>
-            <i className="fas fa-microphone"></i>
-          </>
-        ) : (
-          <>
-            <i className="fas fa-microphone-slash"></i>
-          </>
-        )}
-      </MDBBtn>
-      {/* Button to hide/unhide your camera */}
-      <MDBBtn
-        color="success"
-        onClick={() => cutCam()}
-      >
-        {cam ? (
-          <>
-            <i className="fas fa-video me-2"></i>
-          </>
-        ) : (
-          <>
-            <i className="fas fa-video-slash me-2"></i>
-          </>
-        )}
-      </MDBBtn>
-    </div>
-
-            )}
-          </div>
-        </MDBCol>
-        <MDBCol md="6" lg="5" xl="4" className="mt-5">
-          {/* Right part of the screen for conversation box */}
-          <div style={{ backgroundColor: "#f2f2f2", padding: "30px", borderRadius: '20px' }}>
-            {/* Add your conversation box component here */}
-          </div>
-        </MDBCol>
-      </MDBRow>
-    </MDBContainer>
-
-    {/* Modal rendering */}
-    {showCallRequestModal && (
-      <CustomModal
-        callerName={caller} // Pass the caller's name as a prop
-        onAcceptCall={acceptCall}
-        onDeclineCall={declineCall}
-      />
-    )}
-  </div>
-);
-    }
+  );
+}
