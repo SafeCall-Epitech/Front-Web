@@ -14,9 +14,12 @@ import {
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
 
+
 import { DropdownButton, Dropdown } from 'react-bootstrap';
 import { Uploader } from "uploader";
 import { UploadDropzone } from "react-uploader";
+import { useNavigate } from 'react-router-dom';
+
 
 export default function ProfilePage() {
 
@@ -37,6 +40,7 @@ export default function ProfilePage() {
 
     const [friendsList, setFriendsList] = useState([]);
     const [agenda, setAgenda] = useState([]);
+    const navigate = useNavigate();
 
 
     const uploader = Uploader({
@@ -304,7 +308,10 @@ export default function ProfilePage() {
             DeleteFriend(friend);
         } if (action === 'option3') {
             SendConv(friend);
+        } if (action === 'option4') {
+            navigate(`/My_wfriend_profile/${Name}`);
         }
+        
         else {
             setActionResult('');
         }
@@ -515,6 +522,8 @@ export default function ProfilePage() {
                                                         <Dropdown.Item eventKey="option1">Delete friend</Dropdown.Item>
                                                         <Dropdown.Item eventKey="option2">Report</Dropdown.Item>
                                                         <Dropdown.Item eventKey="option3">Start Conversation</Dropdown.Item>
+                                                        <Dropdown.Item eventKey="option4">Profile</Dropdown.Item>
+
                                                         {/* Add more options as needed */}
                                                     </DropdownButton>
                                                 </MDBListGroupItem>
