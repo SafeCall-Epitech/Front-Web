@@ -26,8 +26,8 @@ import { faMicrophone, faPhone, faVideo } from "@fortawesome/free-solid-svg-icon
 import { faVolumeHigh, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
 
 
- const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
- // const socket = io.connect("http://localhost:5002/");
+  const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
+ //const socket = io.connect("http://localhost:5002/");
 
 
 export default function ECommerce() {
@@ -57,7 +57,11 @@ export default function ECommerce() {
   const myVideo = useRef();
   const userVideo = useRef();
   const connectionRef = useRef();
+  const [friendsList, setFriendsList] = useState([]);
+
   const [showCallRequestModal, setShowCallRequestModal] = useState(false);
+  sessionStorage.setItem("user_name", JSON.parse(localStorage.getItem('user')).toLowerCase())
+
 
   function CustomModal({ callerName, onAcceptCall, onDeclineCall }) {
     console.log("CustomModal rendering"); // For debugging

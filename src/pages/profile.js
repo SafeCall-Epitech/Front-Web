@@ -75,10 +75,10 @@ export default function ProfilePage() {
                 const data = res2.data["Success "];
                 console.log(data);
 
-                if (data && data.length > 0) {
+                if (data && data.length > 0)    {
                     for (let i = 0; i < data.length; i++) {
                         const event = data[i];
-                        const guests = event.Guests;
+                        const guests = user + event.Guests;
                         const date = event.Date;
                         const subject = event.Subject;
                         const Event = event.Guests + " / " + event.Date + " / " + event.Subject;
@@ -481,7 +481,13 @@ export default function ProfilePage() {
                                                     Date: {event.Date}<br />
                                                     Subject: {event.Subject}<br />
                                                     Confirmed: {event.Confirmed ? "Yes" : "No"}<br />
-                                                    ---
+                                                    <MDBBtn
+                                                        color="dark"
+                                                        onClick={() => callUser(idToCall)}
+                                                        style={{ marginTop: "10px" }}
+                                                    >
+                                                        <i className="fas fa-phone"></i> Join Call
+                                                    </MDBBtn>
                                                 </li>
                                             ))}
 

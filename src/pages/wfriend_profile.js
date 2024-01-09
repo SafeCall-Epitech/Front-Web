@@ -66,8 +66,9 @@ export default function EditButton() {
       guest2: username,
       subject: Subject,
       date: selectedDate.toISOString(),
-      time: selectedTime,
+      time: selectedTime + 1,
     });
+    console.log(selectedTime)
 
     axios
       .post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/addEvent`, form, {
