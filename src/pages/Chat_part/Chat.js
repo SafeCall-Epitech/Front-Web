@@ -28,7 +28,7 @@ function Chat({ selectedFriend }) {
 
             const fetchMessages = async () => {
                 try {
-                    const response = await axios.get('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/messages/' + sessionStorage.getItem("user_name") + "/" + selectedFriend);
+                    const response = await axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/messages/' + sessionStorage.getItem("user_name") + "/" + selectedFriend);
                     if (response.data["Success "] == null) {
                         setMessageList([]);
                         setNumberMessage(0)
@@ -51,7 +51,7 @@ function Chat({ selectedFriend }) {
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await axios.get('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/messages/' + sessionStorage.getItem("user_name") + "/" + selectedFriend);
+                const response = await axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/messages/' + sessionStorage.getItem("user_name") + "/" + selectedFriend);
                 if (response.data["Success "].length > numberMessage) {
                     setMessageList(response.data["Success "]);
                     setNumberMessage(response.data["Success "].length)
@@ -74,7 +74,7 @@ function Chat({ selectedFriend }) {
             const msg = { "Sender": sessionStorage.getItem("user_name"), "Message": currentMessage };
 
 
-            await axios.post('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/sendMessage', {
+            await axios.post('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/sendMessage', {
                 message: currentMessage,
                 username: sessionStorage.getItem("user_name"),
                 friendname: selectedFriend

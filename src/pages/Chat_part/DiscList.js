@@ -28,7 +28,7 @@ function DiscList({ onFriendSelect }) {
     useEffect(() => {
         const fetchFriendList = async () => {
             sessionStorage.setItem("user_name", JSON.parse(localStorage.getItem('user')).toLowerCase())
-            const response = await axios.get('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/conversations/' + sessionStorage.getItem("user_name"));
+            const response = await axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/conversations/' + sessionStorage.getItem("user_name"));
             setFriendList(response.data["Success "])
             // setLastMessages(Array(response.data.length).fill("Dernier message"));
         };
@@ -73,14 +73,14 @@ function DiscList({ onFriendSelect }) {
     };
 
     const handleModalSubmit = async () => {
-        const response = await axios.get('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/messages/' + sessionStorage.getItem("user_name") + "/" + currentMessage);
+        const response = await axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/messages/' + sessionStorage.getItem("user_name") + "/" + currentMessage);
         window.location.reload();
         closeModal();
     };
 
     const handleDeleteConversation = async (friend) => {
         const fr = friend.split(":");
-        axios.get('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/delRoom/' + fr[0]);
+        axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/delRoom/' + fr[0]);
         window.location.reload();
     };
 
