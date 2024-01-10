@@ -27,7 +27,7 @@ import { faMicrophone, faPhone, faVideo } from "@fortawesome/free-solid-svg-icon
 import { faVolumeHigh, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
 
 
-const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
+  const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
 
 
 export default function ECommerce() {
@@ -44,7 +44,7 @@ export default function ECommerce() {
       socket.emit("pseudo", {
         pseudo: user
       });
-      setIdToCall(username);
+      setIdToCall(username)
     }
   };
 
@@ -221,8 +221,6 @@ export default function ECommerce() {
   };
 
   useEffect(() => {
-    fetchData();
-
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
       console.log("UseEffectMedia", stream);
       setStream(stream);
@@ -233,11 +231,9 @@ export default function ECommerce() {
 
     socket.on("me", (id) => {
       setMe(id);
-      console.log("user2.0 :", user);
     });
 
     socket.on("callReceived", (data) => {
-      console.log("data from:", data.from);
       setReceivingCall(true);
       setCaller(data.from);
       setCallerSignal(data.signal);
@@ -245,7 +241,9 @@ export default function ECommerce() {
       CustomModal({ callerName: data.callerName, onAcceptCall: acceptCall, onDeclineCall: declineCall });
     });
 
-  }, [username]);;
+    fetchData();
+
+  }, [username]);
 
   const acceptCall = () => {
     answerCall();
@@ -403,7 +401,6 @@ export default function ECommerce() {
                       </>
                     )}
                   </MDBBtn>
-                 
                 </div>
 
               )}
