@@ -24,7 +24,7 @@ function Chat({ selectedFriend }) {
     const [messageList, setMessageList] = useState([]);
     const user = JSON.parse(localStorage.getItem('user'));
     useEffect(() => {
-        if (selectedFriend != "") {
+        if (selectedFriend != "" && selectedFriend != null) {
 
             const fetchMessages = async () => {
                 try {
@@ -110,15 +110,23 @@ function Chat({ selectedFriend }) {
                                                 type="text"
                                                 className="form-control-plaintext form-control-lg"
                                                 value={currentMessage}
-                                                placeholder="Entrer votre message"
+                                                placeholder={`${selectedFriend === "" ? "Ouvrez une conversation pour envoyer un message" : `Envoyez un message à ${selectedFriend} `}`}
                                                 onChange={(event) => {
-                                                    setCurrentMessage(event.target.value);
+                                                    if (selectedFriend !== "") {
+                                                        setCurrentMessage(event.target.value);
+                                                    }
                                                 }}
                                                 onKeyPress={(event) => {
-                                                    event.key === "Enter" && sendMessage();
+                                                    // event.key === "Enter" && sendMessage();
+
+                                                    if (selectedFriend !== "" && event.key === "Enter") {
+                                                        sendMessage();
+                                                    }
                                                 }}
+                                                readOnly={selectedFriend === ""}
                                             />
                                             <MDBBtn onClick={sendMessage}><MDBIcon fas icon="paper-plane" /></MDBBtn>
+
                                         </div>
                                     </MDBCol>
                                 </MDBRow>

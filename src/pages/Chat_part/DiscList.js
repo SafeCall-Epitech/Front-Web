@@ -53,6 +53,7 @@ function DiscList({ onFriendSelect }) {
 
 
     const handleFriendClick = (friendName) => {
+        console.log('Selected Friend:', friendName);
         sessionStorage.setItem("friend_name", friendName);
         const userNames = [sessionStorage.getItem("user_name"), friendName].sort();
         sessionStorage.setItem("room", userNames[0].toLowerCase() + userNames[1].toLowerCase());

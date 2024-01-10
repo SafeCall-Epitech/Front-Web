@@ -4,22 +4,20 @@
     margin-bottom: 10px;
 }
 
-.friend-list {
+/* .friend-list {
     background-color: #fff;
     border-radius: px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     padding: 10px;
-}
+} */
 
 .selected-friend {
-    background-color: #ccc;
-    /* or any other shade of gray you prefer */
+    background-color: black;
+    /* Remplacez cette couleur par la couleur de surbrillance souhaitée */
 }
 
 .friend.clicked {
     background-color: black;
-
-
 }
 
 .friend-item {
