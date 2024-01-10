@@ -10,11 +10,18 @@ import {
     MDBBtn,
     MDBIcon,
     MDBListGroup,
+    MDBModal,
+    MDBModalDialog,
+    MDBModalContent,
+    MDBModalBody,
+    MDBTypography,
     MDBListGroupItem
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
 
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import TimePicker from "react-time-picker";
 import { DropdownButton, Dropdown } from 'react-bootstrap';
 import { Uploader } from "uploader";
 import { UploadDropzone } from "react-uploader";
@@ -26,6 +33,7 @@ export default function ProfilePage() {
     const user = JSON.parse(localStorage.getItem('user'));
     sessionStorage.setItem("user_name", JSON.parse(localStorage.getItem('user')).toLowerCase())
 
+    const [username, setUsername] = useState('');
     const [Name, setName] = useState('');
     const [Email, setEmail] = useState('');
     const [Nb, setNb] = useState('');
@@ -37,6 +45,13 @@ export default function ProfilePage() {
     const [newEmail, setNewEmail] = useState(Email);
     const [newNb, setNewNb] = useState(Nb);
     const [newDescription, setNewDescription] = useState(Description);
+    const [showCallModal, setShowCallModal] = useState(false);
+    const [Subject, setSubject] = useState('');
+    const [modalShow, setModalShow] = useState(false);
+    const [Priority, setPriority] = useState('low'); // Provide an initial value here
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedTime, setSelectedTime] = useState('10:00 AM');
+
 
     const [friendsList, setFriendsList] = useState([]);
     const [agenda, setAgenda] = useState([]);
@@ -70,7 +85,6 @@ export default function ProfilePage() {
         fetchFriendsList();
     }, []);
 
-
     useEffect(() => {
         const fetchAgenda = async () => {
             try {
@@ -79,7 +93,7 @@ export default function ProfilePage() {
                 const data = res2.data["Success "];
                 console.log(data);
 
-                if (data && data.length > 0)    {
+                if (data && data.length > 0) {
                     for (let i = 0; i < data.length; i++) {
                         const event = data[i];
                         const guests = user + event.Guests;
@@ -97,6 +111,35 @@ export default function ProfilePage() {
 
         fetchAgenda();
     }, []);
+
+    const SendCallForm = async () => {
+        const form = JSON.stringify({
+            guest1: user,
+            guest2: username,
+            subject: Subject,
+            date: selectedDate.toISOString(),
+            time: selectedTime + 1,
+        });
+        console.log(selectedTime)
+
+        axios
+            .post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/addEvent`, form, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) => {
+                console.log(res.data);
+                setModalShow(false);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    const handleCloseCallModal = () => {
+        setShowCallModal(false);
+    };
 
     const handleNameChange = (e) => {
         setNewName(e.target.value);
@@ -298,6 +341,7 @@ export default function ProfilePage() {
     const [actionResult, setActionResult] = useState('');
 
     const handleDropdownSelect = (friend, action) => {
+        setUsername(friend.id); // Set the username here
 
         if (action === 'option1') {
             DeleteFriend(friend);
@@ -310,8 +354,13 @@ export default function ProfilePage() {
             SendConv(friend);
         } if (action === 'option4') {
             navigate(`/My_wfriend_profile/${Name}`);
+        } if (action === 'option5') {
+            ``
+            setModalShow(true);
+            setShowCallModal(true);
         }
-        
+
+
         else {
             setActionResult('');
         }
@@ -466,7 +515,6 @@ export default function ProfilePage() {
 
                                 {isEditing && (
                                     <div className="d-flex justify-content-center mt-4">
-
                                         <MDBBtn color="danger" onClick={handleCancel}>
                                             Cancel
                                         </MDBBtn>
@@ -480,7 +528,6 @@ export default function ProfilePage() {
                                 <MDBCard className="mb-4">
                                     <MDBCardBody>
                                         <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Next on the Agenda</span></MDBCardText>
-
                                         <ul>
                                             {agenda && agenda.map((event, index) => (
                                                 <li key={index}>
@@ -497,10 +544,7 @@ export default function ProfilePage() {
                                                     </MDBBtn>
                                                 </li>
                                             ))}
-
                                         </ul>
-
-
                                     </MDBCardBody>
                                 </MDBCard>
                             </MDBCol>
@@ -512,23 +556,27 @@ export default function ProfilePage() {
                                         </MDBCardText>
                                         <MDBListGroup>
                                             {friendsList.map((friend) => (
-                                                <MDBListGroupItem key={friend.id}>
-                                                    {friend.id}
-                                                    <DropdownButton
-                                                        title="Actions"
-                                                        onSelect={(action) => handleDropdownSelect(friend, action)}
-                                                        id={`dropdown-basic-${friend.id}`}
-                                                    >
-                                                        <Dropdown.Item eventKey="option1">Delete friend</Dropdown.Item>
-                                                        <Dropdown.Item eventKey="option2">Report</Dropdown.Item>
-                                                        <Dropdown.Item eventKey="option3">Start Conversation</Dropdown.Item>
-                                                        <Dropdown.Item eventKey="option4">Profile</Dropdown.Item>
-
-                                                        {/* Add more options as needed */}
-                                                    </DropdownButton>
+                                                <MDBListGroupItem key={friend.id} className="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        {friend.id}
+                                                    </div>
+                                                    <div>
+                                                        <DropdownButton
+                                                            title="Actions"
+                                                            onSelect={(action) => handleDropdownSelect(friend, action)}
+                                                            id={`dropdown-basic-${friend.id}`}
+                                                        >
+                                                            <Dropdown.Item eventKey="option1">Delete friend</Dropdown.Item>
+                                                            <Dropdown.Item eventKey="option2">Report</Dropdown.Item>
+                                                            <Dropdown.Item eventKey="option3">Start Conversation</Dropdown.Item>
+                                                            <Dropdown.Item eventKey="option4">Profile</Dropdown.Item>
+                                                            <Dropdown.Item eventKey="option5">Book a Call</Dropdown.Item>
+                                                        </DropdownButton>
+                                                    </div>
                                                 </MDBListGroupItem>
                                             ))}
                                         </MDBListGroup>
+                                                
                                     </MDBCardBody>
                                 </MDBCard>
                             </MDBCol>
@@ -536,6 +584,88 @@ export default function ProfilePage() {
                     </MDBCol>
                 </MDBRow>
             </MDBContainer>
-        </section >
+
+
+            {/* Modal for Booking a Call */}
+            <MDBModal show={showCallModal} tabIndex="-1" onClick={handleCloseCallModal}>
+                <MDBModalDialog>
+                    <MDBModalContent>
+                        <MDBModalBody onClick={(e) => e.stopPropagation()}>
+                            <MDBCard style={{ borderRadius: '15px', backgroundColor: '#E6E6E6' }}>
+                                <MDBCardBody className="p-4 text-black">
+                                    <p className="lead fw-normal mb-1">Call Form</p>
+                                    <br />
+
+                                    <MDBTypography tag="h5" className="mb-2">
+                                        To {username}
+                                    </MDBTypography>
+                                    <br />
+                                    <label htmlFor="name">Subject:</label>
+                                    <br />
+                                    <input
+                                        type="text"
+                                        value={Subject}
+                                        onChange={(e) => setSubject(e.target.value)}
+                                    />
+                                    <br />
+                                    <br />
+                                    <label htmlFor="name">Date:</label>
+                                    <br />
+                                    <DatePicker
+                                        selected={selectedDate}
+                                        onChange={(date) => setSelectedDate(date)}
+                                        dateFormat="dd/MM/yyyy"
+                                        style={{
+                                            backgroundColor: '#007bff',
+                                            color: '#fff',
+                                            border: 'none',
+                                            padding: '10px 20px',
+                                            borderRadius: '5px',
+                                            cursor: 'pointer',
+                                            transition: 'background-color 0.3s ease',
+                                        }}
+                                    />
+                                    <br />
+                                    <br />
+                                    <label htmlFor="time">Time:</label>
+                                    <br />
+                                    <TimePicker
+                                        onChange={setSelectedTime}
+                                        value={selectedTime}
+                                        format="h:mm a"
+                                        clearIcon={null}
+                                        clockIcon={null}
+                                        disableClock={true}
+                                        style={{
+                                            backgroundColor: '#007bff',
+                                            color: '#fff',
+                                            border: 'none',
+                                            padding: '10px 20px',
+                                            borderRadius: '5px',
+                                            cursor: 'pointer',
+                                            transition: 'background-color 0.3s ease',
+                                        }}
+                                    />
+                                    <br />
+                                    <br />
+                                    <MDBBtn
+                                        color="primary"
+                                        rounded
+                                        size="lg"
+                                        onClick={() => {
+                                            SendCallForm();
+                                            setModalShow(false);
+                                        }}
+                                    >
+                                        - Send Form
+                                    </MDBBtn>
+                                </MDBCardBody>
+                            </MDBCard>
+                        </MDBModalBody>
+                    </MDBModalContent>
+                </MDBModalDialog>
+            </MDBModal>
+
+        </section>
     );
 }
