@@ -23,12 +23,12 @@ function DiscList({ onFriendSelect }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [textInput, setTextInput] = useState('');
     const [currentMessage, setCurrentMessage] = useState("");
-    const [selectedFriend, setSelectedFriend] = useState(null);
 
     useEffect(() => {
         const fetchFriendList = async () => {
             sessionStorage.setItem("user_name", JSON.parse(localStorage.getItem('user')).toLowerCase())
-            const response = await axios.get('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/conversations/' + sessionStorage.getItem("user_name"));
+            const response = await axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/conversations/' + sessionStorage.getItem("user_name"));
+            console.log(response.data["Success "])
             setFriendList(response.data["Success "])
             // setLastMessages(Array(response.data.length).fill("Dernier message"));
         };
@@ -38,12 +38,12 @@ function DiscList({ onFriendSelect }) {
 
 
     // const fetchFriendList = async () => {
-    //     const response = await axios.get('http://localhost:3002/get_a_conv/' + sessionStorage.getItem("user_name"));
+    //     const response = await axios.get('https://localhost:3002/get_a_conv/' + sessionStorage.getItem("user_name"));
     //     setFriendList(response.data)
     //     // setLastMessages(Array(response.data.length).fill("Dernier message"));
     // };
     // const fetchMessages = async () => {
-    //     const response = await axios.post('http://localhost:3002/lastmess/', {
+    //     const response = await axios.post('https://localhost:3002/lastmess/', {
     //         friend: friendList
     //     });
     //     console.log("ok")
@@ -57,7 +57,6 @@ function DiscList({ onFriendSelect }) {
         const userNames = [sessionStorage.getItem("user_name"), friendName].sort();
         sessionStorage.setItem("room", userNames[0].toLowerCase() + userNames[1].toLowerCase());
         onFriendSelect(friendName);
-        setSelectedFriend(friendName);
     };
 
     const openModal = () => {
@@ -73,14 +72,16 @@ function DiscList({ onFriendSelect }) {
     };
 
     const handleModalSubmit = async () => {
-        const response = await axios.get('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/messages/' + sessionStorage.getItem("user_name") + "/" + currentMessage);
+        const response = await axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/messages/' + sessionStorage.getItem("user_name") + "/" + currentMessage);
         window.location.reload();
+        console.log(textInput);
         closeModal();
     };
 
     const handleDeleteConversation = async (friend) => {
         const fr = friend.split(":");
-        axios.get('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/delRoom/' + fr[0]);
+        console.log(fr[0])
+        axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/delRoom/' + fr[0]);
         window.location.reload();
     };
 
@@ -98,10 +99,6 @@ function DiscList({ onFriendSelect }) {
                 <MDBTypography listUnStyled>
                     {friendList.map((friend, index) => (
                         <li className="p-2 border-bottom friend" key={friend}>
-                            {/* // <li
-                        //     className={`p-2 border-bottom friend ${selectedFriend === friend ? 'selected-friend' : ''}`}
-                        //     key={friend}
-                        // > */}
                             <a
                                 href="#!"
                                 className="d-flex justify-content-between"

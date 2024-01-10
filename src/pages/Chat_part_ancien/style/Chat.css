@@ -19,12 +19,12 @@
     font-weight: 500;
 }
 
-.other {
+.me {
     background-color: whitesmoke;
     /* float: left; */
 }
 
-.me {
+.other {
     color: whitesmoke;
     background-color: lightskyblue;
     margin-left: 85%;

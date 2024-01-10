@@ -7,7 +7,7 @@ export default function Print_message(props) {
     let utcstr = sessionStorage.getItem("UTC");
     let utc = parseFloat(utcstr)
     const d = new Date();
-    // console.log(d.getHours() + " " + utc)
+    console.log(d.getHours() + " " + utc)
     let hour = d.getHours()
     let min = d.getMinutes();
 

@@ -3,7 +3,6 @@ import ScrollToBottom from "react-scroll-to-bottom";
 import '../Chat_part/style/Chat.css';
 import Print_message from '../Chat_part/Print_message';
 import axios from 'axios';
-
 import {
     MDBContainer,
     MDBRow,
@@ -16,76 +15,38 @@ import {
     MDBBtn
 } from "mdb-react-ui-kit";
 
-
-
 function Chat({ selectedFriend }) {
     const [currentMessage, setCurrentMessage] = useState("");
-    const [numberMessage, setNumberMessage] = useState(0)
     const [messageList, setMessageList] = useState([]);
     const user = JSON.parse(localStorage.getItem('user'));
-    useEffect(() => {
-        if (selectedFriend != "") {
-
-            const fetchMessages = async () => {
-                try {
-                    const response = await axios.get('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/messages/' + sessionStorage.getItem("user_name") + "/" + selectedFriend);
-                    if (response.data["Success "] == null) {
-                        setMessageList([]);
-                        setNumberMessage(0)
-                    } else {
-                        setMessageList(response.data["Success "]);
-                        setNumberMessage(response.data["Success "].length)
-                    }
-                } catch (error) {
-                    console.error("Error fetching messages:", error);
-                }
-            };
-
-
-            fetchMessages();
-        }
-
-    }, [selectedFriend]);
-
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await axios.get('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/messages/' + sessionStorage.getItem("user_name") + "/" + selectedFriend);
-                if (response.data["Success "].length > numberMessage) {
+                const response = await axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/messages/' + sessionStorage.getItem("user_name") + "/" + selectedFriend);
+                if (response.data["Success "] == null) {
+                    setMessageList([]);
+                } else {
                     setMessageList(response.data["Success "]);
-                    setNumberMessage(response.data["Success "].length)
                 }
             } catch (error) {
                 console.error("Error fetching messages:", error);
             }
         };
 
-        const intervalId = setInterval(() => {
-            fetchMessages();
-        }, 1000);
-
-        return () => clearInterval(intervalId);
-
-    },);
+        fetchMessages();
+    }, [selectedFriend]);
 
     const sendMessage = async () => {
         if (currentMessage !== "") {
             const msg = { "Sender": sessionStorage.getItem("user_name"), "Message": currentMessage };
-
-
-            await axios.post('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/sendMessage', {
+            console.log(selectedFriend)
+            await axios.post('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/sendMessage', {
                 message: currentMessage,
                 username: sessionStorage.getItem("user_name"),
                 friendname: selectedFriend
             });
 
-            // await axios.post('http://localhost:3000/send_message', {
-            //     message: currentMessage,
-            //     username: sessionStorage.getItem("user_name"),
-            //     friendname: selectedFriend
-            // });
-            // socket.emit('chat message', { "Sender": sessionStorage.getItem("user_name"), "Message": currentMessage });
             setMessageList([...messageList, msg]);
             setCurrentMessage("");
         }
@@ -132,4 +93,3 @@ function Chat({ selectedFriend }) {
 }
 
 export default Chat;
-
