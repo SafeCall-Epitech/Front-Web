@@ -27,7 +27,7 @@ import { faMicrophone, faPhone, faVideo } from "@fortawesome/free-solid-svg-icon
 import { faVolumeHigh, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
 
 
-  const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
+const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
 
 
 export default function ECommerce() {
@@ -41,12 +41,12 @@ export default function ECommerce() {
       console.log("User : ", user);
 
       // Use the response data as needed
+      socket.emit("pseudo", {
+        pseudo: user
+      });
+      setIdToCall(username);
     }
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [username]);  // Depend on 'username', not 'Guest'
 
   // ... rest of your component ...
 
@@ -92,7 +92,7 @@ export default function ECommerce() {
           <MDBModalContent>
             <MDBModalBody>
               <h4 className="modal-title">Incoming Call</h4>
-              <p>{callerName} is calling you.</p>
+              <p>{idToCall} is calling you.</p>
             </MDBModalBody>
             <MDBModalFooter>
               <MDBBtn color='danger' onClick={onDeclineCall}>Decline</MDBBtn>
@@ -114,7 +114,6 @@ export default function ECommerce() {
     console.log("CallUser function called"); // Add this line for debugging
 
     peer.on("signal", (data) => {
-      console.log("Peer.onSignal", data);
       socket.emit("callUser", {
         userToCall: id,
         signalData: data, // Use data received from the "signal" event
@@ -130,7 +129,7 @@ export default function ECommerce() {
     });
 
     socket.on("callEnded", () => {
-      leaveCall();
+      endCall();
     });
 
     socket.on("callAccepted", (signal) => {
@@ -160,16 +159,31 @@ export default function ECommerce() {
     });
 
     socket.on("callEnded", () => {
-      leaveCall();
+      endCall();
     });
 
     peer.signal(callerSignal);
     connectionRef.current = peer;
   };
 
-  const leaveCall = () => {
+  const endCall = () => {
+    console.log("endCall function")
     setCallEnded(true);
-    socket.disconnect();
+    setReceivingCall(false);
+    setCallAccepted(false);
+    if (userVideo.current) {
+      userVideo.current = null;
+    }
+    if (connectionRef.current && connectionRef.current.srcObject) {
+      connectionRef.current.destroy();
+    }
+  }
+
+  const leaveCall = () => {
+    console.log("leaveCall function")
+    socket.emit("endCall")
+    endCall();
+
   };
 
   const muteMicro = () => {
@@ -207,6 +221,8 @@ export default function ECommerce() {
   };
 
   useEffect(() => {
+    fetchData();
+
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
       console.log("UseEffectMedia", stream);
       setStream(stream);
@@ -217,9 +233,11 @@ export default function ECommerce() {
 
     socket.on("me", (id) => {
       setMe(id);
+      console.log("user2.0 :", user);
     });
 
-    socket.on("callUser", (data) => {
+    socket.on("callReceived", (data) => {
+      console.log("data from:", data.from);
       setReceivingCall(true);
       setCaller(data.from);
       setCallerSignal(data.signal);
@@ -227,7 +245,7 @@ export default function ECommerce() {
       CustomModal({ callerName: data.callerName, onAcceptCall: acceptCall, onDeclineCall: declineCall });
     });
 
-  }, []);
+  }, [username]);;
 
   const acceptCall = () => {
     answerCall();
@@ -298,13 +316,6 @@ export default function ECommerce() {
             {/* Left part of the screen */}
             <div style={{ backgroundColor: "#ffffff", padding: "30px", borderRadius: '20px' }}>
               <div className="text-center mb-4">
-                {/* Center the input field */}
-                <input
-                  onChange={(e) => setIdToCall(e.target.value)}
-                  value={idToCall}
-                  placeholder="Enter User ID"
-                  className="form-control"
-                />
                 <MDBBtn
                   color="success"
                   onClick={() => callUser(idToCall)}
