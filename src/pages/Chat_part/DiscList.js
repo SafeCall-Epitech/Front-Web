@@ -66,23 +66,23 @@ function DiscList({ onFriendSelect }) {
         setSelectedFriend(friendName);
     };
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
+    // const openModal = () => {
+    //     setIsModalOpen(true);
+    // };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
+    // const closeModal = () => {
+    //     setIsModalOpen(false);
+    // };
 
     const handleInputChange = (event) => {
         setTextInput(event.target.value);
     };
 
-    const handleModalSubmit = async () => {
-        const response = await axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/messages/' + sessionStorage.getItem("user_name") + "/" + currentMessage);
-        window.location.reload();
-        closeModal();
-    };
+    // const handleModalSubmit = async () => {
+    //     const response = await axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/messages/' + sessionStorage.getItem("user_name") + "/" + currentMessage);
+    //     window.location.reload();
+    //     closeModal();
+    // };
 
     const handleDeleteConversation = async (friend) => {
         const fr = friend.split(":");
@@ -97,9 +97,9 @@ function DiscList({ onFriendSelect }) {
                     <h5 className="font-weight-bold mb-3 text-center text-lg-start">
                         Conversation
                     </h5>
-                    <MDBBtn size="sm" onClick={openModal}>
+                    {/* <MDBBtn size="sm" onClick={openModal}>
                         Open Modal
-                    </MDBBtn>
+                    </MDBBtn> */}
                 </div>
                 <MDBTypography listUnStyled>
                     {friendList.map((friend, index) => (
@@ -147,7 +147,7 @@ function DiscList({ onFriendSelect }) {
                         </li>
                     ))}
                 </MDBTypography>
-                <div style={{ width: '30px' }}>
+                {/* <div style={{ width: '30px' }}>
                     <MDBModal
                         show={isModalOpen}
                         onHide={closeModal}
@@ -176,7 +176,7 @@ function DiscList({ onFriendSelect }) {
                             </MDBBtn>
                         </MDBModalFooter>
                     </MDBModal>
-                </div>
+                </div> */}
             </MDBCardBody>
         </MDBCard>
     );

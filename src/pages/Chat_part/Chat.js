@@ -49,23 +49,30 @@ function Chat({ selectedFriend }) {
 
 
     useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const response = await axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/messages/' + sessionStorage.getItem("user_name") + "/" + selectedFriend);
-                if (response.data["Success "].length > numberMessage) {
-                    setMessageList(response.data["Success "]);
-                    setNumberMessage(response.data["Success "].length)
+        if (selectedFriend != "" && selectedFriend != null) {
+            const fetchMessages = async () => {
+                try {
+                    const response = await axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/messages/' + sessionStorage.getItem("user_name") + "/" + selectedFriend);
+                    if (response.data["Success "] == null) {
+                        setMessageList([])
+                        setNumberMessage(0)
+                    } else {
+                        if (response.data["Success "].length > numberMessage) {
+                            setMessageList(response.data["Success "]);
+                            setNumberMessage(response.data["Success "].length)
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching messages:", error);
                 }
-            } catch (error) {
-                console.error("Error fetching messages:", error);
-            }
-        };
+            };
 
-        const intervalId = setInterval(() => {
-            fetchMessages();
-        }, 1000);
+            const intervalId = setInterval(() => {
+                fetchMessages();
+            }, 1000);
 
-        return () => clearInterval(intervalId);
+            return () => clearInterval(intervalId);
+        }
 
     },);
 
