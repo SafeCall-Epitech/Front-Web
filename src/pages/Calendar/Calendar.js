@@ -101,7 +101,7 @@ export default function CalendarPage() {
     };
     return (
         <>
-            <Box p={15} m={50}>
+            <Box p={-20} m={50}>
                 <Box pb={20}></Box>
                 <Center>
                     <Calendar
@@ -126,26 +126,25 @@ export default function CalendarPage() {
                 <Text as='em' color="#FC6976" fontSize='lg'>{date.toLocaleDateString()}</Text>
             </Center>
             <Center>
-                <Flex width={'600px'} justifyContent={'space-between'}>
-
                     <Popover>
                         <PopoverTrigger>
                             <Center>
-                                <Button
-                                    className="ripple ripple-surface btn btn-dark btn-rounded btn-mg btn-block"
-                                    width={'160px'}
-                                    onClick={() => {
-                                        filterEventsByDate();
-                                        setModalShow(true); // Set the modalShow state to true when clicking "Daily Events"
-                                    }}
-                                >
-                                    Daily Events
-                                </Button>
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Button
+                                        className="ripple ripple-surface btn btn-dark btn-rounded btn-mg btn-block"
+                                        width={'160px'}
+                                        onClick={() => {
+                                            filterEventsByDate();
+                                            setModalShow(true);
+                                        }}
+                                    >
+                                        Daily Events
+                                    </Button>
+                                </div>
                             </Center>
                         </PopoverTrigger>
                     </Popover>
                     {/* Other Popover components, if any */}
-                </Flex>
             </Center>
 
             {/* Modal for displaying event details */}
