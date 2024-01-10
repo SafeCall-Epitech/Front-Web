@@ -14,8 +14,13 @@ import {
     MDBModalDialog,
     MDBModalContent,
     MDBModalBody,
+    MDBModalTitle,  // Add this line
+    MDBModalFooter,
+    MDBModalHeader,  // Add this line
+
     MDBTypography,
     MDBListGroupItem
+
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
 
@@ -40,9 +45,10 @@ export default function CalendarPage() {
     const [agenda, setAgenda] = useState([]);
     const [eventDate, setEventDate] = useState([]);
     const [filteredEvents, setFilteredEvents] = useState([]);
-
     const [showTime, setShowTime] = useState(false);
     const initRef = React.useRef();
+    const [modalShow, setModalShow] = useState(false); // State to manage modal visibility
+    const [selectedEvent, setSelectedEvent] = useState(null); // State to hold the selected event
 
 
     useEffect(() => {
@@ -51,9 +57,8 @@ export default function CalendarPage() {
                 const res2 = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/listEvent/${user}`)
 
                 const data = res2.data["Success "];
-                console.log("Data : ", data);
 
-                
+
                 if (data && data.length > 0) {
                     for (let i = 0; i < data.length; i++) {
                         const event = data[i];
@@ -64,7 +69,6 @@ export default function CalendarPage() {
                     }
                 }
                 setAgenda(data);
-                console.log("Date : ", date)
 
 
             } catch (error) {
@@ -77,22 +81,24 @@ export default function CalendarPage() {
         fetchAgenda();
     }, []);
 
+    const handleEventClick = (event) => {
+        setSelectedEvent(event);
+        console.log("Selected Event:", event); // Add this line for debugging
+        setModalShow(true);
+    };
+
     const filterEventsByDate = () => {
         const selectedDateString = date.toDateString();
         const filtered = agenda.filter((event) => {
             const eventDateString = new Date(event.Date).toDateString();
             if (eventDateString === selectedDateString) {
-                console.log("Same Date");
                 return true;
             }
             return false;
         });
         setFilteredEvents(filtered);
+
     };
-
-    console.log("Date Value: ", date); // Add this line to log the date value
-
-
     return (
         <>
             <Box p={15} m={50}>
@@ -116,59 +122,63 @@ export default function CalendarPage() {
                     />
                 </Center>
             </Box>
-                <Center m={2}>
-                    <Text as='em' color="#FC6976" fontSize='lg'>{date.toLocaleDateString()}</Text>
-                </Center>
+            <Center m={2}>
+                <Text as='em' color="#FC6976" fontSize='lg'>{date.toLocaleDateString()}</Text>
+            </Center>
             <Center>
                 <Flex width={'600px'} justifyContent={'space-between'}>
-                    
+
                     <Popover>
                         <PopoverTrigger>
                             <Center>
                                 <Button
-                                    class="ripple ripple-surface btn btn-dark btn-rounded btn-mg btn-block"
+                                    className="ripple ripple-surface btn btn-dark btn-rounded btn-mg btn-block"
                                     width={'160px'}
-                                    onClick={filterEventsByDate}
+                                    onClick={() => {
+                                        filterEventsByDate();
+                                        setModalShow(true); // Set the modalShow state to true when clicking "Daily Events"
+                                    }}
                                 >
                                     Daily Events
                                 </Button>
                             </Center>
                         </PopoverTrigger>
-                        <PopoverContent>
-                            <PopoverArrow />
-                            <PopoverCloseButton color="#FC6976" />
-                            <PopoverBody pb={20} fontSize='lg' fontWeight={'bold'}>
-                                {filteredEvents.length > 0 ? (
-                                    filteredEvents.map((event, index) => (
-                                        <div key={index}>
-                                            Guests: {event.Guests} <br />
-                                            Subject: {event.Subject}
-                                        </div>
-                                    ))
-                                ) : (
-                                    "Nothing Planned This Day"
-                                )}
-                            </PopoverBody>
-                            <PopoverFooter border='0' display='flex' justifyContent='right' pb={4}></PopoverFooter>
-                        </PopoverContent>
                     </Popover>
-    
-                    <Popover>
-                        <PopoverTrigger>
-                            <Center>
-                                <Button
-                                    class="ripple ripple-surface btn btn-dark btn-rounded btn-mg btn-block"
-                                    width={'160px'}
-                                >
-                                    Edit/Delete an Event
-                                </Button>
-                            </Center>
-                        </PopoverTrigger>
-                        {/* ... Edit/Delete Event Popover Content (unchanged) ... */}
-                    </Popover>
+                    {/* Other Popover components, if any */}
                 </Flex>
             </Center>
+
+            {/* Modal for displaying event details */}
+            <MDBModal show={modalShow} setShow={setModalShow} tabIndex='-1'>
+                <MDBModalDialog>
+                    <MDBModalContent>
+                        <MDBModalHeader>
+                            <MDBModalTitle>Event Details</MDBModalTitle>
+                            <MDBBtn className='btn-close' color='none' onClick={() => setModalShow(false)}></MDBBtn>
+                        </MDBModalHeader>
+                        <MDBModalBody>
+                            {filteredEvents.length > 0 ? (
+                                filteredEvents.map((event, index) => (
+                                    <div key={index}>
+                                        <strong>Guests:</strong> {event.Guests.replace(/\+/g, ' and ')} <br />
+                                        <strong>Subject:</strong> {event.Subject} <br />
+                                        <strong>Date:</strong> {event.Date.split('T')[0]}
+
+                                        <hr /> {/* Add a horizontal line to separate events */}
+                                    </div>
+                                ))
+                            ) : (
+                                "No events for this day"
+                            )}
+                        </MDBModalBody>
+                        <MDBModalFooter>
+                            <MDBBtn rounded className='mx-2' color='dark' onClick={() => setModalShow(false)}>
+                                Close
+                            </MDBBtn>
+                        </MDBModalFooter>
+                    </MDBModalContent>
+                </MDBModalDialog>
+            </MDBModal>
         </>
     );
-    
-}
+}    
