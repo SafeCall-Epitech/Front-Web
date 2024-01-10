@@ -24,6 +24,11 @@ function DiscList({ onFriendSelect }) {
     const [textInput, setTextInput] = useState('');
     const [currentMessage, setCurrentMessage] = useState("");
     const [selectedFriend, setSelectedFriend] = useState(null);
+    let utcstr = sessionStorage.getItem("UTC");
+    let utc = parseFloat(utcstr)
+    const d = new Date();
+    let hour = d.getHours()
+    let min = d.getMinutes();
 
     useEffect(() => {
         const fetchFriendList = async () => {
@@ -124,7 +129,12 @@ function DiscList({ onFriendSelect }) {
                                             {friend.replace(sessionStorage.getItem('user_name'), '').split(':')[0]}
                                         </p>
                                         <p className="small text-muted">
-                                            {friend.split(':')[1]} : {friend.split(':')[2]}:{friend.split(':')[3]}
+                                            {friend.split(':')[1] !== "" && (
+                                                <>
+                                                    {friend.split(':')[1]} : {friend.split(':')[2].split(" ")[1]} : {parseInt(friend.split(':')[2].split(" ")[2]) + -utc}:{friend.split(':')[3]}
+                                                </>
+                                            )}
+                                            {/* {friend.split(':')[1]} : {friend.split(':')[2]}:{friend.split(':')[3]} */}
                                         </p>
                                     </div>
                                 </div>
