@@ -16,6 +16,7 @@ import My_Register from './pages/register';
 import My_Call from './pages/call_popup';
 
 class App extends Component {
+  
   render() {
     return (
       <Router>
@@ -36,7 +37,9 @@ class App extends Component {
           <Route exact path="/Call" element={<My_Call />} />
 		      <Route exact path="/My_user_profile/:username" element={<The_user_profile />} />
 		      <Route exact path="/My_wfriend_profile/:username" element={<My_wfriend_profile />} /> 
-
+          <Route exact path="/Call/:username" element={<My_Call />} />
+          <Route exact path="/Call/:Guest" element={<My_Call />} />
+          
         </Routes>
       </Router>
     );

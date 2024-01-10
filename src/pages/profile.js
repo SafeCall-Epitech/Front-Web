@@ -33,6 +33,7 @@ export default function ProfilePage() {
     const user = JSON.parse(localStorage.getItem('user'));
     sessionStorage.setItem("user_name", JSON.parse(localStorage.getItem('user')).toLowerCase())
 
+
     const [username, setUsername] = useState('');
     const [Name, setName] = useState('');
     const [Email, setEmail] = useState('');
@@ -52,11 +53,11 @@ export default function ProfilePage() {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTime, setSelectedTime] = useState('10:00 AM');
 
-
     const [friendsList, setFriendsList] = useState([]);
     const [agenda, setAgenda] = useState([]);
-    const navigate = useNavigate();
+    const [Guest, setGuest] = useState("");
 
+    const navigate = useNavigate();
 
     const uploader = Uploader({
         apiKey: "free"
@@ -320,6 +321,15 @@ export default function ProfilePage() {
         }
     }
 
+    const handleJoinCall = (guests) => {
+        const guestArray = guests.split('+');
+        const firstGuest = guestArray[0];
+        const secondGuest = guestArray[1];
+    
+        let guestName = (firstGuest === user) ? secondGuest : firstGuest;
+        navigate(`/Call/${guestName}`);
+    };
+
     const MyDropzone = ({ setFiles }) =>
         <UploadDropzone uploader={uploader}
             options={uploaderOptions}
@@ -537,7 +547,7 @@ export default function ProfilePage() {
                                                     Confirmed: {event.Confirmed ? "Yes" : "No"}<br />
                                                     <MDBBtn
                                                         color="dark"
-                                                        onClick={() => callUser(idToCall)}
+                                                        onClick={() => handleJoinCall(event.Guests)} // Pass guests to the function
                                                         style={{ marginTop: "10px" }}
                                                     >
                                                         <i className="fas fa-phone"></i> Join Call

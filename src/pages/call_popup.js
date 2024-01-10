@@ -16,6 +16,7 @@ import {
   MDBModalFooter,
   MDBInput,
 } from "mdb-react-ui-kit";
+import { useParams } from 'react-router-dom';
 import Draggable from "react-draggable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWindowMinimize, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -27,11 +28,30 @@ import { faVolumeHigh, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
 
 
   const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
- //const socket = io.connect("http://localhost:5002/");
 
 
 export default function ECommerce() {
   const user = JSON.parse(localStorage.getItem("user"));
+  let { username } = useParams();  // This extracts 'username' from the URL
+
+  const fetchData = async () => {
+    if (username) {
+      const res = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/profile/${username}`);
+      console.log("Guest : ", username);
+      console.log("User : ", user);
+
+      // Use the response data as needed
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [username]);  // Depend on 'username', not 'Guest'
+
+  // ... rest of your component ...
+
+  //console.log("Guests:", guests);
+
   const [Name, setName] = useState("");
   const [Email, setEmail] = useState("");
   const [Nb, setNb] = useState("");
@@ -272,7 +292,7 @@ export default function ECommerce() {
           <MDBCol md="6" lg="5" xl="4" className="mt-5">
             {/* Top part of the screen */}
             <div className="text-center mb-4">
-              <h4>My ID = {me}</h4>
+              <h4>My ID = {user}</h4>
             </div>
 
             {/* Left part of the screen */}
