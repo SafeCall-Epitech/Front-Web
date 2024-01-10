@@ -120,7 +120,7 @@ export default function ProfilePage() {
             date: selectedDate.toISOString(),
             time: selectedTime + 1,
         });
-        console.log(selectedTime)
+        console.log(selectedTime);
 
         axios
             .post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/addEvent`, form, {
@@ -130,7 +130,7 @@ export default function ProfilePage() {
             })
             .then((res) => {
                 console.log(res.data);
-                setModalShow(false);
+                setShowCallModal(false); // Close the modal here
             })
             .catch((error) => {
                 console.error(error);
@@ -576,7 +576,7 @@ export default function ProfilePage() {
                                                 </MDBListGroupItem>
                                             ))}
                                         </MDBListGroup>
-                                                
+
                                     </MDBCardBody>
                                 </MDBCard>
                             </MDBCol>
