@@ -430,9 +430,10 @@ export default function ProfilePage() {
                                         }
                                     </>
                                 )}
+                                
+                                    <br/>
 
-                                <MDBCardText>{Name}</MDBCardText>
-                                <p className="@ID : *******">@ID : *******</p>
+                                <MDBCardText>ID : {Name}</MDBCardText>
                                 <div className="d-flex justify-content-center mb-2">
                                     <MDBBtn color="dark" rounded block size="mg" onClick={() => setIsEditing(true)}>
                                         <MDBIcon far icon="cog" /> Modify
