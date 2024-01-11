@@ -22,7 +22,7 @@ import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TimePicker from "react-time-picker";
-import { DropdownButton, Dropdown } from 'react-bootstrap';
+import { Dropdown, DropdownButton, Modal, Button, Form } from 'react-bootstrap';
 import { Uploader } from "uploader";
 import { UploadDropzone } from "react-uploader";
 import { useNavigate } from 'react-router-dom';
@@ -57,8 +57,42 @@ export default function ProfilePage() {
     const [friendsList, setFriendsList] = useState([]);
     const [agenda, setAgenda] = useState([]);
     const [Guest, setGuest] = useState("");
+    const [selectedFriend, setSelectedFriend] = useState(null);
 
     const navigate = useNavigate();
+
+
+    //handle for the report popup
+    const [showModal, setShowModal] = useState(false);
+    const [reportMessage, setReportMessage] = useState('');
+  
+    const sendReport = async () => {
+        const form = JSON.stringify({
+          username: user,
+          date: new Date(),
+          reported: selectedFriend.id,
+          message: reportMessage,
+        });
+        const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/report`, form, {
+          headers: {
+            'Content-Type': 'application/json'
+            }
+        })
+        .then(res => {
+          console.log(res.data);
+          alert("Report send");
+      })
+    }
+
+    const handleCloseModal = () => {
+      setShowModal(false);
+      setReportMessage('');
+    };
+  
+    const handleReport = (friend) => {
+        sendReport(friend);
+        handleCloseModal();
+    };
 
     const uploader = Uploader({
         apiKey: "free"
@@ -378,8 +412,6 @@ export default function ProfilePage() {
         handleProfilePicSave(fileUrl);
     })
     const [files, setFiles] = useState([])
-
-    const [selectedFriend, setSelectedFriend] = useState(null);
     const [actionResult, setActionResult] = useState('');
 
     const handleDropdownSelect = (friend, action) => {
@@ -391,7 +423,8 @@ export default function ProfilePage() {
             setActionResult('');
         }
         if (action === 'option2') {
-            DeleteFriend(friend);
+            setSelectedFriend(friend);
+            setShowModal(true);
         } if (action === 'option3') {
             SendConv(friend);
         } if (action === 'option4') {
@@ -609,17 +642,45 @@ export default function ProfilePage() {
                                                         {friend.id}
                                                     </div>
                                                     <div>
-                                                        <DropdownButton
-                                                            title="Actions"
-                                                            onSelect={(action) => handleDropdownSelect(friend, action)}
-                                                            id={`dropdown-basic-${friend.id}`}
-                                                        >
-                                                            <Dropdown.Item eventKey="option1">Delete friend</Dropdown.Item>
-                                                            <Dropdown.Item eventKey="option2">Report</Dropdown.Item>
-                                                            <Dropdown.Item eventKey="option3">Start Conversation</Dropdown.Item>
-                                                            <Dropdown.Item eventKey="option4">Profile</Dropdown.Item>
-                                                            <Dropdown.Item eventKey="option5">Book a Call</Dropdown.Item>
-                                                        </DropdownButton>
+                                                   <DropdownButton
+                                                        title="Actions"
+                                                        onSelect={(action) => handleDropdownSelect(friend, action)}
+                                                        id={`dropdown-basic-${friend.id}`}
+                                                    >
+                                                        {/* Other Dropdown Items */}
+                                                        <Dropdown.Item eventKey="option1">Delete friend</Dropdown.Item>
+                                                        <Dropdown.Item eventKey="option2">Report</Dropdown.Item>
+                                                        <Dropdown.Item eventKey="option3">Start Conversation</Dropdown.Item>
+                                                        <Dropdown.Item eventKey="option4">Profile</Dropdown.Item>
+                                                        <Dropdown.Item eventKey="option5">Book a Call</Dropdown.Item>
+                                                        <Dropdown.Item eventKey="option2">Report</Dropdown.Item>
+                                                    </DropdownButton>
+
+                                                    {/* Report Modal */}
+                                                    <Modal show={showModal} onHide={handleCloseModal}>
+                                                        <Modal.Header closeButton>
+                                                        <Modal.Title>Report</Modal.Title>
+                                                        </Modal.Header>
+                                                        <Modal.Body>
+                                                        <Form.Group controlId="reportMessage">
+                                                            <Form.Label>Write your report message:</Form.Label>
+                                                            <Form.Control
+                                                            as="textarea"
+                                                            rows={3}
+                                                            value={reportMessage}
+                                                            onChange={(e) => setReportMessage(e.target.value)}
+                                                            />
+                                                        </Form.Group>
+                                                        </Modal.Body>
+                                                        <Modal.Footer>
+                                                        <Button variant="secondary" onClick={handleCloseModal}>
+                                                            Close
+                                                        </Button>
+                                                        <Button variant="primary" onClick={handleReport}>
+                                                            Report
+                                                        </Button>
+                                                        </Modal.Footer>
+                                                    </Modal>
                                                     </div>
                                                 </MDBListGroupItem>
                                             ))}
