@@ -1,0 +1,22 @@
+/* ProfilePage.css */
+
+.agenda-item {
+    display: flex;
+    flex-direction: column; /* Change to column layout to stack details and button */
+    align-items: flex-start; /* Align items to the left */
+    margin-bottom: 10px;
+  }
+  
+  .event-details {
+    margin-bottom: 10px; /* Add margin between event details and button */
+  }
+  
+  .join-call-button {
+    margin-top: 0px; /* Adjust the margin to separate the button from event details */
+  }
+  
+  .event-separator {
+    border-top: 1px solid #1a183b; /* Customize the line color and style as needed */
+    margin-top: 20px; /* Adjust the margin to separate events */
+  }
+  

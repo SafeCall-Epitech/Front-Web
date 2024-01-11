@@ -8,7 +8,8 @@ npm install react-scripts
 
 ### Package
 
-npm install -g serve
+npm install
+npm install simple-peer socket.io-client
 
 ### déploiement
 

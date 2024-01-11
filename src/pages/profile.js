@@ -26,6 +26,7 @@ import { DropdownButton, Dropdown } from 'react-bootstrap';
 import { Uploader } from "uploader";
 import { UploadDropzone } from "react-uploader";
 import { useNavigate } from 'react-router-dom';
+import '../pages/profile.css'; // Make sure to use the correct file path
 
 
 export default function ProfilePage() {
@@ -94,17 +95,46 @@ export default function ProfilePage() {
                 const data = res2.data["Success "];
                 console.log(data);
 
+                const similarEvents = []; // Array to store similar events
+
                 if (data && data.length > 0) {
                     for (let i = 0; i < data.length; i++) {
                         const event = data[i];
                         const guests = user + event.Guests;
                         const date = event.Date;
                         const subject = event.Subject;
-                        const Event = event.Guests + " / " + event.Date + " / " + event.Subject;
+
+                        // Parse the event date as a Date object
+                        const eventDate = new Date(date);
+                        const currentDate = new Date(); // Current date
+
+                        // Check if the event date is the same as the current date
+                        if (
+                            eventDate.getFullYear() === currentDate.getFullYear() &&
+                            eventDate.getMonth() === currentDate.getMonth() &&
+                            eventDate.getDate() === currentDate.getDate()
+                        ) {
+                            similarEvents.push(event); // Add the event to the similarEvents array
+                        }
                     }
                 }
-                setAgenda(data);
 
+                // Set a flag to determine if there are similar events
+                const hasSimilarEvents = similarEvents.length > 0;
+
+                // Log similar events
+                if (hasSimilarEvents) {
+                    console.log("Events with similar dates:");
+                    similarEvents.forEach((event) => {
+                        console.log("Guests:", event.Guests.replace(/\+/g, ' & '));
+                        console.log("Subject:", event.Subject);
+                        console.log("Date:", event.Date.split('T')[0]);
+                        console.log("---");
+                    });
+                }
+
+                setAgenda(data);
+                setHasSimilarEvents(hasSimilarEvents); // Store the flag in state
             } catch (error) {
                 console.error(error);
             }
@@ -113,15 +143,17 @@ export default function ProfilePage() {
         fetchAgenda();
     }, []);
 
+    const [hasSimilarEvents, setHasSimilarEvents] = useState(false);
+
+
     const SendCallForm = async () => {
         const form = JSON.stringify({
             guest1: user,
             guest2: username,
             subject: Subject,
-            date: selectedDate.toISOString(),
-            time: selectedTime + 1,
+            date: selectedDate.toISOString().split('T')[0] + ' ' + selectedTime,
         });
-        console.log(selectedTime);
+
 
         axios
             .post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/addEvent`, form, {
@@ -325,7 +357,7 @@ export default function ProfilePage() {
         const guestArray = guests.split('+');
         const firstGuest = guestArray[0];
         const secondGuest = guestArray[1];
-    
+
         let guestName = (firstGuest === user) ? secondGuest : firstGuest;
         navigate(`/Call/${guestName}`);
     };
@@ -363,7 +395,7 @@ export default function ProfilePage() {
         } if (action === 'option3') {
             SendConv(friend);
         } if (action === 'option4') {
-            navigate(`/My_wfriend_profile/${Name}`);
+            navigate(`/My_wfriend_profile/${friend.id}`);
         } if (action === 'option5') {
             ``
             setModalShow(true);
@@ -468,16 +500,6 @@ export default function ProfilePage() {
 
                                 <MDBRow>
                                     <MDBCol sm="3">
-                                        <MDBCardText>ID SafeCall</MDBCardText>
-                                    </MDBCol>
-                                    <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">MyIdTest</MDBCardText>
-                                    </MDBCol>
-                                </MDBRow>
-                                <hr />
-
-                                <MDBRow>
-                                    <MDBCol sm="3">
                                         <MDBCardText>Email</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
@@ -534,31 +556,46 @@ export default function ProfilePage() {
                         </MDBCard>
 
                         <MDBRow>
-                            <MDBCol sm="6">
-                                <MDBCard className="mb-4">
-                                    <MDBCardBody>
-                                        <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Next on the Agenda</span></MDBCardText>
-                                        <ul>
-                                            {agenda && agenda.map((event, index) => (
-                                                <li key={index}>
-                                                    Guests: {event.Guests}<br />
-                                                    Date: {event.Date}<br />
-                                                    Subject: {event.Subject}<br />
-                                                    Confirmed: {event.Confirmed ? "Yes" : "No"}<br />
-                                                    <MDBBtn
-                                                        color="dark"
-                                                        onClick={() => handleJoinCall(event.Guests)} // Pass guests to the function
-                                                        style={{ marginTop: "10px" }}
-                                                    >
-                                                        <i className="fas fa-phone"></i> Join Call
-                                                    </MDBBtn>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </MDBCardBody>
-                                </MDBCard>
-                            </MDBCol>
-                            <MDBCol sm="6">
+                        <MDBCol sm="6">
+                                    <MDBCard className="mb-4">
+                                        <MDBCardBody>
+                                            <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Next on the Agenda</span></MDBCardText>
+                                            <ul>
+                                                {agenda && agenda.map((event, index) => {
+                                                    const eventDate = new Date(event.Date.split('T')[0]);
+                                                    const currentDate = new Date();
+                                                    const isToday = eventDate.getFullYear() === currentDate.getFullYear() &&
+                                                        eventDate.getMonth() === currentDate.getMonth() &&
+                                                        eventDate.getDate() === currentDate.getDate();
+                                                    
+                                                    return (
+                                                        <li key={index}>
+                                                            <div className="agenda-item">
+                                                                <div className="event-details">
+                                                                    <strong>Guests:</strong> {event.Guests.replace(/\+/g, ' & ')} <br />
+                                                                    <strong>Subject:</strong> {event.Subject} <br />
+                                                                    <strong>Date:</strong> {event.Date.split('T')[0]}
+                                                                </div>
+                                                                <div className="join-call-button">
+                                                                    {isToday && (
+                                                                        <MDBBtn
+                                                                            color="dark"
+                                                                            onClick={() => handleJoinCall(event.Guests)}
+                                                                        >
+                                                                            <i className="fas fa-phone"></i> Join Call
+                                                                        </MDBBtn>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                            {index < agenda.length - 1 && <hr className="event-separator" />}
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        </MDBCardBody>
+                                    </MDBCard>
+                                </MDBCol>
+                                <MDBCol sm="6">
                                 <MDBCard className="mb-4">
                                     <MDBCardBody>
                                         <MDBCardText className="mb-4">

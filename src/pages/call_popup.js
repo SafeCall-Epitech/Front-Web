@@ -311,7 +311,6 @@ export default function ECommerce() {
               <h4>My ID = {user}</h4>
             </div>
 
-            {/* Left part of the screen */}
             <div style={{ backgroundColor: "#ffffff", padding: "30px", borderRadius: '20px' }}>
               <div className="text-center mb-4">
                 <MDBBtn
@@ -406,12 +405,7 @@ export default function ECommerce() {
               )}
             </div>
           </MDBCol>
-          <MDBCol md="6" lg="5" xl="4" className="mt-5">
-            {/* Right part of the screen for conversation box */}
-            <div style={{ backgroundColor: "#f2f2f2", padding: "30px", borderRadius: '20px' }}>
-              {/* Add your conversation box component here */}
-            </div>
-          </MDBCol>
+            
         </MDBRow>
       </MDBContainer>
 
