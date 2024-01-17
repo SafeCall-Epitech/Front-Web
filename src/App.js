@@ -40,7 +40,7 @@ class App extends Component {
 		      <Route exact path="/My_wfriend_profile/:username" element={<My_wfriend_profile />} /> 
           <Route exact path="/Call/:username" element={<My_Call />} />
           <Route exact path="/Call/:Guest" element={<My_Call />} />
-          <Route exact path="/phonecall/:CallWith/:Caller" element={<My_Mobile_Call />} />
+          <Route exact path="/phonecall/:username/:user" element={<My_Mobile_Call />} />
           
         </Routes>
       </Router>
