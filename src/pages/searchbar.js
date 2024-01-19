@@ -44,6 +44,7 @@ export default function App() {
   const handleSearch = async () => {
     try {
       const res = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/profile/${Name}`);
+      console.log(res.data["profile"]);
       if (res.data['profile']) {
         setName(res.data['profile']['FullName']);
         setEmail(res.data['profile']['Email']);
@@ -64,7 +65,8 @@ export default function App() {
       const form = JSON.stringify({
         UserID: user,
         Friend: Name,
-        Action: "rm",
+        Subject: Subject,
+        Action: "delete",
       });
       await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/manageFriend`, form, {
         headers: {
@@ -86,6 +88,7 @@ export default function App() {
       const form = JSON.stringify({
         UserID: user,
         Friend: Name,
+        Subject: Subject,
         Action: "add",
       });
       await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/manageFriend`, form, {
@@ -93,7 +96,6 @@ export default function App() {
           'Content-Type': 'application/json',
         }
       });
-
     } catch (err) {
       console.error(err);
     }
@@ -115,9 +117,7 @@ export default function App() {
   const SendCallForm = async () => {
     // Implement the logic to send the call form data
     try {
-      // Assuming you send the form data here
-
-      // After the form is successfully sent, call the AddFriend function
+      console.log("Added");
       await AddFriend();
 
       // Update the invitationSent state to indicate that the invitation is sent
@@ -269,7 +269,7 @@ export default function App() {
                         setModalShow(false);
                       }}
                     >
-                      - Add Contact
+                      + Add Contact
                     </MDBBtn>
                   </MDBCardBody>
                 </MDBCard>

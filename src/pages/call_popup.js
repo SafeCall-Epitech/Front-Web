@@ -309,6 +309,8 @@ export default function ECommerce() {
             {/* Top part of the screen */}
             <div className="text-center mb-4">
               <h4>My ID = {user}</h4>
+              <h4>Meeting with {idToCall}</h4>
+
             </div>
 
             <div style={{ backgroundColor: "#ffffff", padding: "30px", borderRadius: '20px' }}>

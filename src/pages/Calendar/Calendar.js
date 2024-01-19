@@ -24,14 +24,16 @@ import {
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
 
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TimePicker from "react-time-picker";
 import { DropdownButton, Dropdown } from 'react-bootstrap';
 import { Uploader } from "uploader";
 import { UploadDropzone } from "react-uploader";
-import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 import Calendar from 'react-calendar';
 import "./Calendar.css";
@@ -49,6 +51,8 @@ export default function CalendarPage() {
     const initRef = React.useRef();
     const [modalShow, setModalShow] = useState(false); // State to manage modal visibility
     const [selectedEvent, setSelectedEvent] = useState(null); // State to hold the selected event
+    const navigate = useNavigate();
+
 
 
     useEffect(() => {
@@ -58,28 +62,33 @@ export default function CalendarPage() {
 
                 const data = res2.data["Success "];
 
-
                 if (data && data.length > 0) {
-                    for (let i = 0; i < data.length; i++) {
-                        const event = data[i];
-                        const guests = user + event.Guests;
-                        const date = event.Date;
-                        const subject = event.Subject;
-                        const Event = event.Guests + " / " + event.Date + " / " + event.Subject;
-                    }
+                    setAgenda(data); // Set agenda with the fetched data initially
                 }
-                setAgenda(data);
-
-
             } catch (error) {
                 console.log("error : ");
-
                 console.error(error);
             }
         };
 
         fetchAgenda();
-    }, []);
+    }, [user]);
+
+
+    useEffect(() => {
+        // Filter events when the component first loads with the initial date
+        filterEventsByDate(date);
+    }, [date, agenda]);
+
+    function isToday(eventDate) {
+        const eventDateObj = new Date(eventDate);
+        const currentDate = new Date();
+        return (
+            eventDateObj.getDate() === currentDate.getDate() &&
+            eventDateObj.getMonth() === currentDate.getMonth() &&
+            eventDateObj.getFullYear() === currentDate.getFullYear()
+        );
+    }
 
     const handleEventClick = (event) => {
         setSelectedEvent(event);
@@ -87,97 +96,87 @@ export default function CalendarPage() {
         setModalShow(true);
     };
 
-    const filterEventsByDate = () => {
-        const selectedDateString = date.toDateString();
+    const handleDateClick = (date) => {
+        setDate(date); // Update the selected date
+        filterEventsByDate(date); // Filter events for the selected date
+    };
+
+    const filterEventsByDate = (selectedDate) => {
+        const selectedDateString = selectedDate.toDateString();
         const filtered = agenda.filter((event) => {
             const eventDateString = new Date(event.Date).toDateString();
-            if (eventDateString === selectedDateString) {
-                return true;
-            }
-            return false;
+            return eventDateString === selectedDateString;
         });
         setFilteredEvents(filtered);
-
     };
+
+    const handleJoinCall = (guests) => {
+        const guestArray = guests.split('+');
+        const firstGuest = guestArray[0];
+        const secondGuest = guestArray[1];
+        let guestName = (firstGuest === user) ? secondGuest : firstGuest;
+        navigate(`/Call/${guestName}`);
+    };
+
     return (
         <>
-            <Box p={-20} m={50}>
-                <Box pb={20}></Box>
-                <Center>
-                    <Calendar
-                        locale="en-GB"
-                        onChange={setDate}
-                        value={date}
-                        onClickDay={() => setShowTime(true)}
-                        tileContent={({ date, view }) => {
-                            if (view === 'month') {
-                                const selectedDate = date.toDateString();
-                                const hasEvent = agenda.some((event) => {
-                                    const eventDateString = new Date(event.Date).toDateString();
-                                    return eventDateString === selectedDate;
-                                });
-                                return hasEvent ? <div className="dot"></div> : null;
-                            }
-                        }}
-                    />
-                </Center>
-            </Box>
-            <Center m={2}>
-                <Text as='em' color="#FC6976" fontSize='lg'>{date.toLocaleDateString()}</Text>
-            </Center>
-            <Center>
-                    <Popover>
-                        <PopoverTrigger>
-                            <Center>
-                                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                    <Button
-                                        className="ripple ripple-surface btn btn-dark btn-rounded btn-mg btn-block"
-                                        width={'160px'}
-                                        onClick={() => {
-                                            filterEventsByDate();
-                                            setModalShow(true);
-                                        }}
+            <Flex>
+                {/* Calendar on the left */}
+                <Box p={-20} m={50}>
+                    <Box pb={20}></Box>
+                    <Center>
+                        <Calendar
+                            locale="en-GB"
+                            onChange={setDate}
+                            value={date}
+                            onClickDay={handleDateClick}
+                            tileContent={({ date, view }) => {
+                                if (view === 'month') {
+                                    const selectedDate = date.toDateString();
+                                    const hasEvent = agenda.some((event) => {
+                                        const eventDateString = new Date(event.Date).toDateString();
+                                        return eventDateString === selectedDate;
+                                    });
+                                    return hasEvent ? <div className="dot"></div> : null;
+                                }
+                            }}
+                        />
+                    </Center>
+                </Box>
+
+                {/* Event list on the right */}
+                <Box flex="1" p={4}>
+                    <Center m={20}>
+                        <Text as='em' color="#FC6976" fontSize='lg'>{date.toLocaleDateString()}</Text>
+                    </Center>
+
+                    {/* Display filtered events */}
+                    {filteredEvents.length > 0 ? (
+                        filteredEvents.map((event, index) => (
+                            <div key={index} onClick={() => handleEventClick(event)}>
+                                <strong>Guests:</strong> {event.Guests.replace(/\+/g, ' and ')} <br />
+                                <strong>Subject:</strong> {event.Subject} <br />
+                                <strong>Date:</strong> {event.Date.split('T')[0]}
+
+                                {/* Add the "Join Call" button */}
+                                {isToday(event.Date) && (
+                                    <MDBBtn
+                                        color="dark"
+                                        onClick={() => handleJoinCall(event.Guests)}
                                     >
-                                        Daily Events
-                                    </Button>
-                                </div>
-                            </Center>
-                        </PopoverTrigger>
-                    </Popover>
-                    {/* Other Popover components, if any */}
-            </Center>
+                                        <i className="fas fa-phone"></i> Join Call
+                                    </MDBBtn>
+                                )}
 
-            {/* Modal for displaying event details */}
-            <MDBModal show={modalShow} setShow={setModalShow} tabIndex='-1'>
-                <MDBModalDialog>
-                    <MDBModalContent>
-                        <MDBModalHeader>
-                            <MDBModalTitle>Event Details</MDBModalTitle>
-                            <MDBBtn className='btn-close' color='none' onClick={() => setModalShow(false)}></MDBBtn>
-                        </MDBModalHeader>
-                        <MDBModalBody>
-                            {filteredEvents.length > 0 ? (
-                                filteredEvents.map((event, index) => (
-                                    <div key={index}>
-                                        <strong>Guests:</strong> {event.Guests.replace(/\+/g, ' and ')} <br />
-                                        <strong>Subject:</strong> {event.Subject} <br />
-                                        <strong>Date:</strong> {event.Date.split('T')[0]}
+                                <hr /> {/* Add a horizontal line to separate events */}
+                            </div>
+                        ))
+                    ) : (
+                        "No events for this day"
+                    )}
 
-                                        <hr /> {/* Add a horizontal line to separate events */}
-                                    </div>
-                                ))
-                            ) : (
-                                "No events for this day"
-                            )}
-                        </MDBModalBody>
-                        <MDBModalFooter>
-                            <MDBBtn rounded className='mx-2' color='dark' onClick={() => setModalShow(false)}>
-                                Close
-                            </MDBBtn>
-                        </MDBModalFooter>
-                    </MDBModalContent>
-                </MDBModalDialog>
-            </MDBModal>
+                </Box>
+            </Flex>
         </>
     );
-}    
+}

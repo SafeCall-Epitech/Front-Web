@@ -15,8 +15,6 @@ import {
 import { fr } from "date-fns/locale";
 import axios from 'axios';
 
-// add friend : https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/manageFriend/user/friend/add
-// rm friend : https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/manageFriend/user/friend/rm
 
 export default function NotificationPage() {
 
@@ -26,6 +24,8 @@ export default function NotificationPage() {
 
   const [showNotification, setShowNotification] = useState(false);
   const [notifications, setNotifications] = useState(JSON.parse(localStorage.getItem("notifications")) || []);
+  const [Subject, setSubject] = useState(''); // State variable for the subject in the modal
+  const [friendsList, setFriendsList] = useState([]);
 
   const friendRequestNotifications = notifications.filter(
     (notification) =>
@@ -34,9 +34,6 @@ export default function NotificationPage() {
   const newMessageNotifications = notifications.filter(
     (notification) => notification.type === "message" && !notification.removed
   );
-
-
-  const [friendsList, setFriendsList] = useState([]);
 
   useEffect(() => {
     const id = setInterval(handleNewFriendRequestClick, 2500);
@@ -49,26 +46,24 @@ export default function NotificationPage() {
     };
   }, []);
 
-
-  const handleAcceptFriendRequest = async (event, friendName, index) => {
+  const handleAcceptFriendRequest = async (event, friendName, index, Subject) => {
     event.stopPropagation();
-    const userID = JSON.parse(localStorage.getItem('user'));
-    
+    console.log("before Accept");
+    console.log("subject :", Subject);
       try {
         const form = JSON.stringify({
           UserID: user,
           Friend: friendName,
+          Subject: Subject,
           Action: "accept",
         });
-    
-        const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/manageFriend`, form, {
+        console.log("before ApiCall");
+        const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/replyFriend`, form, {
           headers: {
             'Content-Type': 'application/json',
           }
         });
-    
-        console.log("accepted");
-    
+        console.log("After Post");
         const updatedNotifications = [...notifications];
         updatedNotifications[index].removed = true;
         setNotifications(updatedNotifications);
@@ -77,8 +72,6 @@ export default function NotificationPage() {
       } catch (err) {
         console.error(err);
       }
-
-    
 
     // Update the notifications state and localStorage
     const updatedNotifications = [...notifications];
@@ -90,15 +83,16 @@ export default function NotificationPage() {
   const handleDeclineFriendRequest = async (event, friendName, index) => {
     event.stopPropagation();
     const userID = JSON.parse(localStorage.getItem('user'));
-    
+
       try {
         const form = JSON.stringify({
           UserID: user,
           Friend: friendName,
+          Subject: Subject,
           Action: "deny",
         });
     
-        const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/manageFriend`, form, {
+        const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/replyFriend`, form, {
           headers: {
             'Content-Type': 'application/json',
           }
@@ -157,6 +151,7 @@ export default function NotificationPage() {
   const addNotification = (newNotification) => {
     const updatedNotifications = [{ ...newNotification, read: false }, ...notifications];
     const unreadNotifications = updatedNotifications.filter(notification => !notification.read);
+    
     setNotifications(unreadNotifications);
 
     localStorage.setItem("notifications", JSON.stringify(unreadNotifications));
@@ -182,55 +177,66 @@ export default function NotificationPage() {
     if (document.visibilityState === "visible") {
       const response = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/listFriends/${user}`);
       const fetchedData = response.data.fetched;
-      const pendingFriendRequests = fetchedData.filter(name => name.startsWith("?"));
-      console.log("pendingFriendRequests:", pendingFriendRequests);
-      if (pendingFriendRequests.length > 0) {
-        const newNotifications = pendingFriendRequests
-          .map((request) => {
-            const friendName = request.substring(1);
-            return {
-              title: `${friendName} added you`,
-              message: `${friendName} wants to be friend with you`,
-              type: "friendRequest",
-              timestamp: new Date().toLocaleString(),
-              removed: false
-            };
-          })
-          .filter(newNotification => {
-            const isExistingNotification = notifications.some(notification =>
-              notification.title.includes(newNotification.title.split(" ")[0]) &&
-              !notification.removed
-            );
-            return !isExistingNotification;
-          });
-        
-        if (newNotifications.length > 0) {
-          const updatedNotifications = [...newNotifications, ...notifications];
+
+      if (fetchedData) {
+        const pendingFriendRequests = fetchedData.filter(item => typeof item.Id === 'string' && item.Id.startsWith('?'));
+        setSubject(fetchedData
+        .filter(item => typeof item.Subject === 'string')
+        .map(item => item.Subject));       
+
+        // Now you can use pendingFriendRequests within this scope
+        if (pendingFriendRequests.length > 0) {
+          const newNotifications = pendingFriendRequests
+            .map((request) => {
+              const friendName = request.Id.substring(1);
+              return {
+                title: `${friendName} added you`,
+                message: `${friendName} wants to be friend with you`,
+                subject: `${Subject}`,
+                type: "friendRequest",
+                timestamp: new Date().toLocaleString(),
+                removed: false
+              };
+            })
+            .filter(newNotification => {
+              const isExistingNotification = notifications.some(notification =>
+                notification.title.includes(newNotification.title.split(" ")[0]) &&
+                !notification.removed
+              );
+              return !isExistingNotification;
+            });
+          
+          if (newNotifications.length > 0) {
+            const updatedNotifications = [...newNotifications, ...notifications];
+            setNotifications(updatedNotifications);
+            localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+    
+            if (Notification.permission === "granted") {
+              newNotifications.forEach(newNotification => {
+                new Notification(newNotification.title);
+              });
+            } else if (Notification.permission !== "denied") {
+              Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                  newNotifications.forEach(newNotification => {
+                    new Notification(newNotification.title);
+                  });
+                }
+              });
+            }
+          }
+        } else {
+          // Clear all friend request notifications
+          const updatedNotifications = notifications.filter(notification => notification.type !== "friendRequest");
           setNotifications(updatedNotifications);
           localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
-  
-          if (Notification.permission === "granted") {
-            newNotifications.forEach(newNotification => {
-              new Notification(newNotification.title);
-            });
-          } else if (Notification.permission !== "denied") {
-            Notification.requestPermission().then(permission => {
-              if (permission === "granted") {
-                newNotifications.forEach(newNotification => {
-                  new Notification(newNotification.title);
-                });
-              }
-            });
-          }
         }
       } else {
-        // Clear all friend request notifications
-        const updatedNotifications = notifications.filter(notification => notification.type !== "friendRequest");
-        setNotifications(updatedNotifications);
-        localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+        console.error("fetchedData is null or undefined");
       }
     }
-  };  
+  };
+  
 
   return (
     <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
@@ -293,7 +299,7 @@ export default function NotificationPage() {
                         {notification.type === "friendRequest" && (
                           <div>
                             <button
-                              onClick={(event) => handleAcceptFriendRequest(event, notification.title.split(" ")[0], index)}
+                              onClick={(event) => handleAcceptFriendRequest(event, notification.title.split(" ")[0], index, Subject)}
                               style={{
                                 backgroundColor: "#4CAF50",
                                 color: "white",

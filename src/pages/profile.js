@@ -18,7 +18,6 @@ import {
     MDBListGroupItem
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
-
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TimePicker from "react-time-picker";
@@ -28,20 +27,16 @@ import { UploadDropzone } from "react-uploader";
 import { useNavigate } from 'react-router-dom';
 import '../pages/profile.css'; // Make sure to use the correct file path
 
-
 export default function ProfilePage() {
 
     const user = JSON.parse(localStorage.getItem('user'));
     sessionStorage.setItem("user_name", JSON.parse(localStorage.getItem('user')).toLowerCase())
-
-
     const [username, setUsername] = useState('');
     const [Name, setName] = useState('');
     const [Email, setEmail] = useState('');
     const [Nb, setNb] = useState('');
     const [Description, setDescription] = useState('');
     const [ProfilePic, setProfilePic] = useState("https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png");
-
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(Name);
     const [newEmail, setNewEmail] = useState(Email);
@@ -53,17 +48,13 @@ export default function ProfilePage() {
     const [Priority, setPriority] = useState('low'); // Provide an initial value here
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTime, setSelectedTime] = useState('10:00 AM');
-
     const [friendsList, setFriendsList] = useState([]);
     const [agenda, setAgenda] = useState([]);
     const [Guest, setGuest] = useState("");
-
     const navigate = useNavigate();
-
     const uploader = Uploader({
         apiKey: "free"
     });
-
     const options = { multi: true };
 
     useEffect(() => {
@@ -71,19 +62,18 @@ export default function ProfilePage() {
             try {
                 const response = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/listFriends/${user}`);
                 const fetchedData = response.data.fetched;
-
                 const friendsListData = fetchedData.map(friend => ({
                     id: friend.Id,
                     subject: friend.Subject,
                     active: friend.Active
                 }));
+                console.log(fetchedData);
 
                 setFriendsList(friendsListData);
             } catch (error) {
                 console.error(error);
             }
         };
-
         fetchFriendsList();
     }, []);
 
@@ -91,23 +81,17 @@ export default function ProfilePage() {
         const fetchAgenda = async () => {
             try {
                 const res2 = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/listEvent/${user}`)
-
                 const data = res2.data["Success "];
-                console.log(data);
-
                 const similarEvents = []; // Array to store similar events
-
                 if (data && data.length > 0) {
                     for (let i = 0; i < data.length; i++) {
                         const event = data[i];
                         const guests = user + event.Guests;
                         const date = event.Date;
                         const subject = event.Subject;
-
                         // Parse the event date as a Date object
                         const eventDate = new Date(date);
                         const currentDate = new Date(); // Current date
-
                         // Check if the event date is the same as the current date
                         if (
                             eventDate.getFullYear() === currentDate.getFullYear() &&
@@ -118,34 +102,23 @@ export default function ProfilePage() {
                         }
                     }
                 }
-
                 // Set a flag to determine if there are similar events
                 const hasSimilarEvents = similarEvents.length > 0;
-
                 // Log similar events
                 if (hasSimilarEvents) {
-                    console.log("Events with similar dates:");
                     similarEvents.forEach((event) => {
-                        console.log("Guests:", event.Guests.replace(/\+/g, ' & '));
-                        console.log("Subject:", event.Subject);
-                        console.log("Date:", event.Date.split('T')[0]);
-                        console.log("---");
                     });
                 }
-
                 setAgenda(data);
                 setHasSimilarEvents(hasSimilarEvents); // Store the flag in state
             } catch (error) {
                 console.error(error);
             }
         };
-
         fetchAgenda();
     }, []);
 
     const [hasSimilarEvents, setHasSimilarEvents] = useState(false);
-
-
     const SendCallForm = async () => {
         const form = JSON.stringify({
             guest1: user,
@@ -153,8 +126,6 @@ export default function ProfilePage() {
             subject: Subject,
             date: selectedDate.toISOString().split('T')[0] + ' ' + selectedTime,
         });
-
-
         axios
             .post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/addEvent`, form, {
                 headers: {
@@ -191,6 +162,7 @@ export default function ProfilePage() {
     };
 
     const DeleteFriend = async (friend) => {
+
         try {
             const form = JSON.stringify({
                 UserID: user,
@@ -198,17 +170,22 @@ export default function ProfilePage() {
                 Subject: friend.subject,
                 Action: "delete",
             });
-            await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/manageFriend`, form, {
+            const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/manageFriend`, form, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
             });
-
+            // Check if the deletion was successful
+            if (response.status === 200) {
+                // Remove the friend from the friendsList state
+                const updatedFriendsList = friendsList.filter(f => f.id !== friend.id);
+                setFriendsList(updatedFriendsList);
+            }
         } catch (err) {
             console.error(err);
         }
-        console.log(friend);
     };
+
     const SendConv = async (friend) => {
         try {
             const form = JSON.stringify({
@@ -217,14 +194,7 @@ export default function ProfilePage() {
                 Subject: friend.subject,
                 Action: "delete",
             });
-            // await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/manageFriend`, form, {
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     }
-            // });
-
             const response = await axios.get('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/messages/' + sessionStorage.getItem("user_name") + "/" + friend.id.toLowerCase());
-
         } catch (err) {
             console.error(err);
         }
@@ -341,9 +311,6 @@ export default function ProfilePage() {
 
     const uploaderOptions = {
         multi: true,
-
-        // Comment out this line & use 'onUpdate' instead of 
-        // 'onComplete' to have the dropzone close after upload.
         showFinishButton: true,
 
         styles: {
@@ -357,7 +324,6 @@ export default function ProfilePage() {
         const guestArray = guests.split('+');
         const firstGuest = guestArray[0];
         const secondGuest = guestArray[1];
-
         let guestName = (firstGuest === user) ? secondGuest : firstGuest;
         navigate(`/Call/${guestName}`);
     };
@@ -377,8 +343,7 @@ export default function ProfilePage() {
         setProfilePic(fileUrl);
         handleProfilePicSave(fileUrl);
     })
-    const [files, setFiles] = useState([])
-
+    const [files, setFiles] = useState([]);
     const [selectedFriend, setSelectedFriend] = useState(null);
     const [actionResult, setActionResult] = useState('');
 
@@ -389,21 +354,15 @@ export default function ProfilePage() {
             DeleteFriend(friend);
         } else {
             setActionResult('');
-        }
-        if (action === 'option2') {
-            DeleteFriend(friend);
+        } if (action === 'option2') {
         } if (action === 'option3') {
             SendConv(friend);
         } if (action === 'option4') {
             navigate(`/My_wfriend_profile/${friend.id}`);
         } if (action === 'option5') {
-            ``
             setModalShow(true);
             setShowCallModal(true);
-        }
-
-
-        else {
+        } else {
             setActionResult('');
         }
     };
@@ -430,9 +389,7 @@ export default function ProfilePage() {
                                         }
                                     </>
                                 )}
-                                
-                                    <br/>
-
+                                <br />
                                 <MDBCardText>ID : {Name}</MDBCardText>
                                 <div className="d-flex justify-content-center mb-2">
                                     <MDBBtn color="dark" rounded block size="mg" onClick={() => setIsEditing(true)}>
@@ -455,7 +412,6 @@ export default function ProfilePage() {
                                 </div>
                             </MDBCardBody>
                         </MDBCard>
-
                         <MDBCard className="mb-4 mb-lg-0">
                             <MDBCardBody>
                                 <MDBCardText className="mb-4">
@@ -476,7 +432,6 @@ export default function ProfilePage() {
                             </MDBCardBody>
                         </MDBCard>
                     </MDBCol>
-
                     <MDBCol lg="8">
                         <MDBCard className="mb-4">
                             <MDBCardBody>
@@ -498,7 +453,6 @@ export default function ProfilePage() {
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
-
                                 <MDBRow>
                                     <MDBCol sm="3">
                                         <MDBCardText>Email</MDBCardText>
@@ -517,7 +471,6 @@ export default function ProfilePage() {
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
-
                                 <MDBRow>
                                     <MDBCol sm="3">
                                         <MDBCardText>Phone Nb</MDBCardText>
@@ -536,7 +489,6 @@ export default function ProfilePage() {
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
-
                                 <MDBRow>
                                     <MDBCol sm="3">
                                         <MDBCardText>Password</MDBCardText>
@@ -545,7 +497,6 @@ export default function ProfilePage() {
                                         <MDBCardText className="text-muted">********</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
-
                                 {isEditing && (
                                     <div className="d-flex justify-content-center mt-4">
                                         <MDBBtn color="danger" onClick={handleCancel}>
@@ -555,48 +506,46 @@ export default function ProfilePage() {
                                 )}
                             </MDBCardBody>
                         </MDBCard>
-
                         <MDBRow>
-                        <MDBCol sm="6">
-                                    <MDBCard className="mb-4">
-                                        <MDBCardBody>
-                                            <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Next on the Agenda</span></MDBCardText>
-                                            <ul>
-                                                {agenda && agenda.map((event, index) => {
-                                                    const eventDate = new Date(event.Date.split('T')[0]);
-                                                    const currentDate = new Date();
-                                                    const isToday = eventDate.getFullYear() === currentDate.getFullYear() &&
-                                                        eventDate.getMonth() === currentDate.getMonth() &&
-                                                        eventDate.getDate() === currentDate.getDate();
-                                                    
-                                                    return (
-                                                        <li key={index}>
-                                                            <div className="agenda-item">
-                                                                <div className="event-details">
-                                                                    <strong>Guests:</strong> {event.Guests.replace(/\+/g, ' & ')} <br />
-                                                                    <strong>Subject:</strong> {event.Subject} <br />
-                                                                    <strong>Date:</strong> {event.Date.split('T')[0]}
-                                                                </div>
-                                                                <div className="join-call-button">
-                                                                    {isToday && (
-                                                                        <MDBBtn
-                                                                            color="dark"
-                                                                            onClick={() => handleJoinCall(event.Guests)}
-                                                                        >
-                                                                            <i className="fas fa-phone"></i> Join Call
-                                                                        </MDBBtn>
-                                                                    )}
-                                                                </div>
+                            <MDBCol sm="6">
+                                <MDBCard className="mb-4">
+                                    <MDBCardBody>
+                                        <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Next on the Agenda</span></MDBCardText>
+                                        <ul>
+                                            {agenda && agenda.map((event, index) => {
+                                                const eventDate = new Date(event.Date.split('T')[0]);
+                                                const currentDate = new Date();
+                                                const isToday = eventDate.getFullYear() === currentDate.getFullYear() &&
+                                                    eventDate.getMonth() === currentDate.getMonth() &&
+                                                    eventDate.getDate() === currentDate.getDate();
+                                                return (
+                                                    <li key={index}>
+                                                        <div className="agenda-item">
+                                                            <div className="event-details">
+                                                                <strong>Guests:</strong> {event.Guests.replace(/\+/g, ' & ')} <br />
+                                                                <strong>Subject:</strong> {event.Subject} <br />
+                                                                <strong>Date:</strong> {event.Date.split('T')[0]}
                                                             </div>
-                                                            {index < agenda.length - 1 && <hr className="event-separator" />}
-                                                        </li>
-                                                    );
-                                                })}
-                                            </ul>
-                                        </MDBCardBody>
-                                    </MDBCard>
-                                </MDBCol>
-                                <MDBCol sm="6">
+                                                            <div className="join-call-button">
+                                                                {isToday && (
+                                                                    <MDBBtn
+                                                                        color="dark"
+                                                                        onClick={() => handleJoinCall(event.Guests)}
+                                                                    >
+                                                                        <i className="fas fa-phone"></i> Join Call
+                                                                    </MDBBtn>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        {index < agenda.length - 1 && <hr className="event-separator" />}
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    </MDBCardBody>
+                                </MDBCard>
+                            </MDBCol>
+                            <MDBCol sm="6">
                                 <MDBCard className="mb-4">
                                     <MDBCardBody>
                                         <MDBCardText className="mb-4">
@@ -632,8 +581,6 @@ export default function ProfilePage() {
                     </MDBCol>
                 </MDBRow>
             </MDBContainer>
-
-
             {/* Modal for Booking a Call */}
             <MDBModal show={showCallModal} tabIndex="-1" onClick={handleCloseCallModal}>
                 <MDBModalDialog>
@@ -643,7 +590,6 @@ export default function ProfilePage() {
                                 <MDBCardBody className="p-4 text-black">
                                     <p className="lead fw-normal mb-1">Call Form</p>
                                     <br />
-
                                     <MDBTypography tag="h5" className="mb-2">
                                         To {username}
                                     </MDBTypography>
@@ -713,7 +659,6 @@ export default function ProfilePage() {
                     </MDBModalContent>
                 </MDBModalDialog>
             </MDBModal>
-
         </section>
     );
 }
