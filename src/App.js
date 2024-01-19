@@ -14,6 +14,7 @@ import My_Messages from './pages/Chat_part/Selection';
 import My_Form from './pages/popupForm';
 import My_Register from './pages/register';
 import My_Call from './pages/call_popup';
+import My_Mobile_Call from './pages/mobile_call';
 
 class App extends Component {
   
@@ -39,6 +40,7 @@ class App extends Component {
 		      <Route exact path="/My_wfriend_profile/:username" element={<My_wfriend_profile />} /> 
           <Route exact path="/Call/:username" element={<My_Call />} />
           <Route exact path="/Call/:Guest" element={<My_Call />} />
+          <Route exact path="/phonecall/:username/:user" element={<My_Mobile_Call />} />
           
         </Routes>
       </Router>
