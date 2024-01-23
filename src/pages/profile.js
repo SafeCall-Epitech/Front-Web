@@ -602,7 +602,6 @@ export default function ProfilePage() {
                                                         <Dropdown.Item eventKey="option3">Start Conversation</Dropdown.Item>
                                                         <Dropdown.Item eventKey="option4">Profile</Dropdown.Item>
                                                         <Dropdown.Item eventKey="option5">Book a Call</Dropdown.Item>
-                                                        <Dropdown.Item eventKey="option2">Report</Dropdown.Item>
                                                     </DropdownButton>
 
                                                     {/* Report Modal */}
