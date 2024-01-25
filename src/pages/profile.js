@@ -26,6 +26,7 @@ import { Uploader } from "uploader";
 import { UploadDropzone } from "react-uploader";
 import { useNavigate } from 'react-router-dom';
 import '../pages/profile.css'; // Make sure to use the correct file path
+import fr from 'date-fns/locale/fr'; // Import the French locale
 
 export default function ProfilePage() {
 
@@ -45,9 +46,8 @@ export default function ProfilePage() {
     const [showCallModal, setShowCallModal] = useState(false);
     const [Subject, setSubject] = useState('');
     const [modalShow, setModalShow] = useState(false);
-    const [Priority, setPriority] = useState('low'); // Provide an initial value here
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [selectedTime, setSelectedTime] = useState('10:00 AM');
+    const [selectedTime, setSelectedTime] = useState('10:00');
     const [friendsList, setFriendsList] = useState([]);
     const [agenda, setAgenda] = useState([]);
     const [Guest, setGuest] = useState("");
@@ -68,8 +68,6 @@ export default function ProfilePage() {
                     subject: friend.Subject,
                     active: friend.Active
                 }));
-                console.log(fetchedData);
-
                 setFriendsList(friendsListData);
             } catch (error) {
                 console.error(error);
@@ -90,7 +88,6 @@ export default function ProfilePage() {
                         const guests = user + event.Guests;
                         const date = event.Date;
                         const subject = event.Subject;
-                        // Parse the event date as a Date object
                         const eventDate = new Date(date);
                         const currentDate = new Date(); // Current date
                         // Check if the event date is the same as the current date
@@ -141,29 +138,24 @@ export default function ProfilePage() {
                 console.error(error);
             });
     };
-
     const handleCloseCallModal = () => {
         setShowCallModal(false);
     };
-
     const handleNameChange = (e) => {
         setNewName(e.target.value);
     };
-
     const handleEmailChange = (e) => {
         setNewEmail(e.target.value);
     };
-
     const handlePhoneNBchange = (e) => {
         setNewNb(e.target.value);
     };
-
     const handleDescriptionChange = (e) => {
         setNewDescription(e.target.value);
     };
 
     const DeleteFriend = async (friend) => {
-
+        console.log("DELETE");
         try {
             const form = JSON.stringify({
                 UserID: user,
@@ -176,8 +168,8 @@ export default function ProfilePage() {
                     'Content-Type': 'application/json',
                 }
             });
-            // Check if the deletion was successful
             if (response.status === 200) {
+                console.log("success");
                 // Remove the friend from the friendsList state
                 const updatedFriendsList = friendsList.filter(f => f.id !== friend.id);
                 setFriendsList(updatedFriendsList);
@@ -310,37 +302,37 @@ export default function ProfilePage() {
         fetchData();
     }, []);
 
-        //handle for the report popup
-        const [showModal, setShowModal] = useState(false);
-        const [reportMessage, setReportMessage] = useState('');
-    
-        const sendReport = async () => {
-            const form = JSON.stringify({
-              username: user,
-              date: new Date(),
-              reported: selectedFriend.id,
-              message: reportMessage,
-            });
-            const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/report`, form, {
-              headers: {
+    //handle for the report popup
+    const [showModal, setShowModal] = useState(false);
+    const [reportMessage, setReportMessage] = useState('');
+
+    const sendReport = async () => {
+        const form = JSON.stringify({
+            username: user,
+            date: new Date(),
+            reported: selectedFriend.id,
+            message: reportMessage,
+        });
+        const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/report`, form, {
+            headers: {
                 'Content-Type': 'application/json'
-                }
-            })
+            }
+        })
             .then(res => {
-              console.log(res.data);
-              alert("Report send");
-          })
-        }
-    
-        const handleCloseModal = () => {
-          setShowModal(false);
-          setReportMessage('');
-        };
-    
-        const handleReport = (friend) => {
-            sendReport(friend);
-            handleCloseModal();
-        };
+                console.log(res.data);
+                alert("Report send");
+            })
+    }
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setReportMessage('');
+    };
+
+    const handleReport = (friend) => {
+        sendReport(friend);
+        handleCloseModal();
+    };
 
     const uploaderOptions = {
         multi: true,
@@ -607,26 +599,26 @@ export default function ProfilePage() {
                                                     {/* Report Modal */}
                                                     <Modal show={showModal} onHide={handleCloseModal}>
                                                         <Modal.Header closeButton>
-                                                        <Modal.Title>Report</Modal.Title>
+                                                            <Modal.Title>Report</Modal.Title>
                                                         </Modal.Header>
                                                         <Modal.Body>
-                                                        <Form.Group controlId="reportMessage">
-                                                            <Form.Label>Write your report message:</Form.Label>
-                                                            <Form.Control
-                                                            as="textarea"
-                                                            rows={3}
-                                                            value={reportMessage}
-                                                            onChange={(e) => setReportMessage(e.target.value)}
-                                                            />
-                                                        </Form.Group>
+                                                            <Form.Group controlId="reportMessage">
+                                                                <Form.Label>Write your report message:</Form.Label>
+                                                                <Form.Control
+                                                                    as="textarea"
+                                                                    rows={3}
+                                                                    value={reportMessage}
+                                                                    onChange={(e) => setReportMessage(e.target.value)}
+                                                                />
+                                                            </Form.Group>
                                                         </Modal.Body>
                                                         <Modal.Footer>
-                                                        <Button variant="secondary" onClick={handleCloseModal}>
-                                                            Close
-                                                        </Button>
-                                                        <Button variant="primary" onClick={handleReport}>
-                                                            Report
-                                                        </Button>
+                                                            <Button variant="secondary" onClick={handleCloseModal}>
+                                                                Close
+                                                            </Button>
+                                                            <Button variant="primary" onClick={handleReport}>
+                                                                Report
+                                                            </Button>
                                                         </Modal.Footer>
                                                     </Modal>
                                                 </MDBListGroupItem>
@@ -685,7 +677,7 @@ export default function ProfilePage() {
                                     <TimePicker
                                         onChange={setSelectedTime}
                                         value={selectedTime}
-                                        format="h:mm a"
+                                        format="HH:mm" // Use 24-hour format
                                         clearIcon={null}
                                         clockIcon={null}
                                         disableClock={true}
@@ -698,6 +690,7 @@ export default function ProfilePage() {
                                             cursor: 'pointer',
                                             transition: 'background-color 0.3s ease',
                                         }}
+                                        locale={fr} // Set the French locale
                                     />
                                     <br />
                                     <br />
