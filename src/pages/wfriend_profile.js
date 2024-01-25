@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import TimePicker from 'react-time-picker';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-time-picker/dist/TimePicker.css';
+import fr from 'date-fns/locale/fr'; // Import the French locale
 
 import {
   MDBCol,
@@ -187,22 +188,23 @@ export default function EditButton() {
                               <label htmlFor="time">Time:</label>
                               <br />
                               <TimePicker
-                                onChange={setSelectedTime}
-                                value={selectedTime}
-                                format="h:mm a"
-                                clearIcon={null}
-                                clockIcon={null}
-                                disableClock={true}
-                                style={{
-                                  backgroundColor: '#007bff',
-                                  color: '#fff',
-                                  border: 'none',
-                                  padding: '10px 20px',
-                                  borderRadius: '5px',
-                                  cursor: 'pointer',
-                                  transition: 'background-color 0.3s ease',
-                                }}
-                              />
+                            onChange={setSelectedTime}
+                            value={selectedTime}
+                            format="HH:mm" // Use 24-hour format
+                            clearIcon={null}
+                            clockIcon={null}
+                            disableClock={true}
+                            style={{
+                                backgroundColor: '#007bff',
+                                color: '#fff',
+                                border: 'none',
+                                padding: '10px 20px',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                transition: 'background-color 0.3s ease',
+                            }}
+                            locale={fr} // Set the French locale
+                        />
                               <br />
                               <br />
                               <MDBBtn
