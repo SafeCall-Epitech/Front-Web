@@ -313,7 +313,7 @@ export default function ProfilePage() {
             reported: selectedFriend.id,
             message: reportMessage,
         });
-        const response = await axios.post(`http://x2024safecall3173801594000.westeurope.cloudapp.azure.com:80/report`, form, {
+        const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/report`, form, {
             headers: {
                 'Content-Type': 'application/json'
             }
