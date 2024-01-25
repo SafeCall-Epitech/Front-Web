@@ -26,8 +26,7 @@ import { Input } from "@chakra-ui/react";
 import { faMicrophone, faPhone, faVideo } from "@fortawesome/free-solid-svg-icons"; // Import FontAwesome icons
 import { faVolumeHigh, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
 
-
-  const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
+const socket = io.connect("https://x2024safecall3173801594000.westeurope.cloudapp.azure.com:5000/");
 
 
 export default function ECommerce() {
@@ -47,8 +46,6 @@ export default function ECommerce() {
       setIdToCall(username)
     }
   };
-
-  // ... rest of your component ...
 
   //console.log("Guests:", guests);
 
@@ -205,20 +202,28 @@ export default function ECommerce() {
   };
 
   const muteSound = () => {
-    if (!sound && wasMicroEnabled) {
-      stream.getAudioTracks()[0].enabled = true;
-      if (userVideo.current)
-        userVideo.current.srcObject.getAudioTracks()[0].enabled = true;
-      setMicro(true);
-    } else {
-      if (userVideo.current)
-        userVideo.current.srcObject.getAudioTracks()[0].enabled = false;
-      stream.getAudioTracks()[0].enabled = false;
+    if (stream) {
+      if (sound) {
+        // If sound is currently enabled
+        stream.getAudioTracks()[0].enabled = true;
+        if (userVideo.current && userVideo.current.srcObject) {
+          // Check if userVideo and its srcObject are not null
+          userVideo.current.srcObject.getAudioTracks()[0].enabled = true;
+        }
+        setMicro(true);
+      } else {
+        if (userVideo.current && userVideo.current.srcObject) {
+          // Check if userVideo and its srcObject are not null
+          userVideo.current.srcObject.getAudioTracks()[0].enabled = false;
+        }
+        stream.getAudioTracks()[0].enabled = false;
+      }
+      setWasMicroEnabled(micro);
+      if (sound) setMicro(false);
+      setSound(!sound);
     }
-    setWasMicroEnabled(micro);
-    if (sound) setMicro(false);
-    setSound(!sound);
   };
+
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
@@ -279,17 +284,6 @@ export default function ECommerce() {
     setIsSoundMuted(!isSoundMuted);
   };
 
-  // Function to minimize the modal
-  const minimizeModal = () => {
-    // Add logic to minimize the modal here
-    // You can hide it, minimize it to a corner, or perform any other necessary actions.
-  };
-
-  // Function to close the modal
-  const closeModal = () => {
-    // Add logic to close the modal here
-  };
-
   // Calculate call duration
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -310,7 +304,6 @@ export default function ECommerce() {
             <div className="text-center mb-4">
               <h4>My ID = {user}</h4>
               <h4>Meeting with {idToCall}</h4>
-
             </div>
 
             <div style={{ backgroundColor: "#ffffff", padding: "30px", borderRadius: '20px' }}>
@@ -325,7 +318,7 @@ export default function ECommerce() {
               </div>
 
               {/* Video feeds */}
-              {callAccepted && !callEnded ? (
+              {stream && ( // Display your camera feed if the stream is available
                 <div className="video-container">
                   <div className="video">
                     <video
@@ -345,11 +338,12 @@ export default function ECommerce() {
                     />
                   </div>
                 </div>
-              ) : null}
+              )}
 
-              {callAccepted && !callEnded && (
-                <div className="call-controls">
-                  {/* Button to end the call */}
+              {/* Buttons for sound and camera */}
+              <div className="call-controls">
+                {/* Button to end the call */}
+                {callAccepted && !callEnded && (
                   <MDBBtn
                     color="danger"
                     onClick={() => leaveCall()}
@@ -357,57 +351,53 @@ export default function ECommerce() {
                   >
                     <i className="fas fa-phone-slash"></i>
                   </MDBBtn>
-                  <MDBBtn
-                    color="primary"
-                    onClick={() => muteMicro()}
-                    style={{ marginRight: "10px" }}
-                  >
-                    {micro ? (
-                      <>
-                        <i className="fas fa-microphone"></i>
-                      </>
-                    ) : (
-                      <>
-                        <i className="fas fa-microphone-slash"></i>
-                      </>
-                    )}
-                  </MDBBtn>
-                   {/* Button to mute/demute the sound */}
-                   <MDBBtn
-                    color="primary"
-                    onClick={() => muteSound()}
-                    style={{ marginRight: "10px" }}
-
-                  >
-                    {sound ? (
-                      <FontAwesomeIcon icon={faVolumeHigh} />
-                    ) : (
-                      <FontAwesomeIcon icon={faVolumeMute} />
-                    )}
-                  </MDBBtn>
-                  {/* Button to hide/unhide your camera */}
-                  <MDBBtn
-                    color="success"
-                    onClick={() => cutCam()}
-                    style={{ marginRight: "10px" }}
-
-                  >
-                    {cam ? (
-                      <>
-                        <i className="fas fa-video me-2"></i>
-                      </>
-                    ) : (
-                      <>
-                        <i className="fas fa-video-slash me-2"></i>
-                      </>
-                    )}
-                  </MDBBtn>
-                </div>
-
-              )}
+                )}
+                <MDBBtn
+                  color="primary"
+                  onClick={() => muteMicro()}
+                  style={{ marginRight: "10px" }}
+                >
+                  {micro ? (
+                    <>
+                      <i className="fas fa-microphone"></i>
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-microphone-slash"></i>
+                    </>
+                  )}
+                </MDBBtn>
+                {/* Button to mute/demute the sound */}
+                <MDBBtn
+                  color="primary"
+                  onClick={() => muteSound()}
+                  style={{ marginRight: "10px" }}
+                >
+                  {sound ? (
+                    <FontAwesomeIcon icon={faVolumeHigh} />
+                  ) : (
+                    <FontAwesomeIcon icon={faVolumeMute} />
+                  )}
+                </MDBBtn>
+                {/* Button to hide/unhide your camera */}
+                <MDBBtn
+                  color="success"
+                  onClick={() => cutCam()}
+                  style={{ marginRight: "10px" }}
+                >
+                  {cam ? (
+                    <>
+                      <i className="fas fa-video me-2"></i>
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-video-slash me-2"></i>
+                    </>
+                  )}
+                </MDBBtn>
+              </div>
             </div>
           </MDBCol>
-            
         </MDBRow>
       </MDBContainer>
 
