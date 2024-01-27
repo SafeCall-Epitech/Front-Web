@@ -15,6 +15,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [UserName, setUserName] = useState();
   const [Password, setPassword] = useState();
+  const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   function getlogin(UserName, Password) {
@@ -38,7 +39,12 @@ function App() {
         } else {
           alert("Error: Incorrect Username or Password");
         }
+      })
+      .catch(error => {
+        setLoading(false);
+        setError("Error: Incorrect Username or Password.");
       });
+
   };
 
   return (
@@ -58,6 +64,12 @@ function App() {
 
               <MDBInput wrapperClass='mb-4' label='Username' id='form1' type='username' onChange={e => setUserName(e.target.value)} required />
               <MDBInput wrapperClass='mb-4' label='Password' id='form2' type='password' onChange={e => setPassword(e.target.value)} required />
+
+              {error && (
+                <div className="alert alert-danger" role="alert">
+                  {error}
+                </div>
+              )}
 
               <div className="text-center pt-1 pb-1">
               <MDBBtn className="mb-4 w-100" style={{
