@@ -174,6 +174,7 @@ export default function ECommerce() {
     if (connectionRef.current && connectionRef.current.srcObject) {
       connectionRef.current.destroy();
     }
+    window.location.href = '/';
   }
 
   const leaveCall = () => {
