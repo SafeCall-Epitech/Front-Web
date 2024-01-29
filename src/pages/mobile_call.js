@@ -347,15 +347,15 @@ export default function ECommerce() {
               {/* {callAccepted && !callEnded && ( */}
                 <div className="call-controls">
                   {/* Button to end the call */}
-              {callAccepted && !callEnded && (
-              <MDBBtn
-                    color="danger"
-                    onClick={() => leaveCall()}
-                    style={{ marginRight: "10px" }}
-                  >
-                    <i className="fas fa-phone-slash"></i>
-                  </MDBBtn>
-                   )}
+              {/* {callAccepted && !callEnded && ( */}
+               {/* <MDBBtn
+                     color="danger"
+                     onClick={() => leaveCall()}
+                     style={{ marginRight: "10px" }}
+                   >
+                     <i className="fas fa-phone-slash"></i>
+                   </MDBBtn>
+                    )} */}
                    <MDBBtn
                      color="primary"
                      onClick={() => muteMicro()}
