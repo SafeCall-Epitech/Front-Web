@@ -19,9 +19,7 @@ import axios from 'axios';
 export default function NotificationPage() {
 
   const [intervalId, setIntervalId] = useState(null);
-
   const user = JSON.parse(localStorage.getItem('user'));
-
   const [showNotification, setShowNotification] = useState(false);
   const [notifications, setNotifications] = useState(JSON.parse(localStorage.getItem("notifications")) || []);
   const [Subject, setSubject] = useState(''); // State variable for the subject in the modal
@@ -49,29 +47,35 @@ export default function NotificationPage() {
   const handleAcceptFriendRequest = async (event, friendName, index, Subject) => {
     event.stopPropagation();
     console.log("before Accept");
+    console.log("FriendName : ", friendName);
     console.log("subject :", Subject);
-      try {
-        const form = JSON.stringify({
-          UserID: user,
-          Friend: friendName,
-          Subject: Subject,
-          Action: "accept",
-        });
-        console.log("before ApiCall");
-        const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/replyFriend`, form, {
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
-        console.log("After Post");
-        const updatedNotifications = [...notifications];
-        updatedNotifications[index].removed = true;
-        setNotifications(updatedNotifications);
-        localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
-    
-      } catch (err) {
-        console.error(err);
-      }
+    try {
+      const form = JSON.stringify({
+        UserID: user,
+        Friend: friendName,
+        Subject: Subject,
+        Action: "accept",
+      });
+      console.log("before ApiCall");
+      console.log(form);
+      const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/replyFriend`, form, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      console.log("FriendName After Call :", friendName);
+      console.log("After Post");
+      // Remove this block from handleDeclineFriendRequest function
+      const updatedNotifications = [...notifications];
+      updatedNotifications[index].removed = true;
+      setNotifications(updatedNotifications);
+      localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+
+
+    } catch (err) {
+      console.log("ERROR");
+      console.error(err);
+    }
 
     // Update the notifications state and localStorage
     const updatedNotifications = [...notifications];
@@ -80,41 +84,36 @@ export default function NotificationPage() {
     localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
   };
 
-  const handleDeclineFriendRequest = async (event, friendName, index) => {
+  const handleDeclineFriendRequest = async (event, notificationId, friendName, Subject) => {
     event.stopPropagation();
-    const userID = JSON.parse(localStorage.getItem('user'));
-
-      try {
-        const form = JSON.stringify({
-          UserID: user,
-          Friend: friendName,
-          Subject: Subject,
-          Action: "deny",
-        });
-    
-        const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/replyFriend`, form, {
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
-    
-        console.log("declined");
-    
-        const updatedNotifications = [...notifications];
-        updatedNotifications[index].removed = true;
-        setNotifications(updatedNotifications);
-        localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
-    
-      } catch (err) {
-        console.error(err);
-      }
-    
-
-    // Update the notifications state and localStorage
-    const updatedNotifications = [...notifications];
-    updatedNotifications[index].removed = true;
-    setNotifications(updatedNotifications);
-    localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+    try {
+      const form = JSON.stringify({
+        UserID: user,
+        Friend: friendName,
+        Subject: Subject,
+        Action: "reject",
+      });
+      console.log(form);
+      const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/replyFriend`, form, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      console.log("Declined");
+      console.log(response);
+      const updatedNotifications = notifications.map(notification => {
+        if (notification.id === notificationId) {
+          return { ...notification, removed: true };
+        } else {
+          return notification;
+        }
+      });
+        console.log("UPDATE", updatedNotifications);
+      setNotifications(updatedNotifications);
+      localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleShowNotificationClick = () => {
@@ -151,7 +150,7 @@ export default function NotificationPage() {
   const addNotification = (newNotification) => {
     const updatedNotifications = [{ ...newNotification, read: false }, ...notifications];
     const unreadNotifications = updatedNotifications.filter(notification => !notification.read);
-    
+
     setNotifications(unreadNotifications);
 
     localStorage.setItem("notifications", JSON.stringify(unreadNotifications));
@@ -180,9 +179,13 @@ export default function NotificationPage() {
 
       if (fetchedData) {
         const pendingFriendRequests = fetchedData.filter(item => typeof item.Id === 'string' && item.Id.startsWith('?'));
-        setSubject(fetchedData
-        .filter(item => typeof item.Subject === 'string')
-        .map(item => item.Subject));       
+        const subjectArray = fetchedData
+          .filter(item => typeof item.Subject === 'string')
+          .map(item => item.Subject);
+
+        // Set Subject to the first non-empty value in subjectArray, or to a default value if none are found
+        setSubject(subjectArray.find(subject => subject !== '') || 'DefaultSubject');
+
 
         // Now you can use pendingFriendRequests within this scope
         if (pendingFriendRequests.length > 0) {
@@ -205,12 +208,12 @@ export default function NotificationPage() {
               );
               return !isExistingNotification;
             });
-          
+
           if (newNotifications.length > 0) {
             const updatedNotifications = [...newNotifications, ...notifications];
             setNotifications(updatedNotifications);
             localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
-    
+
             if (Notification.permission === "granted") {
               newNotifications.forEach(newNotification => {
                 new Notification(newNotification.title);
@@ -236,7 +239,7 @@ export default function NotificationPage() {
       }
     }
   };
-  
+
 
   return (
     <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
@@ -313,7 +316,7 @@ export default function NotificationPage() {
                               Accept
                             </button>
                             <button
-                              onClick={(event) => handleDeclineFriendRequest(event, notification.title.split(" ")[0], index)}
+                              onClick={(event) => handleDeclineFriendRequest(event, notification.id, notification.title.split(" ")[0], Subject)}
                               style={{
                                 backgroundColor: "#F44336",
                                 color: "white",
@@ -325,6 +328,8 @@ export default function NotificationPage() {
                             >
                               Decline
                             </button>
+
+
                           </div>
                         )}
                         <p style={{ fontSize: "12px", color: "#808080" }}>{notification.timestamp}</p>

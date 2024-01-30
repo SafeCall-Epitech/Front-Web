@@ -63,11 +63,14 @@ export default function ProfilePage() {
             try {
                 const response = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/listFriends/${user}`);
                 const fetchedData = response.data.fetched;
-                const friendsListData = fetchedData.map(friend => ({
-                    id: friend.Id,
-                    subject: friend.Subject,
-                    active: friend.Active
-                }));
+                const friendsListData = fetchedData
+                    .filter(friend => !friend.Subject.startsWith('?')) // Filter out items with Subject starting with "?"
+                    .filter(friend => !friend.Id.startsWith('?')) // Filter out items with Id starting with "?"
+                    .map(friend => ({
+                        id: friend.Id,
+                        subject: friend.Subject,
+                        active: friend.Active
+                    }));
                 setFriendsList(friendsListData);
             } catch (error) {
                 console.error(error);
@@ -75,6 +78,7 @@ export default function ProfilePage() {
         };
         fetchFriendsList();
     }, []);
+    
 
     useEffect(() => {
         const fetchAgenda = async () => {
@@ -156,6 +160,8 @@ export default function ProfilePage() {
 
     const DeleteFriend = async (friend) => {
         console.log("DELETE");
+        console.log(friend.id);
+
         try {
             const form = JSON.stringify({
                 UserID: user,
@@ -163,6 +169,8 @@ export default function ProfilePage() {
                 Subject: friend.subject,
                 Action: "delete",
             });
+
+            console.log(form);
             const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/manageFriend`, form, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -171,8 +179,15 @@ export default function ProfilePage() {
             if (response.status === 200) {
                 console.log("success");
                 // Remove the friend from the friendsList state
+
+         //       console.log(friend.id);
+
                 const updatedFriendsList = friendsList.filter(f => f.id !== friend.id);
+
+
+               // console.log(updatedFriendsList);
                 setFriendsList(updatedFriendsList);
+              //  console.log(friendsList);
             }
         } catch (err) {
             console.error(err);
