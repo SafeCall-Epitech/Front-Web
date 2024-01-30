@@ -408,6 +408,20 @@ export default function ProfilePage() {
         }
     };
 
+    const DeleteAccount = async () => {
+        try {
+            console.log(user);
+            axios.post('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com/delete', JSON.stringify({userID: user}), {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+            })
+            navigate(`/Login/`);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     return (
         <section style={{ top: '0', bottom: '0', right: '0', left: '0', backgroundColor: '#E6E6E6' }}>
             <MDBContainer className="py-5">
@@ -433,14 +447,13 @@ export default function ProfilePage() {
                                 <br />
                                 <MDBCardText>ID : {Name}</MDBCardText>
                                 <div className="d-flex justify-content-center mb-2">
-                                    <MDBBtn color="dark" rounded block size="mg" onClick={() => setIsEditing(true)}>
+                                    <MDBBtn color="black" rounded block size="mg" onClick={() => setIsEditing(true)}>
                                         <MDBIcon far icon="cog" /> Modify
                                     </MDBBtn>
                                 </div>
-
                                 <div className="d-flex justify-content-center mb-2">
                                     {user && (
-                                        <MDBBtn color="danger" rounded block size="mg" onClick={() => {
+                                        <MDBBtn color="warning" rounded block size="mg" onClick={() => {
                                             const confirmed = window.confirm('Are you sure you want to disconnect?');
                                             if (confirmed) {
                                                 localStorage.removeItem('user');
@@ -450,6 +463,11 @@ export default function ProfilePage() {
                                             <MDBIcon fas icon="sign-out-alt" /> Disconnect
                                         </MDBBtn>
                                     )}
+                                </div>
+                                <div className="d-flex justify-content-center mb-2">
+                                <MDBBtn color="danger" rounded block size="mg" onClick={() => DeleteAccount()}>
+                                        <MDBIcon far icon="cog" /> Delete Account
+                                    </MDBBtn>
                                 </div>
                             </MDBCardBody>
                         </MDBCard>
