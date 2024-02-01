@@ -28,6 +28,8 @@ import { useNavigate } from 'react-router-dom';
 import '../pages/profile.css'; // Make sure to use the correct file path
 import fr from 'date-fns/locale/fr'; // Import the French locale
 
+import PopupModal from './feedbackpopup';
+
 export default function ProfilePage() {
 
     const user = JSON.parse(localStorage.getItem('user'));
@@ -349,6 +351,34 @@ export default function ProfilePage() {
         handleCloseModal();
     };
 
+    const [isOpen, setIsOpen] = useState(false);
+    const [textInput, setTextInput] = useState('');
+  
+    const toggleModal = (state) => {
+        setIsOpen(state);
+      };
+    
+    const handleInputChange = (e) => {
+       setTextInput(e.target.value);
+    };
+    
+    const sendFeedback = async () => {
+        const form = JSON.stringify({
+            username: user,
+            date: new Date(),
+            message: textInput,
+        });
+        const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/feedback`, form, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(res => {
+                console.log(res.data);
+                toggleModal();
+            })
+    }
+
     const uploaderOptions = {
         multi: true,
         showFinishButton: true,
@@ -450,6 +480,17 @@ export default function ProfilePage() {
                                     <MDBBtn color="black" rounded block size="mg" onClick={() => setIsEditing(true)}>
                                         <MDBIcon far icon="cog" /> Modify
                                     </MDBBtn>
+                                </div>
+                                <div className="d-flex justify-content-center mb-2">
+                                <MDBBtn color="blue" rounded block size="mg" onClick={() => toggleModal(true)}>
+                                        <MDBIcon far icon="cog" /> send your feedback
+                                    </MDBBtn>
+                                    <PopupModal
+                                        isOpen={isOpen}
+                                        toggleModal={toggleModal}
+                                        onInputChange={handleInputChange}
+                                        onSubmit={sendFeedback}
+                                    />
                                 </div>
                                 <div className="d-flex justify-content-center mb-2">
                                     {user && (
