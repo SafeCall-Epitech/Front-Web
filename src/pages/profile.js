@@ -222,6 +222,7 @@ export default function ProfilePage() {
                 }
             })
             setIsEditing(false);
+            window.location.reload(); // Refresh the page
         } catch (err) {
             console.error(err);
         }
@@ -239,6 +240,7 @@ export default function ProfilePage() {
                 }
             })
             setIsEditing(false);
+            window.location.reload(); // Refresh the page
         } catch (err) {
             console.error(err);
         }
@@ -255,6 +257,7 @@ export default function ProfilePage() {
                 }
             })
             setIsEditing(false);
+            window.location.reload(); // Refresh the page
         } catch (err) {
             console.error(err);
         }
@@ -272,6 +275,7 @@ export default function ProfilePage() {
                 }
             })
             setIsEditing(false);
+            window.location.reload(); // Refresh the page
         } catch (err) {
             console.error(err);
         }
@@ -289,6 +293,7 @@ export default function ProfilePage() {
                 }
             })
             setIsEditing(false);
+            window.location.reload(); // Refresh the page
         } catch (err) {
             console.error(err);
         }
