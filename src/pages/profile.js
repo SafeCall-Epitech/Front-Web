@@ -15,7 +15,8 @@ import {
     MDBModalContent,
     MDBModalBody,
     MDBTypography,
-    MDBListGroupItem
+    MDBListGroupItem,
+    MDBInput
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
 import DatePicker from "react-datepicker";
@@ -29,6 +30,7 @@ import '../pages/profile.css'; // Make sure to use the correct file path
 import fr from 'date-fns/locale/fr'; // Import the French locale
 
 import PopupModal from './feedbackpopup';
+import { Input } from '@chakra-ui/react';
 
 export default function ProfilePage() {
 
@@ -53,12 +55,29 @@ export default function ProfilePage() {
     const [friendsList, setFriendsList] = useState([]);
     const [agenda, setAgenda] = useState([]);
     const [Guest, setGuest] = useState("");
+    const [emailCode, setemailCode] = useState("");
+    const [isemailVerified, setisemailVerified] = useState(false);
     const navigate = useNavigate();
     const uploader = Uploader({
         apiKey: "free"
     });
     const options = { multi: true };
     const [selectedFriend, setSelectedFriend] = useState(null);
+
+    useEffect(() => {
+        const fetchVerification = async () => {
+            try {
+                const response = await axios.get(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/verify/${user}`);
+                console.log(response.data.verified);
+                if (response.data.verified === true) {
+                    setisemailVerified(true);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchVerification();
+    } , []);
 
     useEffect(() => {
         const fetchFriendsList = async () => {
@@ -159,6 +178,34 @@ export default function ProfilePage() {
     const handleDescriptionChange = (e) => {
         setNewDescription(e.target.value);
     };
+    const handleEmailCodeChange = (e) => {
+        setemailCode(e.target.value);
+    }
+
+    const verifyEmail = async () => {
+        try {
+            const form = JSON.stringify({
+                Login: user,
+                Code: emailCode,
+            });
+            if (emailCode === "") {
+                alert("Please enter a code");
+                return;
+            }
+            const response = await axios.post(`https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/verifyAccount`, form, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            if (response.status === 200) {
+                alert("Email verified");
+                setisemailVerified(true);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Invalid code");
+        }
+    }
 
     const DeleteFriend = async (friend) => {
         console.log("DELETE");
@@ -481,9 +528,19 @@ export default function ProfilePage() {
                                 )}
                                 <br />
                                 <MDBCardText>ID : {Name}</MDBCardText>
+                                {!isemailVerified && (
+
+                                    <div className="d-flex justify-content-center mb-2">
+                                    <input type="text" value={emailCode} onChange={handleEmailCodeChange} />
+                                    <MDBBtn color="success" rounded block size="mg" onClick={() => verifyEmail()}>
+                                        <MDBIcon icon="check" /> Verify Email
+                                    </MDBBtn>
+                                </div>
+                                )}
+
                                 <div className="d-flex justify-content-center mb-2">
                                     <MDBBtn color="black" rounded block size="mg" onClick={() => setIsEditing(true)}>
-                                        <MDBIcon far icon="cog" /> Modify
+                                        <MDBIcon color='white' icon="cog" /> Modify
                                     </MDBBtn>
                                 </div>
                                 <div className="d-flex justify-content-center mb-2">
