@@ -493,7 +493,7 @@ export default function ProfilePage() {
     const DeleteAccount = async () => {
         try {
             console.log(user);
-            axios.post('http://x2024safecall3173801594000.westeurope.cloudapp.azure.com/delete', JSON.stringify({userID: user}), {
+            axios.post('https://x2024safecall3173801594000.westeurope.cloudapp.azure.com/delete', JSON.stringify({userID: user}), {
                     headers: {
                         'Content-Type': 'application/json'
                     }
